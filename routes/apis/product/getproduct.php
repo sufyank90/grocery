@@ -17,4 +17,25 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
     });
 
+    Route::get('/{slug}',function(Request $request,$slug){
+        $data = Product::with('categories')->where('name','like','%'.$slug.'%')->orderBy('id','desc')->get();
+        return response()->json(["data"=>$data,"message"=>"success"], 200);
+    });
+
+    Route::get('/category/{category}',function(Request $request,$category){
+        // goto category then apply filter
+        $data = Product::with('categories')->whereHas('categories', function ($q) use ($category) {
+            $q->where('name', $category);
+        })->orderBy('id','desc')->get();
+        return response()->json(["data"=>$data,"message"=>"success"], 200);
+    });
+
+    Route::get('/category/{category}/{slug}',function(Request $request,$category,$slug){
+        // goto category then apply filter
+        $data = Product::with('categories')->where('name','like','%'.$slug.'%')->whereHas('categories', function ($q) use ($category) {
+            $q->where('name', $category);
+        })->orderBy('id','desc')->get();
+        return response()->json(["data"=>$data,"message"=>"success"], 200);
+    });
+
 });

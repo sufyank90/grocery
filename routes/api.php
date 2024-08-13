@@ -22,3 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 include __DIR__ . '/apis/auth/auth.php';
 include __DIR__ . '/apis/category/getcategory.php';
 include __DIR__ . '/apis/product/getproduct.php';
+include __DIR__ . '/apis/order/order.php';
+include __DIR__ . '/apis/item/item.php';
