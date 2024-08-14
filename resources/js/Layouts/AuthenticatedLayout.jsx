@@ -16,7 +16,8 @@ export default function Authenticated({ auth, header, children }) {
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    {/* <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" /> */}
+                                <img src="/DealtoCard.png" className='w-14 h-16' alt="" />
                                 </Link>
                             </div>
 
@@ -25,6 +26,27 @@ export default function Authenticated({ auth, header, children }) {
                                     Dashboard
                                 </NavLink>
                             </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('customer.index')} active={route().current('customer.index')}>
+                                    Customers
+                                </NavLink>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('order')} active={route().current('order')}>
+                                    Order
+                                </NavLink>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('product.index')} active={route().current('product.index')}>
+                                    Product
+                                </NavLink>
+                            </div>
+                            {/* <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('category')} active={route().current('category')}>
+                                    Category
+                                </NavLink>
+                            </div> */}
+                            
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ml-6">
