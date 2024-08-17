@@ -9,7 +9,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request; // Correct import statement
 
-
+use App\Models\Category;
 class ProductController extends Controller
 {
     /**
@@ -21,8 +21,8 @@ class ProductController extends Controller
     {
     
         $products = Product::orderBy('id','desc')->paginate(5);
-        
-        return Inertia::render('product/Product', compact('products'));
+        $categories = Category::all();
+        return Inertia::render('product/Product', compact('products','categories'));
     }
 
     /**
@@ -41,29 +41,11 @@ class ProductController extends Controller
      * @param  \App\Http\Requests\StoreProductRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // Define validation rules
-        $rules = [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'status' => 'required|in:instock,outofstock,active',
-        ];
-
-        // Validate the request
-        $validator = Validator::make($request->all(), $rules);
-
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        // Create the product
-        Product::create($request->only(['name', 'description', 'price', 'status']));
-
-        // Redirect back with a success message
-        return redirect()->back()->with('success', 'Product created successfully.');
+    public function store(StoreProductRequest $request)
+    { 
+        $product = Product::create($request->only(['name', 'description', 'price', 'status']));
+        $product->categories()->attach($request->categories);
+        session()->flash('success', 'Product created successfully.');
     }
 
     /**

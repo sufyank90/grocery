@@ -4,9 +4,10 @@ import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import InputLabel from '@/Components/InputLabel';
 
 export default function Product(props) {
-    const { products } = props;
+    const { products, categories } = props;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -119,12 +120,14 @@ export default function Product(props) {
                             description: '',
                             price: '',
                             status: 'instock',
+                            categories: [],
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
                             description: Yup.string().required('Required'),
                             price: Yup.number().required('Required').positive(),
                             status: Yup.string().required('Required'),
+                            categories: Yup.array().min(1, 'At least one category is required').required('Required'),
                         })}
                         onSubmit={(values, { resetForm }) => {
                             console.log(values);
@@ -136,6 +139,7 @@ export default function Product(props) {
                             });
                         }}
                     >
+                         {({ values, setFieldValue }) => (
                         <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
                             <h2 className="text-lg font-bold mb-4">Create Product</h2>
                             <div className="relative z-0 w-full mb-5 group">
@@ -210,6 +214,34 @@ export default function Product(props) {
                                 <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
 
+                            <div className="relative z-0 w-full mb-5 group">
+                               <InputLabel className="" value={"Select Category"}/>
+                                {categories.map((category) => (
+                                   <div key={category.id} className="flex items-center">
+                                   <label className="flex items-center">
+                                     <Field
+                                       type="checkbox"
+                                       name="categories"
+                                       value={category.id}
+                                       checked={values.categories.includes(category.id)}
+                                       onChange={(e) => {
+                                         const { checked } = e.target;
+                                         if (checked) {
+                                           setFieldValue("categories", [...values.categories, category.id]);
+                                         } else {
+                                           setFieldValue("categories", values.categories.filter((id) => id !== category.id));
+                                         }
+                                       }}
+                                       className="mr-2"
+                                     />
+                                     {category.name}
+                                   </label>
+                                
+                                 </div>
+                                ))}
+                                   <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
                             <div className="flex justify-end space-x-2 mt-4">
                                 <button
                                     type="submit"
@@ -225,7 +257,11 @@ export default function Product(props) {
                                     Close
                                 </button>
                             </div>
+
+                          
+
                         </Form>
+                         )}
                     </Formik>
                 </Modal>
 

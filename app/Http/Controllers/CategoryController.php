@@ -41,7 +41,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        
+        Category::create($request->all());
+        return back();
     }
     
 
