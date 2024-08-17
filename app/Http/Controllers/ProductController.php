@@ -6,6 +6,9 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request; // Correct import statement
+
 
 class ProductController extends Controller
 {
@@ -16,6 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+    
         $products = Product::orderBy('id','desc')->paginate(5);
         
         return Inertia::render('product/Product', compact('products'));
@@ -37,9 +41,29 @@ class ProductController extends Controller
      * @param  \App\Http\Requests\StoreProductRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
-        //
+        // Define validation rules
+        $rules = [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:instock,outofstock,active',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Create the product
+        Product::create($request->only(['name', 'description', 'price', 'status']));
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Product created successfully.');
     }
 
     /**
@@ -71,9 +95,29 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, Product $product)
     {
-        //
+        // Define validation rules
+        $rules = [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:instock,outofstock,active',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Update the product
+        $product->update($request->only(['name', 'description', 'price', 'status']));
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -84,6 +128,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        // Delete the product
+        $product->delete();
+
+        // Return a response or redirect back with a success message
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 }

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 export default function Product(props) {
     const { products } = props;
@@ -50,23 +52,23 @@ export default function Product(props) {
                         <table className="min-w-full bg-white rounded-lg shadow">
                             <thead>
                                 <tr>
-                                    <th className="py-2 px-4 border-b">#</th>
-                                    <th className="py-2 px-4 border-b">Name</th>
-                                    <th className="py-2 px-4 border-b">Description</th>
-                                    <th className="py-2 px-4 border-b">Price</th>
-                                    <th className="py-2 px-4 border-b">Status</th>
-                                    <th className="py-2 px-4 border-b">Actions</th>
+                                    <th className="py-2 px-4 border-b text-left">#</th>
+                                    <th className="py-2 px-4 border-b text-left">Name</th>
+                                    <th className="py-2 px-4 border-b text-left">Description</th>
+                                    <th className="py-2 px-4 border-b text-left">Price</th>
+                                    <th className="py-2 px-4 border-b text-left">Status</th>
+                                    <th className="py-2 px-4 border-b text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className='text-center'>
                                 {products.data.map((product) => (
                                     <tr key={product.id}>
-                                        <td className="py-2 px-4 border-b">{product.id}</td>
-                                        <td className="py-2 px-4 border-b">{product.name}</td>
-                                        <td className="py-2 px-4 border-b">{product.description}</td>
-                                        <td className="py-2 px-4 border-b">${parseFloat(product.price).toFixed(2)}</td>
-                                        <td className="py-2 px-4 border-b">{product.status}</td>
-                                        <td className="py-2 px-4 border-b">
+                                        <td className="py-2 px-4 border-b text-left">{product.id}</td>
+                                        <td className="py-2 px-4 border-b text-left">{product.name}</td>
+                                        <td className="py-2 px-4 border-b text-left">{product.description}</td>
+                                        <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
+                                        <td className="py-2 px-4 border-b text-left">{product.status}</td>
+                                        <td className="py-2 px-4 border-b text-left">
                                             <div className="flex justify-center space-x-2">
                                                 <button
                                                     onClick={() => openEditModal(product)}
@@ -111,97 +113,122 @@ export default function Product(props) {
                     onClose={() => setIsModalOpen(false)}
                     maxWidth="2xl"
                 >
-                    <form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                        <h2 className="text-lg font-bold mb-4">Create Product</h2>
-                        <div className="relative z-0 w-full mb-5 group">
-                            <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="name"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Name
-                            </label>
-                        </div>
+                    <Formik
+                        initialValues={{
+                            name: '',
+                            description: '',
+                            price: '',
+                            status: 'instock',
+                        }}
+                        validationSchema={Yup.object({
+                            name: Yup.string().required('Required'),
+                            description: Yup.string().required('Required'),
+                            price: Yup.number().required('Required').positive(),
+                            status: Yup.string().required('Required'),
+                        })}
+                        onSubmit={(values, { resetForm }) => {
+                            console.log(values);
+                            router.post(route('product.store'), values, {
+                                onSuccess: () => {
+                                    resetForm();
+                                    setIsModalOpen(false);
+                                },
+                            });
+                        }}
+                    >
+                        <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Create Product</h2>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="name"
+                                    type="text"
+                                    id="name"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="name"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Name
+                                </label>
+                                <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="relative z-0 w-full mb-5 group">
-                            <textarea
-                                name="description"
-                                id="description"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="description"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Description
-                            </label>
-                        </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="description"
+                                    as="textarea"
+                                    id="description"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="description"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Description
+                                </label>
+                                <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="relative z-0 w-full mb-5 group">
-                            <input
-                                type="number"
-                                name="price"
-                                id="price"
-                                step="0.01"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="price"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Price
-                            </label>
-                        </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="price"
+                                    type="number"
+                                    id="price"
+                                    step="0.01"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="price"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Price
+                                </label>
+                                <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="relative z-0 w-full mb-5 group">
-                            <select
-                                name="status"
-                                id="status"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                required
-                            >
-                                <option value="instock">In Stock</option>
-                                <option value="outofstock">Out of Stock</option>
-                                <option value="active">Active</option>
-                            </select>
-                            <label
-                                htmlFor="status"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Status
-                            </label>
-                        </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    as="select"
+                                    name="status"
+                                    id="status"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                >
+                                    <option value="instock">In Stock</option>
+                                    <option value="outofstock">Out of Stock</option>
+                                    <option value="active">Active</option>
+                                </Field>
+                                <label
+                                    htmlFor="status"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Status
+                                </label>
+                                <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="flex justify-end space-x-2 mt-4">
-                            <button
-                                type="submit"
-
-
-                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                            >
-                                Submit
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setIsModalOpen(false)}
-                                className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </form>
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                >
+                                    Submit
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </Form>
+                    </Formik>
                 </Modal>
+
 
                 {/* Edit Product Modal */}
                 <Modal
@@ -209,111 +236,123 @@ export default function Product(props) {
                     onClose={() => setIsEditModalOpen(false)}
                     maxWidth="2xl"
                 >
-                    <form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                        <h2 className="text-lg font-bold mb-4">Edit Product</h2>
-                        <div className="relative z-0 w-full mb-5 group">
-                            <input
-                                type="text"
-                                name="name"
-                                id="edit_name"
-                                value={selectedProduct ? selectedProduct.name : ''}
-                                onChange={(e) =>
-                                    setSelectedProduct({ ...selectedProduct, name: e.target.value })
-                                }
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="edit_name"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Name
-                            </label>
-                        </div>
+                    <Formik
+                        initialValues={{
+                            name: selectedProduct ? selectedProduct.name : '',
+                            description: selectedProduct ? selectedProduct.description : '',
+                            price: selectedProduct ? selectedProduct.price : '',
+                            status: selectedProduct ? selectedProduct.status : 'instock',
+                        }}
+                        validationSchema={Yup.object({
+                            name: Yup.string().required('Required'),
+                            description: Yup.string().required('Required'),
+                            price: Yup.number().required('Required').positive(),
+                            status: Yup.string().required('Required'),
+                        })}
+                        onSubmit={(values, { resetForm }) => {
+                            router.put(route('product.update', selectedProduct.id), values, {
+                                onSuccess: () => {
+                                    resetForm();
+                                    setIsEditModalOpen(false);
+                                },
+                            });
+                        }}
+                    >
+                        <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Edit Product</h2>
 
-                        <div className="relative z-0 w-full mb-5 group">
-                            <textarea
-                                name="description"
-                                id="edit_description"
-                                value={selectedProduct ? selectedProduct.description : ''}
-                                onChange={(e) =>
-                                    setSelectedProduct({ ...selectedProduct, description: e.target.value })
-                                }
-                                className="block py-2.5 h-32 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="edit_description"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Description
-                            </label>
-                        </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="name"
+                                    type="text"
+                                    id="edit_name"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="edit_name"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Name
+                                </label>
+                                <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="relative z-0 w-full mb-5 group">
-                            <input
-                                type="number"
-                                name="price"
-                                id="edit_price"
-                                step="0.01"
-                                value={selectedProduct ? selectedProduct.price : ''}
-                                onChange={(e) =>
-                                    setSelectedProduct({ ...selectedProduct, price: parseFloat(e.target.value) })
-                                }
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
-                                required
-                            />
-                            <label
-                                htmlFor="edit_price"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Price
-                            </label>
-                        </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="description"
+                                    as="textarea"
+                                    id="edit_description"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="edit_description"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Description
+                                </label>
+                                <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="relative z-0 w-full mb-5 group">
-                            <select
-                                name="status"
-                                id="edit_status"
-                                value={selectedProduct ? selectedProduct.status : ''}
-                                onChange={(e) =>
-                                    setSelectedProduct({ ...selectedProduct, status: e.target.value })
-                                }
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                required
-                            >
-                                <option value="instock">In Stock</option>
-                                <option value="outofstock">Out of Stock</option>
-                                <option value="active">Active</option>
-                            </select>
-                            <label
-                                htmlFor="edit_status"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            >
-                                Status
-                            </label>
-                        </div>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="price"
+                                    type="number"
+                                    id="edit_price"
+                                    step="0.01"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="edit_price"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Price
+                                </label>
+                                <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-                        <div className="flex justify-end space-x-2 mt-4">
-                            <button
-                                type="submit"
-                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                            >
-                                Update
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setIsEditModalOpen(false)}
-                                className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </form>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    as="select"
+                                    name="status"
+                                    id="edit_status"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                >
+                                    <option value="instock">In Stock</option>
+                                    <option value="outofstock">Out of Stock</option>
+                                    <option value="active">Active</option>
+                                </Field>
+                                <label
+                                    htmlFor="edit_status"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Status
+                                </label>
+                                <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                >
+                                    Update
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsEditModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </Form>
+                    </Formik>
                 </Modal>
+
+
 
                 {/* Delete Confirmation Modal */}
                 <Modal
@@ -321,29 +360,53 @@ export default function Product(props) {
                     onClose={() => setIsDeleteModalOpen(false)}
                     maxWidth="sm"
                 >
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto flex flex-col items-center">
-                        <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
-                        <p className="mb-4 text-gray-700">Are you sure you want to delete this product? This action cannot be undone.</p>
-                        <div className="flex justify-end space-x-2 mt-4">
-                            <button
-                                onClick={() => {
-                                    // Handle deletion logic here
+                    <Formik
+                        initialValues={{ confirmation: '' }}
+                        validationSchema={Yup.object({
+                            confirmation: Yup.string().required('Type "DELETE" to confirm').oneOf(['DELETE'], 'Type "DELETE" to confirm'),
+                        })}
+                        onSubmit={(values, { resetForm }) => {
+                            router.delete(route('product.destroy', selectedProduct.id), {
+                                onSuccess: () => {
+                                    resetForm();
                                     setIsDeleteModalOpen(false);
-                                }}
-                                className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                            >
-                                Delete
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setIsDeleteModalOpen(false)}
-                                className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
+                                },
+                            });
+                        }}
+                    >
+                        <Form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+                            <p className="mb-4 text-gray-700">Are you sure you want to delete this product?</p>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="confirmation"
+                                    type="text"
+                                    id="delete_confirmation"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-600 peer"
+                                    placeholder="Type DELETE to confirm"
+                                />
+                                <ErrorMessage name="confirmation" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </Form>
+                    </Formik>
                 </Modal>
+
             </AuthenticatedLayout>
         </>
     );

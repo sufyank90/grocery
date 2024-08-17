@@ -15,7 +15,7 @@ export default function Authenticated({ auth, header, children }) {
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="shrink-0 flex items-center">
-                                <Link href="/">
+                                <Link href={route('dashboard')}>
                                     {/* <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" /> */}
                                 <img src="/DealtoCard.png" className='w-14 h-16' alt="" />
                                 </Link>
@@ -32,7 +32,7 @@ export default function Authenticated({ auth, header, children }) {
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink href={route('order')} active={route().current('order')}>
+                                <NavLink href={route('order.index')} active={route().current('order')}>
                                     Order
                                 </NavLink>
                             </div>
@@ -41,11 +41,11 @@ export default function Authenticated({ auth, header, children }) {
                                     Product
                                 </NavLink>
                             </div>
-                            {/* <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink href={route('category')} active={route().current('category')}>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('category.index')} active={route().current('category.index')}>
                                     Category
                                 </NavLink>
-                            </div> */}
+                            </div>
                             
                         </div>
 
