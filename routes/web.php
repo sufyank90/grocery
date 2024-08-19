@@ -41,3 +41,4 @@ require __DIR__.'/dashboard/user.php';
 require __DIR__.'/dashboard/product.php';
 require __DIR__.'/dashboard/category.php';
 require __DIR__.'/dashboard/order.php';
+require __DIR__.'/dashboard/coupon.php';
