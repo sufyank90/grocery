@@ -1,5 +1,5 @@
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ const Create = (props) => {
     const { nextId, users, products } = props;
     const [selectedName, setSelectedName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState([]);
 
     const handleEmailChange = (e, setFieldValue) => {
@@ -267,26 +268,26 @@ const Create = (props) => {
                                                         {item.qty}
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        <FaRegTrashCan className="text-red-500 cursor-pointer" onClick={() => setSelectedItem(prevItems => prevItems.filter((_, i) => i !== index)) } size={20} />
+                                                        <FaRegTrashCan className="text-red-500 cursor-pointer" onClick={() => setSelectedItem(prevItems => prevItems.filter((_, i) => i !== index))} size={20} />
                                                     </td>
                                                 </tr>
                                             ))}
                                             <tr>
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                       
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
                                                 </th>
-                                                <td class="px-6 py-4"> 
-                                                    
+                                                <td class="px-6 py-4">
+
                                                 </td>
-                                                <td class="px-6 py-4"> 
-                                                    
-                                                    </td>
-                                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> 
+                                                <td class="px-6 py-4">
+
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     Total
                                                 </td>
                                                 <td class="px-6 py-4 ">
-                                                {calculateTotalPrice()}
-                                                    </td>
+                                                    {calculateTotalPrice()}
+                                                </td>
                                             </tr>
 
                                         </tbody>
@@ -294,7 +295,13 @@ const Create = (props) => {
                                 </div>
 
                                 <div className="flex justify-end space-x-2 mt-4">
-
+                                    <button
+                                        type="button"
+                                        onClick={(e) => { e.preventDefault(); setIsCouponModalOpen(true) }}
+                                        className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                        Apply Coupon
+                                    </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
@@ -398,6 +405,7 @@ const Create = (props) => {
                             </div>
 
                             <div className="flex justify-end space-x-2 mt-4">
+
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
@@ -408,6 +416,72 @@ const Create = (props) => {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            </Modal>
+
+
+            {/* apply coupon */}
+            <Modal
+                show={isCouponModalOpen}
+                onClose={() => setIsCouponModalOpen(false)}
+                maxWidth="2xl"
+            >
+                <Formik
+                    initialValues={{
+                        code: ''
+
+                    }}
+                    validationSchema={Yup.object({
+                        code: Yup.string().required('Required'),
+                    })}
+                    onSubmit={(values, { resetForm }) => {
+                        router.post(route('order.check_coupon_code'), values);
+                        resetForm();
+                        setIsCouponModalOpen(false);
+
+                    }}
+                >
+                    {({ isSubmitting }) => (
+                        <Form className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto flex flex-col items-center ">
+                            <h2 className="text-lg font-bold mb-4">Apply Coupon</h2>
+                            <div className="overflow-y-auto max-h-80 w-full">
+                                <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            type="text"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            name="code"
+                                            placeholder="Coupon Code"
+                                        />
+                                        <label
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                        </label>
+                                        <ErrorMessage name="code" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end space-x-2 mt-4">
+
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                    {isSubmitting ? 'Adding...' : 'Add'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCouponModalOpen(false)}
                                     className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
                                 >
                                     Close

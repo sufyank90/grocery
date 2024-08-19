@@ -41,6 +41,11 @@ class OrderController extends Controller
         ]);
     }
 
+    public function checkCouponCode(Request $request)
+    {
+        dd($request->all());
+    }
+
     /**
      * Store a newly created resource in storage.
      *
