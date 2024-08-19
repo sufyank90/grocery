@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,16 +35,13 @@ class OrderController extends Controller
         $nextId = Order::max('id') + 1;
         $users = User::all();
         $products = Product::with('categories')->get();
+        $coupons = Coupon::all();
         return Inertia::render('order/Create', [
             'nextId' => $nextId,
             'users' => $users,
-            'products' => $products
+            'products' => $products,
+            'coupons' => $coupons
         ]);
-    }
-
-    public function checkCouponCode(Request $request)
-    {
-        dd($request->all());
     }
 
     /**
@@ -54,7 +52,16 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        //
+        $order = Order::create($request->validated());
+        $order->items()->createMany($request->items);
+        if ($request->coupon) {
+            $coupon = Coupon::where('code', $request->couponcode)->first();
+            if ($coupon) {
+                $coupon->usage_limit = $coupon->usage_limit - 1;
+                $coupon->save();
+            }
+        }
+        return back();
     }
 
     /**

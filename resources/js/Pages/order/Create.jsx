@@ -7,12 +7,14 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import Modal from '@/Components/Modal';
 const Create = (props) => {
-    const { nextId, users, products } = props;
+    const { nextId, users, products, coupons } = props;
     const [selectedName, setSelectedName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState([]);
-
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [finalPrice, setFinalPrice] = useState(0);
+    const [couponCode, setCouponCode] = useState([]);
     const handleEmailChange = (e, setFieldValue) => {
         const selectedEmail = e.target.value;
         const selectedUser = users.find(user => user.email === selectedEmail);
@@ -23,8 +25,25 @@ const Create = (props) => {
         setFieldValue('name', userName); // Set the name field value
     };
     const calculateTotalPrice = () => {
-        return selectedItem.reduce((total, item) => total + (item.price * item.qty), 0).toFixed(2);
+        return setTotalPrice(selectedItem.reduce((total, item) => total + (item.price * item.qty), 0).toFixed(2))
     };
+    useEffect(() => {
+        calculateTotalPrice();
+        if (couponCode && couponCode.code) {
+            if (totalPrice == 0.00) {
+                setFinalPrice(0);
+            }
+            else {
+                setFinalPrice((totalPrice - couponCode.value).toFixed(2));
+            }
+        }
+        else {
+            setFinalPrice(totalPrice);
+        }
+    }, [selectedItem, totalPrice]);
+
+
+
     return (
         <Authenticated
             auth={props.auth}
@@ -51,6 +70,7 @@ const Create = (props) => {
                             discount: '',
                             status: '',
                             payable: '',
+                            user_id: '',
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -61,20 +81,35 @@ const Create = (props) => {
                             city: Yup.string().required('Required'),
                             country: Yup.string().required('Required'),
                             method: Yup.string().required('Required'),
-                            total: Yup.number().required('Required'),
-                            couponcode: Yup.string(),
-                            coupontype: Yup.string(),
-                            discount: Yup.number(),
-                            status: Yup.string().required('Required'),
-                            payable: Yup.number().required('Required'),
+
                         })}
                         onSubmit={(values, { resetForm }) => {
-                            router.post(route('order.store'), values, {
+
+                            router.post(route('order.store'), {
+                                name: values.name,
+                                email: values.email,
+                                phone: values.phone,
+                                address: values.address,
+                                zipcode: values.zipcode,
+                                city: values.city,
+                                country: values.country,
+                                method: values.method,
+                                total: totalPrice,
+                                discount: couponCode ? couponCode.value : 0,
+                                couponcode: couponCode ? couponCode.code : '',
+                                coupontype: couponCode ? couponCode.type : '',
+                                status: 'pending',
+                                payable: finalPrice,
+                                items: selectedItem,
+                                coupon: couponCode,
+                                user_id: props.auth.user.id,
+                            }, {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpen(false);
                                 },
                             });
+
                         }}
                     >
                         {({ isSubmitting, setFieldValue }) => (
@@ -209,8 +244,8 @@ const Create = (props) => {
                                             name="method"
                                         >
                                             <option value="" disabled>Select Method</option>
-                                            <option value="cod">COD</option>
-                                            <option value="credit">Credit</option>
+                                            <option value="cash">Cash</option>
+                                            <option value="card">Card</option>
                                         </Field>
 
                                         <ErrorMessage name="method" component="div" className="text-red-600 text-sm mt-1" />
@@ -283,10 +318,66 @@ const Create = (props) => {
 
                                                 </td>
                                                 <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    Sub Total
+                                                </td>
+                                                <td class="px-6 py-4 ">
+                                                    {totalPrice}
+                                                </td>
+                                            </tr>
+                                            {couponCode && couponCode.code &&
+                                                <>
+                                                    <tr>
+                                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
+                                                        </th>
+                                                        <td class="px-6 py-4">
+
+                                                        </td>
+                                                        <td class="px-6 py-4">
+
+                                                        </td>
+                                                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            Coupon
+                                                        </td>
+                                                        <td class="px-6 py-4 ">
+                                                            {couponCode.code}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
+                                                        </th>
+                                                        <td class="px-6 py-4">
+
+                                                        </td>
+                                                        <td class="px-6 py-4">
+
+                                                        </td>
+                                                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            Discount Amount
+                                                        </td>
+                                                        <td class="px-6 py-4 ">
+                                                            {couponCode.value}
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            }
+                                            <tr>
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+
+                                                </th>
+                                                <td class="px-6 py-4">
+
+                                                </td>
+                                                <td class="px-6 py-4">
+
+                                                </td>
+                                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     Total
                                                 </td>
                                                 <td class="px-6 py-4 ">
-                                                    {calculateTotalPrice()}
+                                                    {finalPrice}
                                                 </td>
                                             </tr>
 
@@ -297,14 +388,23 @@ const Create = (props) => {
                                 <div className="flex justify-end space-x-2 mt-4">
                                     <button
                                         type="button"
-                                        onClick={(e) => { e.preventDefault(); setIsCouponModalOpen(true) }}
+                                        disabled={selectedItem.length == [] ? true : false}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            if (couponCode && couponCode.code) {
+                                                setCouponCode([])
+                                                setFinalPrice(totalPrice)
+                                            } else {
+                                                setIsCouponModalOpen(true)
+                                            }
+                                        }}
                                         className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                        Apply Coupon
+                                        {couponCode && couponCode.code ? 'Remove Coupon' : 'Apply Coupon'}
                                     </button>
                                     <button
                                         type="submit"
-                                        disabled={isSubmitting}
+                                        disabled={selectedItem.length == [] ? true : false}
                                         className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
                                         {isSubmitting ? 'Submitting...' : 'Submit'}
@@ -442,10 +542,27 @@ const Create = (props) => {
                         code: Yup.string().required('Required'),
                     })}
                     onSubmit={(values, { resetForm }) => {
-                        router.post(route('order.check_coupon_code'), values);
-                        resetForm();
-                        setIsCouponModalOpen(false);
-
+                        const coupon = coupons.find(coupon => coupon.code === values.code);
+                        if (!coupon) {
+                            console.log('Invalid coupon code');
+                        }
+                        else if (coupon.usage_limit <= 0) {
+                            console.log('Coupon usage limit exceeded');
+                        }
+                        else if (new Date(coupon.expiry_date) < new Date()) {
+                            console.log('Coupon has expired');
+                        }
+                        else {
+                            if (coupon.type === 'fixed') {
+                                setFinalPrice(finalPrice - coupon.value);
+                            }
+                            else if (coupon.type === 'percentage') {
+                                setFinalPrice(finalPrice - (finalPrice * coupon.value / 100));
+                            }
+                            coupon.usage_limit -= 1;
+                            setCouponCode(coupon);
+                            setIsCouponModalOpen(false);
+                        }
                     }}
                 >
                     {({ isSubmitting }) => (

@@ -13,7 +13,7 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class StoreOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'items' => 'required|array|min:1',
+            'coupon' => 'nullable|array',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'zipcode' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'method' => 'required|in:cash,card',
+            'total' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric',
+            'couponcode' => 'nullable|string|max:50',
+            'coupontype' => 'nullable|in:fixed,percentage',
+            'payable' => 'required|numeric',
+            'status' => 'required',
+            'user_id' => 'required',
         ];
     }
 }
