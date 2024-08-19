@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\User;
 
 class OrderController extends Controller
 {
@@ -17,8 +19,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::orderBy('id','desc')->paginate(5);
-        
+        $orders = Order::orderBy('id', 'desc')->paginate(5);
+
         return Inertia::render('order/Order', compact('orders'));
     }
 
@@ -29,7 +31,14 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $nextId = Order::max('id') + 1;
+        $users = User::all();
+        $products = Product::with('categories')->get();
+        return Inertia::render('order/Create', [
+            'nextId' => $nextId,
+            'users' => $users,
+            'products' => $products
+        ]);
     }
 
     /**

@@ -10,5 +10,5 @@ use Inertia\Inertia;
 
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    Route::resource('order', OrderController::class);    
+    Route::resource('order', OrderController::class);
 });
