@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/react';
 export default function Guest({ children }) {
     return (
         <>
-            <div className='flex w-full justify-center items-center gap-2'>
+            <div className='flex w-full justify-center items-center  h-screen  gap-2 bg-[#fcb609]'>
             <div className='w-full pl-60 mt-32'>
                     <img src="/illustration.svg" alt="" />
                 </div>
