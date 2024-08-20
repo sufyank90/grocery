@@ -11,7 +11,7 @@ export default function Guest({ children }) {
                 <div className='w-full pl-80 pr-32'>
                     <Link href="/">
                         {/* ApplicationLogo component ko remove karke apni logo image use karein */}
-                        <img src='/DealtoCard.png' alt="Logo" className="w-40 h-52 ml-28 "  />
+                        <img src='/image/logo.png' alt="Logo" className="w-40 h-52 ml-28 "  />
                         {/* <img src={illustration} className='w-full' /> */}
                     </Link>
                     

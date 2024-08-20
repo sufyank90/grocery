@@ -17,7 +17,7 @@ export default function Authenticated({ auth, header, children }) {
                             <div className="shrink-0 flex items-center">
                                 <Link href={route('dashboard')}>
                                     {/* <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" /> */}
-                                <img src="/DealtoCard.png" className='w-14 h-16' alt="" />
+                                <img src="/image/logo.png" className='w-14 h-16' alt="" />
                                 </Link>
                             </div>
 
