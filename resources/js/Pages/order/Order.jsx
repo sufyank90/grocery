@@ -61,35 +61,62 @@ function Orders(props) {
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.data.map((order) => (
+                                {orders.data.map((order, index) => (
                                     <tr key={order.id} className="hover:bg-gray-100">
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.id}</td>
+                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.total}</td>
+                                        {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
+                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                            {order.status === 'pending' && (
+                                                <span
+                                                onClick={() => {
+                                                    setSelectedOrder(order);
+                                                    setIsDeleteModalOpen(true);
+                                                }}
+                                                className="bg-yellow-100 cursor-pointer text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                                    {order.status}
+                                                </span>
+                                            )}
+                                            {order.status === 'completed' && (
+                                                <span
+                                                onClick={() => {
+                                                    setSelectedOrder(order);
+                                                    setIsDeleteModalOpen(true);
+                                                }}
+                                                className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                                    {order.status}
+                                                </span>
+                                            )}
+                                            {order.status === 'cancelled' && (
+                                                <span
+                                                onClick={() => {
+                                                    setSelectedOrder(order);
+                                                    setIsDeleteModalOpen(true);
+                                                }}
+                                                className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                                    {order.status}
+                                                </span>
+                                            )}
+                                        </td>
+
                                         <td className="py-2 px-4 border-b border-gray-200 text-right">
                                             <div className="text-right space-x-2">
                                                 <button
                                                     onClick={() => openEditModal(order)}
                                                     className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
                                                 >
-                                                    Edit
+                                                    View
                                                 </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setSelectedOrder(order);
-                                                        setIsDeleteModalOpen(true);
-                                                    }}
-                                                    className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600"
-                                                >
-                                                    Delete
-                                                </button>
+                                             
                                             </div>
                                         </td>
                                     </tr>
@@ -303,8 +330,8 @@ function Orders(props) {
                         maxWidth="sm"
                     >
                         <div className="bg-white p-4 rounded-lg">
-                            <h3 className="text-lg font-bold mb-4">Confirm Deletion</h3>
-                            <p>Are you sure you want to delete the order with ID {selectedOrder.id}?</p>
+                            <h3 className="text-lg font-bold mb-4">Change Status</h3>
+                            
                             <div className="flex justify-end mt-4 space-x-2">
                                 <button
                                     onClick={() => {
@@ -317,7 +344,7 @@ function Orders(props) {
                                     }}
                                     className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                 >
-                                    Delete
+                                    Save
                                 </button>
                                 <button
                                     onClick={() => setIsDeleteModalOpen(false)}

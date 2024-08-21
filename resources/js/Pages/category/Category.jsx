@@ -57,9 +57,9 @@ function Category(props) {
     </tr>
   </thead>
   <tbody>
-    {categorys.data.map((product) => (
+    {categorys.data.map((product,index) => (
       <tr key={product.id} className="hover:bg-gray-100">
-        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.id}</td>
+        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index+1}</td>
         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.name}</td>
         <td className="py-2 px-4 border-b border-gray-200 text-right">
           <div className="text-right space-x-2">

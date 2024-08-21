@@ -2,11 +2,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
 export default function AdminPanel(props) {
+    const {countuser,countpendingorder,countcompletedorder} = props;
+
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Admin Dashboard</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
         >
             <Head title="Admin Dashboard" />
 
@@ -18,17 +21,17 @@ export default function AdminPanel(props) {
                     <div className="py-4">
                         <div className="flex space-x-4">
                             {/* Cards */}
-                            <div className="w-1/3 bg-blue-500 text-white p-4 rounded-lg shadow">
+                            <div className="w-1/3 bg-white border border-gray-200  text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Customers</h3>
-                                <p className="mt-2 text-xl">120</p>
+                                <p className="mt-2 text-xl">{countuser}</p>
                             </div>
-                            <div className="w-1/3 bg-green-500 text-white p-4 rounded-lg shadow">
-                                <h3 className="text-lg font-bold">Active Customers</h3>
-                                <p className="mt-2 text-xl">85</p>
+                            <div className="w-1/3 bg-white border border-gray-200  text-black p-4 rounded-lg shadow border-[#fcb609]">
+                                <h3 className="text-lg font-bold">Pending Orders</h3>
+                                <p className="mt-2 text-xl">{countpendingorder}</p>
                             </div>
-                            <div className="w-1/3 bg-red-500 text-white p-4 rounded-lg shadow">
-                                <h3 className="text-lg font-bold">Pending Requests</h3>
-                                <p className="mt-2 text-xl">15</p>
+                            <div className="w-1/3 bg-white border border-gray-200  text-black p-4 rounded-lg shadow border-[#fcb609]">
+                                <h3 className="text-lg font-bold">Completed Orders</h3>
+                                <p className="mt-2 text-xl">{countcompletedorder}</p>
                             </div>
                         </div>
                     </div>

@@ -62,9 +62,9 @@ export default function Product(props) {
                                 </tr>
                             </thead>
                             <tbody className='text-center'>
-                                {products.data.map((product) => (
+                                {products.data.map((product,index) => (
                                     <tr key={product.id}>
-                                        <td className="py-2 px-4 border-b text-left">{product.id}</td>
+                                        <td className="py-2 px-4 border-b text-left">{index + 1}</td>
                                         <td className="py-2 px-4 border-b text-left">{product.name}</td>
                                         <td className="py-2 px-4 border-b text-left">{product.description}</td>
                                         <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>

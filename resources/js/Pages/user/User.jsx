@@ -85,9 +85,9 @@ function User(props) {
                 </tr>
               </thead>
               <tbody className='text-center'>
-  {users.data.map((user) => (
+  {users.data.map((user,index) => (
     <tr key={user.id}>
-      <td className="py-2 px-4 border-b text-left">{user.id}</td>
+      <td className="py-2 px-4 border-b text-left">{index+1}</td>
       <td className="py-2 px-4 border-b truncate text-left">{user.name}</td>
       <td className="py-2 px-4 border-b text-left">{user.email}</td>
       <td className="py-2 px-4 border-b text-left">

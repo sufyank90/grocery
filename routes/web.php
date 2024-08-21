@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\User;
+use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +24,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+
+    $countuser = User::count();
+    $countpendingorder = Order::where('status','pending')->count();
+    $countcompletedorder = Order::where('status','completed')->count();
+
+    return Inertia::render('Dashboard',compact(['countuser','countpendingorder','countcompletedorder']));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

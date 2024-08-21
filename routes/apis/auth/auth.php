@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-
+use Illuminate\Validation\Rule;
 Route::middleware(['guest'])->prefix('auth')->group(function () {
 
 
@@ -62,3 +62,66 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
     });
 
 });
+
+Route::middleware(['auth:sanctum'])->group(function () {
+   
+    Route::post('/changepassword', function(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'oldpassword' => ['required', 'string'],
+            'newpassword' => ['required', 'string', 'min:8'],
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        $user = $request->user();
+    
+        if (!Hash::check($request->oldpassword, $user->password)) {
+            return response()->json(['message' => 'Invalid current password'], 401); 
+        }
+    
+        $user->password = Hash::make($request->newpassword);
+        $user->save();
+    
+        return response()->json(['message' => 'Password changed successfully'], 200); 
+    });
+
+
+    Route::put('/profile', function(Request $request) {
+        $user = $request->user();
+    
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required', 
+                'string', 
+                'email', 
+                'max:255', 
+                Rule::unique('users')->ignore($user->id),
+            ],
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+    
+        // Delete the current tokens
+        $user->tokens()->delete();
+    
+        // Create a new token
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->plainTextToken;
+    
+        $message = "Profile updated successfully";
+        return response()->json(["message" => $message, "token" => $token, "data" => $user], 200);
+    });
+});
+
+
+
+
