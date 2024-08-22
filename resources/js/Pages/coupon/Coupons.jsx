@@ -63,36 +63,53 @@ function Coupons(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {coupons.data.map((product,index) => (
-                                    <tr key={product.id} className="hover:bg-gray-100">
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.code}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.type}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.value}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_type}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_limit}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.expiry_date}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-right">
-                                            <div className="text-right space-x-2">
-                                                <button
-                                                    onClick={() => openEditModal(product)}
-                                                    className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setSelectedProduct(product);
-                                                        setIsDeleteModalOpen(true);
-                                                    }}
-                                                    className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
+                                {coupons.data.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            className="py-2 px-4 border-b border-gray-200 text-center text-gray-700"
+                                            colSpan="8"
+                                        >
+                                            No coupons found
                                         </td>
                                     </tr>
-                                ))}
+                                ) : 
+                                (
+                                    <>
+                                        {coupons.data.map((product, index) => (
+                                            <tr key={product.id} className="hover:bg-gray-100">
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.code}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.type}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.value}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_type}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_limit}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.expiry_date}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-right">
+                                                    <div className="text-right space-x-2">
+                                                        <button
+                                                            onClick={() => openEditModal(product)}
+                                                            className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedProduct(product);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
+                                                            className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )
+                                }
+
+
                             </tbody>
                         </table>
 
@@ -145,114 +162,114 @@ function Coupons(props) {
                         }}
                     >
                         <Form className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto flex flex-col">
-    <h2 className="text-xl font-bold mb-4 text-center">Create Coupon</h2>
+                            <h2 className="text-xl font-bold mb-4 text-center">Create Coupon</h2>
 
-    <div className="relative z-0 w-full mb-5">
-        <Field
-            name="code"
-            type="text"
-            placeholder=" "
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        />
-        <label
-            htmlFor="code"
-            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-        >
-            Code
-        </label>
-        <ErrorMessage name="code" component="div" className="text-red-600 text-sm mt-1" />
-    </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    name="code"
+                                    type="text"
+                                    placeholder=" "
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                />
+                                <label
+                                    htmlFor="code"
+                                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                                >
+                                    Code
+                                </label>
+                                <ErrorMessage name="code" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-    <div className="relative z-0 w-full mb-5">
-        <Field
-            as="select"
-            name="type"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        >
-            <option value="">Select Type</option>
-            <option value="fixed">Fixed</option>
-            <option value="percentage">Percentage</option>
-        </Field>
-        <ErrorMessage name="type" component="div" className="text-red-600 text-sm mt-1" />
-    </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    as="select"
+                                    name="type"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                >
+                                    <option value="">Select Type</option>
+                                    <option value="fixed">Fixed</option>
+                                    <option value="percentage">Percentage</option>
+                                </Field>
+                                <ErrorMessage name="type" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-    <div className="relative z-0 w-full mb-5">
-        <Field
-            name="value"
-            type="number"
-            placeholder=" "
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        />
-        <label
-            htmlFor="value"
-            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-        >
-            Value
-        </label>
-        <ErrorMessage name="value" component="div" className="text-red-600 text-sm mt-1" />
-    </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    name="value"
+                                    type="number"
+                                    placeholder=" "
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                />
+                                <label
+                                    htmlFor="value"
+                                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                                >
+                                    Value
+                                </label>
+                                <ErrorMessage name="value" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-    <div className="relative z-0 w-full mb-5">
-        <Field
-            as="select"
-            name="usage_type"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        >
-            <option value="">Select Usage Type</option>
-            <option value="single">Single Use</option>
-            <option value="multiple">Multiple Use</option>
-        </Field>
-        <ErrorMessage name="usage_type" component="div" className="text-red-600 text-sm mt-1" />
-    </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    as="select"
+                                    name="usage_type"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                >
+                                    <option value="">Select Usage Type</option>
+                                    <option value="single">Single Use</option>
+                                    <option value="multiple">Multiple Use</option>
+                                </Field>
+                                <ErrorMessage name="usage_type" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-    <div className="relative z-0 w-full mb-5">
-        <Field
-            name="usage_limit"
-            type="number"
-            placeholder=" "
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        />
-        <label
-            htmlFor="usage_limit"
-            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-        >
-            Usage Limit
-        </label>
-        <ErrorMessage name="usage_limit" component="div" className="text-red-600 text-sm mt-1" />
-    </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    name="usage_limit"
+                                    type="number"
+                                    placeholder=" "
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                />
+                                <label
+                                    htmlFor="usage_limit"
+                                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                                >
+                                    Usage Limit
+                                </label>
+                                <ErrorMessage name="usage_limit" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-    <div className="relative z-0 w-full mb-5">
-        <Field
-            name="expiry_date"
-            type="date"
-            placeholder=" "
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        />
-        <label
-            htmlFor="expiry_date"
-            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-        >
-            Expiry Date
-        </label>
-        <ErrorMessage name="expiry_date" component="div" className="text-red-600 text-sm mt-1" />
-    </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    name="expiry_date"
+                                    type="date"
+                                    placeholder=" "
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                />
+                                <label
+                                    htmlFor="expiry_date"
+                                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                                >
+                                    Expiry Date
+                                </label>
+                                <ErrorMessage name="expiry_date" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
-    <div className="flex justify-end space-x-2 mt-6">
-        <button
-            type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5"
-        >
-            Submit
-        </button>
-        <button
-            type="button"
-            onClick={() => setIsModalOpen(false)}
-            className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-        >
-            Close
-        </button>
-    </div>
-</Form>
+                            <div className="flex justify-end space-x-2 mt-6">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5"
+                                >
+                                    Submit
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </Form>
 
                     </Formik>
                 </Modal>

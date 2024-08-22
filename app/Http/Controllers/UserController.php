@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash; // Add this line
 class UserController extends Controller
 {
     public function index(){
-        $users = User::orderBy('id','desc')->paginate(5);
+        $users = User::orderBy('id','desc')->paginate(10);
         
         return Inertia::render('user/User', compact('users'));
     }

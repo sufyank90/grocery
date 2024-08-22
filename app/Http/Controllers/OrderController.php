@@ -20,7 +20,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::orderBy('id', 'desc')->paginate(5);
+        $orders = Order::orderBy('id', 'desc')->paginate(10);
 
         return Inertia::render('order/Order', compact('orders'));
     }

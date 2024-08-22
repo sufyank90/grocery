@@ -33,12 +33,15 @@ export default function Product(props) {
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Products</h3>
                             <div className="flex space-x-2">
-                                <button
+                                {/* <button
                                     onClick={() => setIsModalOpen(true)}
                                     className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
                                     Create
-                                </button>
+                                </button> */}
+                                <Link href={route('product.create')} className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">
+                                    Create
+                                </Link>
                                 <input
                                     type="text"
                                     placeholder="Search..."
@@ -62,6 +65,14 @@ export default function Product(props) {
                                 </tr>
                             </thead>
                             <tbody className='text-center'>
+                                {products.data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="6" className="py-2 px-4 border-b text-center">
+                                            No products found
+                                        </td>
+                                    </tr>
+                                ): (
+                                <>
                                 {products.data.map((product,index) => (
                                     <tr key={product.id}>
                                         <td className="py-2 px-4 border-b text-left">{index + 1}</td>
@@ -90,12 +101,16 @@ export default function Product(props) {
                                         </td>
                                     </tr>
                                 ))}
+                                </>
+                            )
+                             }
+                                
                             </tbody>
                         </table>
 
 
                         {/* Pagination */}
-                        <div className="flex justify-end mt-4 space-x-1">
+                        <div className="flex justify-end mt-4 space-x-1 mb-8">
                             {products.links.map((link, index) => (
                                 <Link
                                     key={index}

@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index()
     {
     
-        $products = Product::orderBy('id','desc')->paginate(5);
+        $products = Product::orderBy('id','desc')->with('media')->paginate(10);
         $categories = Category::all();
         return Inertia::render('product/Product', compact('products','categories'));
     }
@@ -32,7 +32,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all(); // Category data ko fetch karein, agar zarurat ho.
+        return Inertia::render('product/Create', [
+        'categories' => $categories,
+    ]);
     }
 
     /**
@@ -45,6 +48,9 @@ class ProductController extends Controller
     { 
         $product = Product::create($request->only(['name', 'description', 'price', 'status']));
         $product->categories()->attach($request->categories);
+        if($request->file){
+            $product->addMedia($request->file)->toMediaCollection();
+        }
         session()->flash('success', 'Product created successfully.');
     }
 

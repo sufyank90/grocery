@@ -36,6 +36,7 @@ function Orders(props) {
                                     onClick={() => setIsModalOpen(true)}
                                     className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
+
                                     Create
                                 </button> */}
                                 <Link href={route('order.create')} className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">
@@ -66,7 +67,14 @@ function Orders(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.data.map((order, index) => (
+                                {orders.data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="8" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
+                                            No orders found
+                                        </td>
+                                    </tr>
+                                ):(<>
+                                 {orders.data.map((order, index) => (
                                     <tr key={order.id} className="hover:bg-gray-100">
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
@@ -121,6 +129,9 @@ function Orders(props) {
                                         </td>
                                     </tr>
                                 ))}
+                                
+                                </>)}
+                               
                             </tbody>
                         </table>
 
