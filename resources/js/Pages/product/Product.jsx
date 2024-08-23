@@ -90,12 +90,12 @@ export default function Product(props) {
                                             </td>
                                         <td className="py-2 px-4 border-b text-left">
                                             <div className="flex justify-center space-x-2">
-                                                <button
-                                                    onClick={() => openEditModal(product)}
+                                                <Link
+                                                    href={route('product.edit', product.id)}
                                                     className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
                                                 >
                                                     Edit
-                                                </button>
+                                                </Link>
                                                 <button
                                                     onClick={() => {
                                                         setSelectedProduct(product);

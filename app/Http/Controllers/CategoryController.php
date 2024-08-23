@@ -82,26 +82,38 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateCategoryRequest $request, Category $category)
-{
-    $rules = [
-        'name' => 'required|string|max:255',
-    ];
-
-
-    // Validate the request
-    $validator = Validator::make($request->all(), $rules);
-
-    // Check if validation fails
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+    {
+    
     }
 
-    // Update the Category
-    $category->update($request->only(['name']));
 
-    // Redirect back with a success message
-    return redirect()->back()->with('success', 'Category updated successfully.');
-}
+
+    public function updatewithfile(Request $request, Category $category)
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Update the Category
+        $category->update($request->only(['name']));
+
+        if ($request->hasFile('file')) {
+            $category->clearMediaCollection();
+            $category->addMedia($request->file('file'))->toMediaCollection();
+        }
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Category updated successfully.');
+    }
+
 
 
     /**
