@@ -102,7 +102,7 @@ const Create = (props) => {
                                 payable: finalPrice,
                                 items: selectedItem,
                                 coupon: couponCode,
-                                user_id: props.auth.user.id,
+                                user_id:values.user_id,
                             }, {
                                 onSuccess: () => {
                                     resetForm();
@@ -123,7 +123,10 @@ const Create = (props) => {
                                             as="select"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             name="email"
-                                            onChange={(e) => { handleEmailChange(e, setFieldValue); setFieldValue('email', e.target.value); }}
+                                            onChange={(e) => { handleEmailChange(e, setFieldValue); setFieldValue('email', e.target.value); 
+                                                const id = users.find(user => user.email === e.target.value).id;
+                                                setFieldValue('user_id', id);
+                                             }}
                                         >
                                             <option value="">Select Email</option>
                                             {users.map((user) => (

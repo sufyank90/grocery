@@ -12,7 +12,7 @@ Route::middleware('auth:sanctum')->prefix('category')->group(function () {
 
 
     Route::get('',function(Request $request){
-        $data = Category::orderBy('id','desc')->get();
+        $data = Category::orderBy('id','desc')->with('media')->get();
         return response()->json(["data"=>$data,"message"=>"success"], 200);
 
     });

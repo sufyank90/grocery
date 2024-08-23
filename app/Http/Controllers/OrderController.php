@@ -44,6 +44,18 @@ class OrderController extends Controller
         ]);
     }
 
+    // order.status
+    public function status(Request $request,$id)
+    {
+        $order = Order::find($id);
+        $order->status = $request->status;
+        if($request->status == 'cancelled'){
+            $order->reason = $request->reason;
+        }
+        $order->save();
+        return back();
+    }
+
     /**
      * Store a newly created resource in storage.
      *

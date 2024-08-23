@@ -341,19 +341,60 @@ function Orders(props) {
                         maxWidth="sm"
                     >
                         <div className="bg-white p-4 rounded-lg">
-                            <h3 className="text-lg font-bold mb-4">Change Status</h3>
-                            
-                            <div className="flex justify-end mt-4 space-x-2">
-                                <button
-                                    onClick={() => {
-                                        router.delete(route('order.destroy', selectedOrder.id), {
-                                            onSuccess: () => {
-                                                setIsDeleteModalOpen(false);
-                                                setSelectedOrder(null);
-                                            },
-                                        });
-                                    }}
-                                    className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            <h3 className="text-lg font-bold mb-4">Change Status </h3>
+
+                                <Formik
+                                        enableReinitialize
+                                        initialValues={{ status: selectedOrder.status || '', reason: selectedOrder.reason || '' }}
+                                        validationSchema={Yup.object({ status: Yup.string().required('Required'),
+                                            
+                                            reason:Yup.string().when("status", {
+                                            is: 'cancelled',
+                                            then: schema => schema.required(),
+                                            otherwise: schema => schema.optional(),
+                                          })
+                                        
+                                        })}
+                                        onSubmit={(values) => {
+                                            // Handle form submission
+
+
+                                            router.put(route('order.status', selectedOrder.id),values, {
+                                                onSuccess: () => {
+                                                    setIsDeleteModalOpen(false);
+                                                    setSelectedOrder(null);
+                                                },
+                                            });
+                                        }}
+                                    >
+                                        {({ values }) => (
+                                            <Form>
+                                                <div>
+                                                <label>
+                                                    <Field type="radio" name="status" value="pending" />
+                                                   &nbsp;  Pending  &nbsp;
+                                                </label>
+                                                <label>
+                                                    <Field type="radio" name="status" value="completed" />
+                                                    &nbsp; Completed  &nbsp;
+                                                </label>
+                                                <label>
+                                                    <Field type="radio" name="status" value="cancelled" />
+                                                    &nbsp; Cancelled  &nbsp;
+                                                </label>
+                                                </div>
+                                                <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
+                                                {values.status === 'cancelled' && (
+                                                    <div className='mt-4'>
+                                                    <Field placeholder="Reason" className="w-full p-2 border border-gray-300 rounded" name="reason" />
+                                                    <ErrorMessage name="reason" component="div" className="text-red-600 text-sm mt-1" />
+                                                </div>
+                                                
+                                                )}
+
+<div className="flex justify-end mt-4 space-x-2">
+                                <button type='submit'
+                                    className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                 >
                                     Save
                                 </button>
@@ -364,6 +405,11 @@ function Orders(props) {
                                     Cancel
                                 </button>
                             </div>
+                                                
+                                            </Form>
+                                        )}
+                                    </Formik>
+                           
                         </div>
                     </Modal>
                 )}
