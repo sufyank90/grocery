@@ -118,12 +118,18 @@ function Orders(props) {
 
                                         <td className="py-2 px-4 border-b border-gray-200 text-right">
                                             <div className="text-right space-x-2">
-                                                <button
+                                                {/* <button
                                                     onClick={() => openEditModal(order)}
                                                     className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
                                                 >
                                                     View
-                                                </button>
+                                                </button> */}
+                                                <Link
+                                                    href={route('order.show', order.id)}
+                                                    className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
+                                                >
+                                                    View
+                                                </Link>
                                              
                                             </div>
                                         </td>
