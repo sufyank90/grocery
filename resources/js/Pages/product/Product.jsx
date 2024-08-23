@@ -33,12 +33,15 @@ export default function Product(props) {
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Products</h3>
                             <div className="flex space-x-2">
-                                <button
+                                {/* <button
                                     onClick={() => setIsModalOpen(true)}
                                     className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
                                     Create
-                                </button>
+                                </button> */}
+                                <Link href={route('product.create')} className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">
+                                    Create
+                                </Link>
                                 <input
                                     type="text"
                                     placeholder="Search..."
@@ -58,10 +61,19 @@ export default function Product(props) {
                                     <th className="py-2 px-4 border-b text-left">Description</th>
                                     <th className="py-2 px-4 border-b text-left">Price</th>
                                     <th className="py-2 px-4 border-b text-left">Status</th>
+                                    <th className="py-2 px-4 border-b text-left">Image</th>
                                     <th className="py-2 px-4 border-b text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className='text-center'>
+                                {products.data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="6" className="py-2 px-4 border-b text-center">
+                                            No products found
+                                        </td>
+                                    </tr>
+                                ): (
+                                <>
                                 {products.data.map((product,index) => (
                                     <tr key={product.id}>
                                         <td className="py-2 px-4 border-b text-left">{index + 1}</td>
@@ -69,6 +81,13 @@ export default function Product(props) {
                                         <td className="py-2 px-4 border-b text-left">{product.description}</td>
                                         <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
                                         <td className="py-2 px-4 border-b text-left">{product.status}</td>
+                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                {product.media && product.media.length > 0 && product.media[0].original_url ? (
+                                                    <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />
+                                                ) : (
+                                                    <p>No image</p>
+                                                )}
+                                            </td>
                                         <td className="py-2 px-4 border-b text-left">
                                             <div className="flex justify-center space-x-2">
                                                 <button
@@ -90,12 +109,16 @@ export default function Product(props) {
                                         </td>
                                     </tr>
                                 ))}
+                                </>
+                            )
+                             }
+                                
                             </tbody>
                         </table>
 
 
                         {/* Pagination */}
-                        <div className="flex justify-end mt-4 space-x-1">
+                        <div className="flex justify-end mt-4 space-x-1 mb-8">
                             {products.links.map((link, index) => (
                                 <Link
                                     key={index}
@@ -121,6 +144,7 @@ export default function Product(props) {
                             price: '',
                             status: 'instock',
                             categories: [],
+                            file: null,
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -128,9 +152,20 @@ export default function Product(props) {
                             price: Yup.number().required('Required').positive(),
                             status: Yup.string().required('Required'),
                             categories: Yup.array().min(1, 'At least one category is required').required('Required'),
+                            file: Yup.mixed()
+                                .required('File is required')
+                                .test(
+                                    'fileFormat',
+                                    'Unsupported file format',
+                                    (value) => {
+                                        console.log(value)
+                                        if (!value) return true; // If no file uploaded, skip validation
+                                        return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
+                                    }
+                                )
                         })}
                         onSubmit={(values, { resetForm }) => {
-                            console.log(values);
+                            
                             router.post(route('product.store'), values, {
                                 onSuccess: () => {
                                     resetForm();

@@ -11,9 +11,9 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
     Route::get('', function (Request $request) {
         // Get the currently authenticated user
         $user = $request->user();
-        // return response()->json(["message" => $user, "success"], 200);
-        // Fetch orders for the authenticated user
-        $orders = Order::where('user_id', $user->id)
+    
+ 
+        $orders = Order::where('user_id', $user->id)->with('items')
             ->orderBy('id', 'desc')
             ->get();
         

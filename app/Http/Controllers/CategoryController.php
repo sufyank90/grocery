@@ -18,7 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categorys = Category::orderBy('id','desc')->paginate(5);
+        $categorys = Category::orderBy('id','desc')->with('media')->paginate(10);
         
         return Inertia::render('category/Category', compact('categorys'));
     }
@@ -41,7 +41,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        Category::create($request->all());
+        $data = $request->except(['file']);
+        $category = Category::create($data);
+        if($request->file){
+            $category->addMedia($request->file)->toMediaCollection();
+        }
         return back();
     }
     

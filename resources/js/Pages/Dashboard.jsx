@@ -21,15 +21,15 @@ export default function AdminPanel(props) {
                     <div className="py-4">
                         <div className="flex space-x-4">
                             {/* Cards */}
-                            <div className="w-1/3 bg-white border border-gray-200  text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="w-1/3 bg-white border   text-black p-4 rounded-lg shadow  border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Customers</h3>
                                 <p className="mt-2 text-xl">{countuser}</p>
                             </div>
-                            <div className="w-1/3 bg-white border border-gray-200  text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="w-1/3 bg-white border   text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Pending Orders</h3>
                                 <p className="mt-2 text-xl">{countpendingorder}</p>
                             </div>
-                            <div className="w-1/3 bg-white border border-gray-200  text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="w-1/3 bg-white border  text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Completed Orders</h3>
                                 <p className="mt-2 text-xl">{countcompletedorder}</p>
                             </div>
