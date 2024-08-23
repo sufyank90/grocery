@@ -73,7 +73,15 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+    
+        $categories = Category::all();
+
+        $product->load(['categories', 'media']);
+
+        return Inertia::render('product/Edit', [
+        'categories' => $categories,
+        'product' => $product,
+    ]);
     }
 
     /**
@@ -85,27 +93,36 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // Define validation rules
+      
+    }
+
+
+    public function updatewithfile(Request $request, Product $product)
+    {
+     
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:instock,outofstock,active',
+       
         ];
-
-        // Validate the request
+       
         $validator = Validator::make($request->all(), $rules);
-
-        // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
-        // Update the product
         $product->update($request->only(['name', 'description', 'price', 'status']));
 
-        // Redirect back with a success message
-        return redirect()->back()->with('success', 'Product updated successfully.');
+        $categories = explode(',', $request->categories);
+        $categories = array_map('intval', $categories);
+        $product->categories()->sync($categories);
+
+        if ($request->hasFile('file')) {
+            $product->clearMediaCollection();
+            $product->addMedia($request->file('file'))->toMediaCollection();
+        }     
+        return redirect(route('product.index'))->with('success', 'Category updated successfully.');
     }
 
     /**

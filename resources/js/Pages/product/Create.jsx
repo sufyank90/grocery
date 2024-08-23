@@ -12,6 +12,7 @@ import { IoIosAddCircleOutline } from 'react-icons/io';
 
 function Create(props) {
     const { products, categories } = props;
+    
     return (
         <>
         <AuthenticatedLayout
