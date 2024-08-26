@@ -5,6 +5,8 @@ import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 function Category(props) {
     const { categorys } = props;
@@ -34,7 +36,8 @@ function Category(props) {
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
                                     Create
                                 </button>
@@ -43,7 +46,9 @@ function Category(props) {
                                     placeholder="Search..."
                                     className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                <button 
+                                style={{ background: '#fcb609' }}
+                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                                     Search
                                 </button>
                             </div>
@@ -81,18 +86,23 @@ function Category(props) {
                                                 <div className="text-right space-x-2">
                                                     <button
                                                         onClick={() => openEditModal(product)}
-                                                        className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
+                                                        
                                                     >
-                                                        Edit
+                                                        <FaEdit 
+                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+
+
                                                     </button>
                                                     <button
                                                         onClick={() => {
                                                             setSelectedProduct(product);
                                                             setIsDeleteModalOpen(true);
                                                         }}
-                                                        className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600"
+                                                        
                                                     >
-                                                        Delete
+                                                        <MdDelete
+
+className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                                                     </button>
                                                 </div>
                                             </td>

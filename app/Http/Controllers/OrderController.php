@@ -93,9 +93,16 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit(Order $order)
+    public function edit(Product $product)
     {
-        //
+        $products = Category::all();
+
+        $product->load(['categories', 'media']);
+
+        return Inertia::render('product/Edit', [
+        'categories' => $categories,
+        'product' => $product,
+    ]);
     }
 
     /**

@@ -4,6 +4,9 @@ import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { FaUserPlus } from "react-icons/fa";
 
 function User(props) {
 
@@ -59,16 +62,22 @@ function User(props) {
               <div className="flex space-x-2">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                  style={{ background: '#fcb609' }}
+                  className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
                 >
                   Create
                 </button>
+                {/* <FaUserPlus onClick={() => setIsModalOpen(true)}
+                className="w-9 h-9 cursor-pointer"
+                style={{ color: '#fcb609' }}
+                /> */}
+
                 <input
                   type="text"
                   placeholder="Search..."
                   className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
-                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                <button style={{ background: '#fcb609' }} className=" text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                   Search
                 </button>
               </div>
@@ -92,16 +101,22 @@ function User(props) {
       <td className="py-2 px-4 border-b text-left">{user.email}</td>
       <td className="py-2 px-4 border-b text-left">
         <div className="flex items-center">
-          <button
-            onClick={() => openEditModal(user)}
-            className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
+          {/* <button
+            
           >
             Edit
-          </button>
-          <span className="mx-1"> </span>
-          <button onClick={() => openDeleteModal(user.id)} className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600">
+          </button> */}
+          <FaEdit onClick={() => openEditModal(user)}
+            className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+            <span className="mx-1"> </span>
+          <MdDelete 
+          onClick={() => openDeleteModal(user.id)}
+            className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+
+          
+          {/* <button  className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600">
             Delete
-          </button>
+          </button> */}
         </div>
       </td>
     </tr>
