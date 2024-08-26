@@ -81,10 +81,14 @@ export default function Posters(props) {
                                             <div class="flex items-center justify-between mb-2">
                                                 <h5 class="text-xl font-bold leading-none text-gray-500  ">Upload</h5>
                                                 {values.file && (
+                                                    
                                                     <button type="submit" className='bg-[#f3d08140] text-[#D2A43C] px-4 py-2 rounded-lg text-bold disabled:opacity-50'>
                                                         {isSubmitting ? 'Uploading...' : 'Upload'}
-                                                    </button>
-                                                )}
+                                                    </button> 
+                                                    
+                                                )
+                                                
+                                                }
                                             </div>
                                             <div class="flex items-center justify-center w-full">
                                                 <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50     hover:bg-gray-100      ">

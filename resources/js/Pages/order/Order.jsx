@@ -38,14 +38,20 @@ function Orders(props) {
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Orders</h3>
                             <div className="flex space-x-2">
-                                <button
-                                    onClick={() => setIsModalOpen(true)}
+                                {/* <button
+                                    // onClick={() => setIsModalOpen(true)}
+                                    href={route('order.create')}
                                     style={{ background: '#fcb609' }}
                                     className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
 
                                     Create
-                                </button>
+                                </button> */}
+                                <Link href={route('order.create')}
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600">
+                                    Create
+                                </Link>
 
                                 {/* <Link 
                                 
