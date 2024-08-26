@@ -5,6 +5,10 @@ import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import InputLabel from '@/Components/InputLabel';
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+
+
 
 export default function Product(props) {
     const { products, categories } = props;
@@ -39,7 +43,9 @@ export default function Product(props) {
                                 >
                                     Create
                                 </button> */}
-                                <Link href={route('product.create')} className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">
+                                <Link href={route('product.create')}
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600">
                                     Create
                                 </Link>
                                 <input
@@ -47,7 +53,9 @@ export default function Product(props) {
                                     placeholder="Search..."
                                     className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                <button
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                                     Search
                                 </button>
                             </div>
@@ -72,48 +80,53 @@ export default function Product(props) {
                                             No products found
                                         </td>
                                     </tr>
-                                ): (
-                                <>
-                                {products.data.map((product,index) => (
-                                    <tr key={product.id}>
-                                        <td className="py-2 px-4 border-b text-left">{index + 1}</td>
-                                        <td className="py-2 px-4 border-b text-left">{product.name}</td>
-                                        <td className="py-2 px-4 border-b text-left">{product.description}</td>
-                                        <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
-                                        <td className="py-2 px-4 border-b text-left">{product.status}</td>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                {product.media && product.media.length > 0 && product.media[0].original_url ? (
-                                                    <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />
-                                                ) : (
-                                                    <p>No image</p>
-                                                )}
-                                            </td>
-                                        <td className="py-2 px-4 border-b text-left">
-                                            <div className="flex justify-center space-x-2">
-                                                <Link
-                                                    href={route('product.edit', product.id)}
-                                                    className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                
-                                                <button
-                                                    onClick={() => {
-                                                        setSelectedProduct(product);
-                                                        setIsDeleteModalOpen(true);
-                                                    }}
-                                                    className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                                </>
-                            )
-                             }
-                                
+                                ) : (
+                                    <>
+                                        {products.data.map((product, index) => (
+                                            <tr key={product.id}>
+                                                <td className="py-2 px-4 border-b text-left">{index + 1}</td>
+                                                <td className="py-2 px-4 border-b text-left">{product.name}</td>
+                                                <td className="py-2 px-4 border-b text-left">{product.description}</td>
+                                                <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
+                                                <td className="py-2 px-4 border-b text-left">{product.status}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                    {product.media && product.media.length > 0 && product.media[0].original_url ? (
+                                                        <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />
+                                                    ) : (
+                                                        <p>No image</p>
+                                                    )}
+                                                </td>
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    <div className="flex justify-center space-x-2">
+
+                                                        <Link
+                                                            href={route('product.edit', product.id)}
+
+                                                        >
+                                                            <FaEdit 
+                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        </Link>
+
+                                                       
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedProduct(product);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
+
+                                                        >
+                                                            <MdDelete
+
+                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )
+                                }
+
                             </tbody>
                         </table>
 
@@ -166,7 +179,7 @@ export default function Product(props) {
                                 )
                         })}
                         onSubmit={(values, { resetForm }) => {
-                            
+
                             router.post(route('product.store'), values, {
                                 onSuccess: () => {
                                     resetForm();
@@ -175,129 +188,129 @@ export default function Product(props) {
                             });
                         }}
                     >
-                         {({ values, setFieldValue }) => (
-                        <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                            <h2 className="text-lg font-bold mb-4">Create Product</h2>
-                            <div className="relative z-0 w-full mb-5 group">
-                                <Field
-                                    name="name"
-                                    type="text"
-                                    id="name"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                />
-                                <label
-                                    htmlFor="name"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Name
-                                </label>
-                                <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
+                        {({ values, setFieldValue }) => (
+                            <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
+                                <h2 className="text-lg font-bold mb-4">Create Product</h2>
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        name="name"
+                                        type="text"
+                                        id="name"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="name"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Name
+                                    </label>
+                                    <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
-                            <div className="relative z-0 w-full mb-5 group">
-                                <Field
-                                    name="description"
-                                    as="textarea"
-                                    id="description"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                />
-                                <label
-                                    htmlFor="description"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Description
-                                </label>
-                                <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        name="description"
+                                        as="textarea"
+                                        id="description"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="description"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Description
+                                    </label>
+                                    <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
-                            <div className="relative z-0 w-full mb-5 group">
-                                <Field
-                                    name="price"
-                                    type="number"
-                                    id="price"
-                                    step="0.01"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                />
-                                <label
-                                    htmlFor="price"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Price
-                                </label>
-                                <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        name="price"
+                                        type="number"
+                                        id="price"
+                                        step="0.01"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="price"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Price
+                                    </label>
+                                    <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
-                            <div className="relative z-0 w-full mb-5 group">
-                                <Field
-                                    as="select"
-                                    name="status"
-                                    id="status"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                >
-                                    <option value="instock">In Stock</option>
-                                    <option value="outofstock">Out of Stock</option>
-                                    <option value="active">Active</option>
-                                </Field>
-                                <label
-                                    htmlFor="status"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Status
-                                </label>
-                                <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        as="select"
+                                        name="status"
+                                        id="status"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    >
+                                        <option value="instock">In Stock</option>
+                                        <option value="outofstock">Out of Stock</option>
+                                        <option value="active">Active</option>
+                                    </Field>
+                                    <label
+                                        htmlFor="status"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Status
+                                    </label>
+                                    <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
-                            <div className="relative z-0 w-full mb-5 group">
-                               <InputLabel className="" value={"Select Category"}/>
-                                {categories.map((category) => (
-                                   <div key={category.id} className="flex items-center">
-                                   <label className="flex items-center">
-                                     <Field
-                                       type="checkbox"
-                                       name="categories"
-                                       value={category.id}
-                                       checked={values.categories.includes(category.id)}
-                                       onChange={(e) => {
-                                         const { checked } = e.target;
-                                         if (checked) {
-                                           setFieldValue("categories", [...values.categories, category.id]);
-                                         } else {
-                                           setFieldValue("categories", values.categories.filter((id) => id !== category.id));
-                                         }
-                                       }}
-                                       className="mr-2"
-                                     />
-                                     {category.name}
-                                   </label>
-                                
-                                 </div>
-                                ))}
-                                   <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <InputLabel className="" value={"Select Category"} />
+                                    {categories.map((category) => (
+                                        <div key={category.id} className="flex items-center">
+                                            <label className="flex items-center">
+                                                <Field
+                                                    type="checkbox"
+                                                    name="categories"
+                                                    value={category.id}
+                                                    checked={values.categories.includes(category.id)}
+                                                    onChange={(e) => {
+                                                        const { checked } = e.target;
+                                                        if (checked) {
+                                                            setFieldValue("categories", [...values.categories, category.id]);
+                                                        } else {
+                                                            setFieldValue("categories", values.categories.filter((id) => id !== category.id));
+                                                        }
+                                                    }}
+                                                    className="mr-2"
+                                                />
+                                                {category.name}
+                                            </label>
 
-                            <div className="flex justify-end space-x-2 mt-4">
-                                <button
-                                    type="submit"
-                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                >
-                                    Submit
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                                >
-                                    Close
-                                </button>
-                            </div>
+                                        </div>
+                                    ))}
+                                    <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
-                          
+                                <div className="flex justify-end space-x-2 mt-4">
+                                    <button
+                                        type="submit"
+                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                    >
+                                        Submit
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
 
-                        </Form>
-                         )}
+
+
+                            </Form>
+                        )}
                     </Formik>
                 </Modal>
 

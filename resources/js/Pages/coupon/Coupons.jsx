@@ -4,6 +4,8 @@ import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 
 function Coupons(props) {
@@ -34,7 +36,8 @@ function Coupons(props) {
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
                                     Create
                                 </button>
@@ -43,7 +46,9 @@ function Coupons(props) {
                                     placeholder="Search..."
                                     className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                <button
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                                     Search
                                 </button>
                             </div>
@@ -72,41 +77,44 @@ function Coupons(props) {
                                             No coupons found
                                         </td>
                                     </tr>
-                                ) : 
-                                (
-                                    <>
-                                        {coupons.data.map((product, index) => (
-                                            <tr key={product.id} className="hover:bg-gray-100">
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.code}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.type}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.value}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_type}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_limit}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.expiry_date}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-right">
-                                                    <div className="text-right space-x-2">
-                                                        <button
-                                                            onClick={() => openEditModal(product)}
-                                                            className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                setSelectedProduct(product);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-                                                            className="text-white py-2 px-4 rounded-lg bg-red-500 hover:bg-red-600"
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </>
-                                )
+                                ) :
+                                    (
+                                        <>
+                                            {coupons.data.map((product, index) => (
+                                                <tr key={product.id} className="hover:bg-gray-100">
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.code}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.type}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.value}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_type}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.usage_limit}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.expiry_date}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-right">
+                                                        <div className="text-right space-x-2">
+                                                            <button
+                                                                onClick={() => openEditModal(product)}
+
+                                                            >
+                                                                <FaEdit
+                                                                    className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSelectedProduct(product);
+                                                                    setIsDeleteModalOpen(true);
+                                                                }}
+                                                               
+                                                            >
+                                                                <MdDelete
+
+                                                                    className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </>
+                                    )
                                 }
 
 

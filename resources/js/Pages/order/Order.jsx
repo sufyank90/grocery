@@ -4,6 +4,12 @@ import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { GrView } from "react-icons/gr";
+import { MdDelete } from "react-icons/md";
+import { IoCreate } from "react-icons/io5";
+
+
+
 
 function Orders(props) {
     const { orders } = props; // Update this to use orders instead of categorys
@@ -32,24 +38,34 @@ function Orders(props) {
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Orders</h3>
                             <div className="flex space-x-2">
-                                {/* <button
+                                <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
                                 >
 
                                     Create
-                                </button> */}
-                                <Link href={route('order.create')} className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">
-                                    Create
-                                </Link>
+                                </button>
+
+                                {/* <Link 
+                                
+                                href={route('order.create')}>
+                                    <IoCreate style={{ color: '#fcb609' }} className='w-8 h-8 cursor-pointer' />
+                                </Link> */}
+                                
+                                
+
                                 <input
                                     type="text"
                                     placeholder="Search..."
                                     className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                <button style={{ background: '#fcb609' }} className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                                     Search
                                 </button>
+                                
+
+
                             </div>
                         </div>
 
@@ -124,13 +140,19 @@ function Orders(props) {
                                                 >
                                                     View
                                                 </button> */}
-                                                <Link
-                                                    href={route('order.show', order.id)}
+                                                {/* <Link
+                                                   
                                                     className="text-white py-2 px-4 rounded-lg bg-blue-500 hover:bg-blue-600"
                                                 >
                                                     View
+                                                </Link> */}
+                                                <Link  href={route('order.show', order.id)}>
+                                                <GrView className="w-7 h-7" style={{ color: '#fcb609' }} />
+
+
                                                 </Link>
-                                             
+                                                
+
                                             </div>
                                         </td>
                                     </tr>
