@@ -43,6 +43,7 @@ export default function Product(props) {
                                 >
                                     Create
                                 </button> */}
+                                
                                 <Link href={route('product.create')}
                                     style={{ background: '#fcb609' }}
                                     className="text-black py-2 px-4 rounded-lg hover:bg-green-600">
