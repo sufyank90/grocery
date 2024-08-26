@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Home(props) {
 
@@ -13,15 +13,19 @@ export default function Home(props) {
         >
             <Head title="Setting" />
 
-            <div className="flex">
+            <div className="">
                
 
                 {/* Main Content */}
                 <div className="w-full pl-32 pr-32 mt-10">
                     <div className="py-4">
-                        <div className="flex space-x-4">
+                        <div className="">
                           
-                       
+                          <Link href={route('banner.index')} >
+                        <div class="p-5 mt-10 overflow-x-auto    shadow-md rounded-lg bg-white border border-gray-200 rounded-lg shadow     ">
+                            <h1 >Banner</h1>
+                        </div>
+                        </Link>
                         </div>
                     </div>
                     
