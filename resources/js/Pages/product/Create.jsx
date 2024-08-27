@@ -6,12 +6,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import { IoIosAddCircleOutline } from 'react-icons/io';
-
+import Select from 'react-select';
 
 
 
 function Create(props) {
-    const { products, categories } = props;
+    const { products, categories , shippingRates } = props;
+
+
     
     return (
         <>
@@ -34,6 +36,7 @@ function Create(props) {
                             price: '',
                             status: 'instock',
                             categories: [],
+                            shipping_rates: [],
                             file: null,
                         }}
                         validationSchema={Yup.object({
@@ -55,6 +58,7 @@ function Create(props) {
                                 ),
                         })}
                         onSubmit={(values, { resetForm }) => {
+                            
                             console.log(values);
                             router.post(route('product.store'), values, {
                                 onSuccess: () => {
@@ -166,6 +170,26 @@ function Create(props) {
                                 ))}
                                    <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
+
+
+                            <div className="relative z-0 w-full mb-5 group">
+                               <InputLabel className="" value={"Select for specific areas"}/>
+                               <Select
+                                    onChange={(e) => {
+                                        setFieldValue("shipping_rates", e.map((item) => item.value));
+                                    }}
+                                    isMulti
+                                    name="shipping_rates"
+                                    options={shippingRates}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                                   <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+
+
+
 
                             <div class="flex items-center justify-center w-full">
                                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50     hover:bg-gray-100      ">

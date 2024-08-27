@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request; // Correct import statement
 
 use App\Models\Category;
+use App\Models\ShippingRate;
+
 class ProductController extends Controller
 {
     /**
@@ -20,7 +22,8 @@ class ProductController extends Controller
     public function index()
     {
     
-        $products = Product::orderBy('id','desc')->with('media')->paginate(10);
+        $products = Product::orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
+     
         $categories = Category::all();
         return Inertia::render('product/Product', compact('products','categories'));
     }
@@ -32,9 +35,20 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all(); // Category data ko fetch karein, agar zarurat ho.
+        $categories = Category::all();
+
+        $shippingRates = ShippingRate::all(['id', 'area_name']);
+
+        $formattedShippingRates = $shippingRates->map(function ($item) {
+            return [
+                'value' => $item->id,
+                'label' => $item->area_name ,
+            ];
+        });
+        
         return Inertia::render('product/Create', [
         'categories' => $categories,
+        'shippingRates' => $formattedShippingRates
     ]);
     }
 
@@ -46,11 +60,13 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
+  
         $product = Product::create($request->only(['name', 'description', 'price', 'status']));
         $product->categories()->attach($request->categories);
         if($request->file){
             $product->addMedia($request->file)->toMediaCollection();
         }
+        $product->shipping_rates()->attach($request->shipping_rates);
         session()->flash('success', 'Product created successfully.');
     }
 
