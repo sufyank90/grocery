@@ -45,16 +45,27 @@ class OrderController extends Controller
     }
 
     // order.status
-    public function status(Request $request,$id)
-    {
-        $order = Order::find($id);
+    public function status(Request $request, $id)
+{
+    // Debugging: Output all request data
+    //dd($request->all()); // You might want to comment this out after testing
+
+    $order = Order::find($id);
+
+    if ($order) {
         $order->status = $request->status;
-        if($request->status == 'cancelled'){
+
+        if ($request->status == 'cancelled') {
             $order->reason = $request->reason;
         }
+
         $order->save();
-        return back();
+
+        return redirect()->back()->with('success', 'Order status updated successfully.');
     }
+
+    return redirect()->back()->with('error', 'Order not found.');
+}
 
     /**
      * Store a newly created resource in storage.
@@ -83,8 +94,21 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Order $order)
+
     {
-        //
+        
+        $nextId = Order::max('id');
+        $users = User::all();
+        $products = Product::with('categories')->get();
+        $coupons = Coupon::all();
+        return Inertia::render('order/View', [
+            'nextId' => $nextId,
+            'users' => $users,
+            'products' => $products,
+            'coupons' => $coupons
+        ]);
+        
+
     }
 
     /**

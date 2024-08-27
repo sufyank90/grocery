@@ -103,7 +103,7 @@ function Coupons(props) {
                                                                     setSelectedProduct(product);
                                                                     setIsDeleteModalOpen(true);
                                                                 }}
-                                                               
+
                                                             >
                                                                 <MdDelete
 
@@ -318,65 +318,105 @@ function Coupons(props) {
                             });
                         }}
                     >
-                        <Form className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto flex flex-col items-center">
-                            <h2 className="text-lg font-bold mb-4">Edit Coupon</h2>
+                        <Form className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto flex flex-col space-y-4">
+                            <h2 className="text-xl font-bold text-center text-gray-800">Edit Coupon</h2>
 
-                            <div className="overflow-y-auto max-h-80 w-full">
-                                <div>
-                                    <Field name="code" type="text" placeholder="Code" className="input-field w-full" />
-                                    <ErrorMessage name="code" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                <div>
-                                    <Field as="select" name="type" className="input-field w-full">
-                                        <option value="">Select Type</option>
-                                        <option value="fixed">Fixed</option>
-                                        <option value="percentage">Percentage</option>
-                                    </Field>
-                                    <ErrorMessage name="type" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                <div>
-                                    <Field name="value" type="number" placeholder="Value" className="input-field w-full" />
-                                    <ErrorMessage name="value" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                <div>
-                                    <Field as="select" name="usage_type" className="input-field w-full">
-                                        <option value="">Select Usage Type</option>
-                                        <option value="single">Single Use</option>
-                                        <option value="multiple">Multiple Use</option>
-                                    </Field>
-                                    <ErrorMessage name="usage_type" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                <div>
-                                    <Field name="usage_limit" type="number" placeholder="Usage Limit" className="input-field w-full" />
-                                    <ErrorMessage name="usage_limit" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                <div>
-                                    <Field name="expiry_date" type="date" placeholder="Expiry Date" className="input-field w-full" />
-                                    <ErrorMessage name="expiry_date" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
+                            {/* Coupon Code Field */}
+                            <div className="relative z-0 w-full">
+                                <Field
+                                    name="code"
+                                    type="text"
+                                    placeholder=" "
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                />
+                                <label
+                                    htmlFor="code"
+                                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                                >
+                                    Code
+                                </label>
+                                <ErrorMessage name="code" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
 
+                            {/* Coupon Type Field */}
+                            <div>
+                                <Field
+                                    as="select"
+                                    name="type"
+                                    className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                >
+                                    <option value="">Select Type</option>
+                                    <option value="fixed">Fixed</option>
+                                    <option value="percentage">Percentage</option>
+                                </Field>
+                                <ErrorMessage name="type" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            {/* Value Field */}
+                            <div>
+                                <Field
+                                    name="value"
+                                    type="number"
+                                    placeholder="Value"
+                                    className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                                <ErrorMessage name="value" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            {/* Usage Type Field */}
+                            <div>
+                                <Field
+                                    as="select"
+                                    name="usage_type"
+                                    className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                >
+                                    <option value="">Select Usage Type</option>
+                                    <option value="single">Single Use</option>
+                                    <option value="multiple">Multiple Use</option>
+                                </Field>
+                                <ErrorMessage name="usage_type" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            {/* Usage Limit Field */}
+                            <div>
+                                <Field
+                                    name="usage_limit"
+                                    type="number"
+                                    placeholder="Usage Limit"
+                                    className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                                <ErrorMessage name="usage_limit" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            {/* Expiry Date Field */}
+                            <div>
+                                <Field
+                                    name="expiry_date"
+                                    type="date"
+                                    placeholder="Expiry Date"
+                                    className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                                <ErrorMessage name="expiry_date" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+                            {/* Buttons */}
                             <div className="flex justify-end space-x-2 mt-6">
                                 <button
                                     type="submit"
-                                    className="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-5 py-2.5"
+                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
                                 >
                                     Update
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setIsEditModalOpen(false)}
-                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                    className="bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-4 focus:ring-gray-300"
                                 >
                                     Close
                                 </button>
                             </div>
                         </Form>
+
                     </Formik>
                 </Modal>
 
