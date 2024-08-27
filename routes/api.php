@@ -27,3 +27,5 @@ include __DIR__ . '/apis/item/item.php';
 include __DIR__ . '/apis/coupon/getcoupon.php';
 include __DIR__ . '/apis/shippingrate/getshippingrate.php';
 include __DIR__ . '/apis/banner/getbanner.php';
+include __DIR__ . '/apis/wishlist/wishlist.php';
+include __DIR__ . '/apis/feedback/feedback.php';
