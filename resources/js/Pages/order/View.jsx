@@ -8,7 +8,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import Modal from '@/Components/Modal';
 
 const View = (props) => {
-    const { nextId, users, products, coupons, order } = props; // Assuming 'order' contains existing order data
+    const { nextId, users, products, coupons, order } = props;
     const [selectedName, setSelectedName] = useState(order ? order.name : '');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(order ? order.items : []);
@@ -22,10 +22,10 @@ const View = (props) => {
         const userName = selectedUser ? selectedUser.name : '';
 
         setSelectedName(userName);
-        setFieldValue('name', userName); // Set the name field value
+        setFieldValue('name', userName);
         setFieldValue('email', selectedEmail);
         const userId = selectedUser ? selectedUser.id : '';
-        setFieldValue('user_id', userId); // Set the user_id field value
+        setFieldValue('user_id', userId);
     };
 
     const calculateTotalPrice = () => {
@@ -49,12 +49,31 @@ const View = (props) => {
         <Authenticated
             auth={props.auth}
             errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Create Order # {nextId}</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">View Order # {nextId}</h2>}
         >
-            <Head title="Create Order" />
+            <Head title="View Order" />
 
-            <div className='flex justify-center mt-10 '>
+            <div className='flex justify-center mt-10'>
                 <div className="block w-1/2 p-6 bg-white border border-gray-200 rounded-lg shadow h-full mb-10">
+                    {/* Order Information Section */}
+                    <div className="mb-6">
+                        <h2 className="text-lg font-bold mb-4">Order Information</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex items-center">
+                                <span className="font-semibold">Order ID: </span>
+                                <span className="ml-2">{order ? order.id : 'N/A'}</span>
+                            </div>
+                            <div className="flex items-center">
+                                <span className="font-semibold">Order Date: </span>
+                                <span className="ml-2">{order ? order.created_at : 'N/A'}</span>
+                            </div>
+                            <div className="flex items-center">
+                                <span className="font-semibold">Order Status: </span>
+                                <span className="ml-2">{order ? order.status : 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <Formik
                         initialValues={{
                             name: order ? order.name : '',
@@ -145,68 +164,68 @@ const View = (props) => {
                                     <Link className='text-blue-600 hover:text-blue-800' onClick={(e) => { e.preventDefault(); setIsModalOpen(true) }}>Add Item</Link>
                                 </div>
 
-                                <div class="relative overflow-x-auto">
-                                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <div className="relative overflow-x-auto">
+                                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" className="px-6 py-3">
                                                     Product name
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" className="px-6 py-3">
                                                     Category
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" className="px-6 py-3">
                                                     Price
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" className="px-6 py-3">
                                                     Qty
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" className="px-6 py-3">
                                                     Action
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {selectedItem.map((item, index) => (
-                                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                         {item.name}
                                                     </th>
-                                                    <td class="px-6 py-4">
+                                                    <td className="px-6 py-4">
                                                         {item.category}
                                                     </td>
-                                                    <td class="px-6 py-4">
+                                                    <td className="px-6 py-4">
                                                         {item.price}
                                                     </td>
-                                                    <td class="px-6 py-4">
+                                                    <td className="px-6 py-4">
                                                         {item.qty}
                                                     </td>
-                                                    <td class="px-6 py-4">
+                                                    <td className="px-6 py-4">
                                                         <FaRegTrashCan className="text-red-500 cursor-pointer" onClick={() => setSelectedItem(prevItems => prevItems.filter((_, i) => i !== index))} size={20} />
                                                     </td>
                                                 </tr>
                                             ))}
                                             <tr>
-                                                <td colSpan={4} class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-right">
+                                                <td colSpan={4} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-right">
                                                     Sub Total
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td className="px-6 py-4">
                                                     {totalPrice}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colSpan={4} class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-right">
+                                                <td colSpan={4} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-right">
                                                     Coupon Discount
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td className="px-6 py-4">
                                                     -{couponCode ? couponCode.value : 0}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colSpan={4} class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-right">
+                                                <td colSpan={4} className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-right">
                                                     Total Amount
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td className="px-6 py-4">
                                                     {finalPrice}
                                                 </td>
                                             </tr>
@@ -222,7 +241,7 @@ const View = (props) => {
                                     disabled={isSubmitting}
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-6"
                                 >
-                                    {isSubmitting ? 'Processing...' : 'Create Order'}
+                                    {isSubmitting ? 'Processing...' : 'Update Order'}
                                 </button>
                             </Form>
                         )}
@@ -281,5 +300,5 @@ const View = (props) => {
         </Authenticated>
     );
 };
-
+// mujhe drop down slect arne ki zarurat na pare  jo bhi mere order ka data hoga wo sida sida mujhe asi show ho jaye meri fields ke andar
 export default View;
