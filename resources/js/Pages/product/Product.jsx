@@ -22,6 +22,7 @@ export default function Product(props) {
         setSelectedProduct(product);
         setIsEditModalOpen(true);
     };
+    console.log(products)
 
     return (
         <>
@@ -70,6 +71,7 @@ export default function Product(props) {
                                     <th className="py-2 px-4 border-b text-left">Description</th>
                                     <th className="py-2 px-4 border-b text-left">Price</th>
                                     <th className="py-2 px-4 border-b text-left">Status</th>
+                                    <th className="py-2 px-4 border-b text-left">Areas</th>
                                     <th className="py-2 px-4 border-b text-left">Image</th>
                                     <th className="py-2 px-4 border-b text-left">Actions</th>
                                 </tr>
@@ -90,6 +92,9 @@ export default function Product(props) {
                                                 <td className="py-2 px-4 border-b text-left">{product.description}</td>
                                                 <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
                                                 <td className="py-2 px-4 border-b text-left">{product.status}</td>
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    { product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All' }
+                                                </td>
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
                                                     {product.media && product.media.length > 0 && product.media[0].original_url ? (
                                                         <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />

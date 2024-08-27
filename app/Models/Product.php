@@ -20,4 +20,8 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsToMany(Category::class, 'category_product', 'product_id', 'category_id');
     }
+
+    public function shipping_rates(){
+        return $this->belongsToMany(ShippingRate::class, 'product_shipping_rate', 'product_id', 'shipping_rate_id');
+    }
 }
