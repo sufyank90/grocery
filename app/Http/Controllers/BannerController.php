@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBannerRequest;
 use App\Http\Requests\UpdateBannerRequest;
 use Inertia\Inertia;
+use App\Models\Product;
+use App\Models\Category;
 class BannerController extends Controller
 {
     /**
@@ -17,8 +19,9 @@ class BannerController extends Controller
     public function index()
     {
         $poster = Banner::with('media')->get();
-       
-        return Inertia::render('setting/Posters',compact('poster'));
+        $products = Product::all();
+        $categories = Category::all();
+        return Inertia::render('setting/Posters',compact(['poster','products','categories']));
     }
 
     /**
@@ -39,9 +42,16 @@ class BannerController extends Controller
      */
     public function store(StoreBannerRequest $request)
     {
+
         $banner = Banner::create();
         if($request->file){
             $banner->addMedia($request->file)->toMediaCollection();
+        }
+        if($request->type == 'product'){
+            $banner->update(['product_id' => $request->product]);   
+        }
+        if($request->type == 'category'){
+            $banner->update(['category_id' => $request->category]);
         }
     }
 

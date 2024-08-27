@@ -28,19 +28,24 @@ Route::middleware('auth:sanctum')->prefix('wishlist')->group(function () {
             return response()->json($validator->errors(), 422);
         }
         
-
         $validatedData = $validator->validated();
 
         // Get the currently authenticated user
         $user = $request->user();
 
-        // Create a new order with the validated data
+        if(Wishlist::where('user_id', $user->id)->where('product_id', $validatedData['product_id'])->exists()){
+            //remove the product from wishlist
+            $wishlist = Wishlist::where('user_id', $user->id)->where('product_id', $validatedData['product_id'])->first();
+            $wishlist->delete();
+            return response()->json(["data" => $wishlist, "message" => "Removed from Wishlist successfully"], 200);
+        }
+
         $wishlist = Wishlist::create(array_merge($validatedData, [
             'user_id' => $user->id,
         ]));
 
 
-        return response()->json(["data" => $wishlist, "message" => "Wishlist created successfully"], 201);
+        return response()->json(["data" => $wishlist, "message" => "Added to Wishlist successfully"], 201);
     });
 
 });
