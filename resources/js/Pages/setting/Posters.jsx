@@ -10,12 +10,13 @@ import { useState } from 'react';
 
 export default function Posters(props) {
 
-    const {poster} = props;
-
+    const { poster, products, categories } = props;
+console.log(poster)
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     return (
+        
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
@@ -25,19 +26,18 @@ export default function Posters(props) {
 
             <div className="flex">
 
-
                 {/* Main Content */}
                 <div className="w-full pl-32 pr-32 mt-10">
                     <div className="py-4">
                         <div className="">
 
-
-
-
-                            <div class="p-5 mt-10 overflow-x-auto    shadow-md rounded-lg bg-white border border-gray-200 rounded-lg shadow     ">
+                            <div className="p-5 mt-10 overflow-x-auto shadow-md rounded-lg bg-white border border-gray-200">
                                 <Formik
                                     initialValues={{
                                         file: null,
+                                        product: '',
+                                        category: '',
+                                        type: '',
                                     }}
                                     validationSchema={
                                         Yup.object({
@@ -47,30 +47,39 @@ export default function Posters(props) {
                                                     'fileFormat',
                                                     'Unsupported file format',
                                                     (value) => {
-                                                        console.log(value)
-                                                        if (!value) return true; // If no file uploaded, skip validation
+                                                        if (!value) return true;
                                                         return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
                                                     }
-                                                )
+                                                ),
+                                            product: Yup.string().when("type", {
+                                                is: 'product',
+                                                then: schema => schema.required(),
+                                                otherwise: schema => schema.optional(),
+                                              }),
+                                            category: Yup.string().when("type", {
+                                                is: 'category',
+                                                then: schema => schema.required(),
+                                                otherwise: schema => schema.optional(),
+                                              }),
+                                           
                                         })
                                     }
-                                    onSubmit={async (values, { setSubmitting, resetForm, isSubmitting }) => {
+                                    onSubmit={async (values, { setSubmitting, resetForm }) => {
                                         try {
                                             setSubmitting(true);
                                             const formData = new FormData();
                                             formData.append('file', values.file);
+                                            formData.append('product', values.product);
+                                            formData.append('category', values.category);
+                                            formData.append('type', values.type);
                                            
                                             await router.post(route('banner.store'), formData, {
                                                 preserveScroll: true,
                                                 preserveState: true,
-                                            }
-                                            );
+                                            });
                                         } catch (error) {
-                                            // Handle errors if necessary
-                                            // toast.error(error.message);
                                             console.error(error);
                                         } finally {
-                                            // Make sure to setSubmitting(false) after processing is done
                                             setSubmitting(false);
                                             resetForm();
                                         }
@@ -78,63 +87,108 @@ export default function Posters(props) {
                                 >
                                     {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
                                         <Form>
-                                            <div class="flex items-center justify-between mb-2">
-                                                <h5 class="text-xl font-bold leading-none text-gray-500  ">Upload</h5>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h5 className="text-xl font-bold leading-none text-gray-500">Upload</h5>
                                                 {values.file && (
-                                                    
-                                                    <button type="submit" className='bg-[#f3d08140] text-[#D2A43C] px-4 py-2 rounded-lg text-bold disabled:opacity-50'>
+                                                    <button type="submit" className="bg-[#f3d08140] text-[#D2A43C] px-4 py-2 rounded-lg text-bold disabled:opacity-50">
                                                         {isSubmitting ? 'Uploading...' : 'Upload'}
-                                                    </button> 
-                                                    
-                                                )
-                                                
-                                                }
+                                                    </button>
+                                                )}
                                             </div>
-                                            <div class="flex items-center justify-center w-full">
-                                                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50     hover:bg-gray-100      ">
-                                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                        {!values.file ? (<>
-                                                            <svg class="w-8 h-8 mb-4 text-gray-500  " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                            </svg>
-                                                            <p class="mb-2 text-sm text-gray-500  "><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                            <p class="text-xs text-gray-500  ">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                                        </>) : (
+
+                                            <div className="mb-4 mt-5">
+                                      
+                                                <label>
+                                                <Field type="radio" name="type" value='' /> &nbsp; Only Banner &nbsp;
+                                                </label>
+                                                <label>
+                                                <Field type="radio" name="type" value='category' /> &nbsp; For Category &nbsp;
+                                                </label>
+                                                <label>
+                                                <Field type="radio" name="type" value='product' /> &nbsp; For Product &nbsp;
+                                                </label>
+
+                                                <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
+                                            </div>
+
+                                            {/* Product Dropdown */}
+                                            {values.type === 'product' && (
+                                                  <div className="mb-4">
+                                                  <label htmlFor="product" className="block mb-2 text-sm font-medium text-gray-700">Select Product</label>
+                                                  <Field as="select" name="product" id="product" className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg">
+                                                      <option value="" label="Select product" />
+                                                      {products.map((product , index) => (
+                                                          <option key={product.id} value={product.id}>
+                                                              {product.name}
+                                                          </option>
+                                                      ))}
+                                                  </Field>
+                                                  <ErrorMessage name="product" component="div" className="text-red-500 text-sm" />
+                                              </div>
+  
+                                            )}
+                                          
+                                            {/* Category Dropdown */}
+                                            {values.type === 'category' && (
+                                                  <div className="mb-4">
+                                                  <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-700">Select Category</label>
+                                                  <Field as="select" name="category" id="category" className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg">
+                                                      <option value="" label="Select category" />
+                                                      {categories.map((category) => (
+                                                          <option key={category.id} value={category.id}>
+                                                              {category.name}
+                                                          </option>
+                                                      ))}
+                                                  </Field>
+                                                  <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
+                                              </div>
+                                            )}
+                                          
+
+                                            <div className="flex items-center justify-center w-full mb-4">
+                                                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                        {!values.file ? (
                                                             <>
-                                                                <div className="relative">
-                                                                    <img height={100} width={100} className='rounded-lg' src={URL.createObjectURL(values.file)} alt="Preview" />
-                                                                    <IoCloseOutline size={30} onClick={() => setFieldValue("file", null)} className="absolute top-[-20px] right-[-20px] m-2 p-1 bg-white rounded-full cursor-pointer" />
-                                                                </div>
+                                                                <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                                </svg>
+                                                                <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                                                <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                                             </>
+                                                        ) : (
+                                                            <div className="relative">
+                                                                <img height={100} width={100} className="rounded-lg" src={URL.createObjectURL(values.file)} alt="Preview" />
+                                                                <IoCloseOutline size={30} onClick={() => setFieldValue("file", null)} className="absolute top-[-20px] right-[-20px] m-2 p-1 bg-white rounded-full cursor-pointer" />
+                                                            </div>
                                                         )}
                                                     </div>
                                                     <input onChange={(event) => {
-                                                        // validate the file type
                                                         const fileType = event.target.files[0].type;
                                                         const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
                                                         if (!allowedTypes.includes(fileType)) {
-                                                            toast.error('Unsupported file type. Only SVG, PNG, JPG, JPEG, GIF are allowed.');
+                                                            alert('Unsupported file type. Only SVG, PNG, JPG, JPEG, GIF are allowed.');
                                                             return;
                                                         }
-                                                        setFieldValue("file", event.currentTarget.files[0])
-                                                    }} id="dropzone-file" type="file" class="hidden" />
+                                                        setFieldValue("file", event.currentTarget.files[0]);
+                                                    }} id="dropzone-file" type="file" className="hidden" />
                                                 </label>
                                             </div>
+
                                             <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
                                         </Form>
                                     )}
                                 </Formik>
+
                                 {poster && poster.length > 0 && (
-                                   poster.map((media) => (
-                                        console.log(media),
-                                        <div class="mt-2  flex items-center justify-between mb-2 bg-[#f3d08140] px-2 py-2 rounded-lg">
-                                            <img key={media.media[0].id} src={media.media[0].original_url} height={100} width={100} className='rounded-lg' />
-                                            <div class="flex gap-3">
-                                                <a href={media.media[0].original_url} download className='bg-[#e5e5e5e5] text-gray-500 px-2 py-2 disabled rounded-lg text-bold mt-4'
-                                                >
+                                    poster.map((media) => (
+                                        <div key={media.id} className="mt-2 flex items-center justify-between mb-2 bg-[#f3d08140] px-2 py-2 rounded-lg">
+                                            <img src={media.media[0].original_url} height={100} width={100} className="rounded-lg" />
+                                            <div className="flex gap-3">
+                                                <a href={media.media[0].original_url} download className="bg-[#e5e5e5e5] text-gray-500 px-2 py-2 rounded-lg text-bold mt-4">
                                                     <FaDownload size={20} />
                                                 </a>
-                                                <button className='bg-red-500 text-white px-2 py-2 disabled rounded-lg text-bold mt-4'
+                                                <button className="bg-red-500 text-white px-2 py-2 rounded-lg text-bold mt-4"
                                                     onClick={() => {
                                                         setSelectedProduct(media.id);
                                                         setIsDeleteModalOpen(true);
@@ -147,20 +201,11 @@ export default function Posters(props) {
                                     ))
                                 )}
                             </div>
-
-
-
                         </div>
                     </div>
-
-
-
                 </div>
-            </div>
 
-
-
-  <Modal
+                <Modal
                     show={isDeleteModalOpen}
                     onClose={() => setIsDeleteModalOpen(false)}
                     maxWidth="sm"
@@ -211,7 +256,7 @@ export default function Posters(props) {
                         </Form>
                     </Formik>
                 </Modal>
-
+            </div>
         </AuthenticatedLayout>
     );
 }
