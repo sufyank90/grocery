@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
 
+
 class OrderController extends Controller
 {
     /**
@@ -97,17 +98,12 @@ class OrderController extends Controller
 
     {
         
-        $nextId = Order::max('id');
-        $users = User::all();
-        $products = Product::with('categories')->get();
-        $coupons = Coupon::all();
-        return Inertia::render('order/View', [
-            'nextId' => $nextId,
-            'users' => $users,
-            'products' => $products,
-            'coupons' => $coupons
-        ]);
-        
+      // Load the order with its items and feedbacks
+      $orderWithDetails = $order->load(['items', 'feedbacks']);
+
+      return Inertia::render('order/View', [
+          'order' => $orderWithDetails, // Pass the order with its items and feedbacks
+      ]);
 
     }
 

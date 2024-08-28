@@ -39,4 +39,9 @@ class Order extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'order_id');
+    }
 }

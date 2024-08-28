@@ -28,9 +28,18 @@ export default function Home(props) {
                         </Link>
                         </div>
                     </div>
-                    
-
-                    
+                </div>
+                <div className="w-full pl-32 pr-32">
+                    <div className="py-4">
+                        <div className="">
+                          
+                          <Link  >
+                        <div class="p-5 mt-10 overflow-x-auto    shadow-md rounded-lg bg-white border border-gray-200 rounded-lg shadow     ">
+                            <h1 >Admin Panel Management</h1>
+                        </div>
+                        </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>

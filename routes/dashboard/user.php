@@ -7,5 +7,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    Route::resource('customer', UserController::class);    
+    Route::resource('customer', UserController::class); 
+     
 });

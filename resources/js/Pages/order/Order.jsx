@@ -432,7 +432,7 @@ function Orders(props) {
                                             >
                                                 Save
                                             </button>
-                                            <button
+                                            <button type='button'
                                                 onClick={() => setIsDeleteModalOpen(false)}
                                                 className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
                                             >

@@ -15,5 +15,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         \App\Models\User::factory(1)->create();
+        //assign admin role
+        \App\Models\User::first()->assignRole('admin');
     }
 }

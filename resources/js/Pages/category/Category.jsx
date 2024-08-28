@@ -16,6 +16,7 @@ function Category(props) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+
     const openEditModal = (product) => {
         setSelectedProduct(product);
         setIsEditModalOpen(true);
@@ -25,14 +26,14 @@ function Category(props) {
             <AuthenticatedLayout
                 auth={props.auth}
                 errors={props.errors}
-                header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Products List</h2>}
+                header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Category List</h2>}
             >
                 <Head title="Admin Dashboard" />
 
                 <div className="flex">
                     <div className="w-full pl-32 pr-32 mt-10">
                         <div className="flex justify-between items-center mt-6 mb-4">
-                            <h3 className="text-lg font-bold">Products</h3>
+                            <h3 className="text-lg font-bold">Categories</h3>
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
@@ -46,9 +47,9 @@ function Category(props) {
                                     placeholder="Search..."
                                     className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <button 
-                                style={{ background: '#fcb609' }}
-                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
+                                <button
+                                    style={{ background: '#fcb609' }}
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                                     Search
                                 </button>
                             </div>
@@ -70,46 +71,46 @@ function Category(props) {
                                         <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">No products found</td>
                                     </tr>
                                 ) : (
-                                <>
-                                    {categorys.data.map((product, index) => (
-                                        <tr key={product.id} className="hover:bg-gray-100">
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.name}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                {product.media && product.media.length > 0 && product.media[0].original_url ? (
-                                                    <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />
-                                                ) : (
-                                                    <p>No image</p>
-                                                )}
-                                            </td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-right">
-                                                <div className="text-right space-x-2">
-                                                    <button
-                                                        onClick={() => openEditModal(product)}
-                                                        
-                                                    >
-                                                        <FaEdit 
+                                    <>
+                                        {categorys.data.map((product, index) => (
+                                            <tr key={product.id} className="hover:bg-gray-100">
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.name}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                    {product.media && product.media.length > 0 && product.media[0].original_url ? (
+                                                        <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />
+                                                    ) : (
+                                                        <p>No image</p>
+                                                    )}
+                                                </td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-right">
+                                                    <div className="text-right space-x-2">
+                                                        <button
+                                                            onClick={() => openEditModal(product)}
+
+                                                        >
+                                                            <FaEdit
                                                                 className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
 
 
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedProduct(product);
-                                                            setIsDeleteModalOpen(true);
-                                                        }}
-                                                        
-                                                    >
-                                                        <MdDelete
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedProduct(product);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
 
-className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                                        >
+                                                            <MdDelete
 
-                                </>
+                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+
+                                    </>
                                 )
                                 }
 
@@ -133,7 +134,8 @@ className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                         </div>
                     </div>
                 </div>
-
+ 
+             
                 {/* Create Product Modal */}
                 <Modal
                     show={isModalOpen}
@@ -264,31 +266,31 @@ className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                     <Formik
                         initialValues={{
                             name: selectedProduct ? selectedProduct.name : '',
-                            file:   selectedProduct && selectedProduct.media && selectedProduct.media[0] && selectedProduct.media[0].original_url
-                            ? selectedProduct.media[0].original_url
-                            : null,
+                            file: selectedProduct && selectedProduct.media && selectedProduct.media[0] && selectedProduct.media[0].original_url
+                                ? selectedProduct.media[0].original_url
+                                : null,
 
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
-                            file:  selectedProduct && selectedProduct.media && selectedProduct.media[0] && selectedProduct.media[0].original_url
-                            ? null :  Yup.mixed()
-                            .required('File is required')
-                            .test(
-                                'fileFormat',
-                                'Unsupported file format',
-                                (value) => {
-                                    console.log(value)
-                                    if (!value) return true; // If no file uploaded, skip validation
-                                    return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
-                                }
-                            )
+                            file: selectedProduct && selectedProduct.media && selectedProduct.media[0] && selectedProduct.media[0].original_url
+                                ? null : Yup.mixed()
+                                    .required('File is required')
+                                    .test(
+                                        'fileFormat',
+                                        'Unsupported file format',
+                                        (value) => {
+                                            console.log(value)
+                                            if (!value) return true; // If no file uploaded, skip validation
+                                            return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
+                                        }
+                                    )
 
                         })}
                         onSubmit={(values, { resetForm }) => {
-       
+
                             const formData = new FormData();
-                            
+
                             formData.append('name', values.name);
                             if (values.file && values.file !== selectedProduct.media[0]?.original_url) {
                                 formData.append('file', values.file);
@@ -301,31 +303,31 @@ className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                                 },
                             });
                         }}
-                        
+
                     >
                         {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
-                        <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                            <h2 className="text-lg font-bold mb-4">Edit Product </h2>
+                            <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
+                                <h2 className="text-lg font-bold mb-4">Edit Product </h2>
 
-                            <div className="relative z-0 w-full mb-5 group">
-                                <Field
-                                    name="name"
-                                    type="text"
-                                    id="edit_name"
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                />
-                                <label
-                                    htmlFor="edit_name"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >
-                                    Name
-                                </label>
-                                <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        name="name"
+                                        type="text"
+                                        id="edit_name"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="edit_name"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Name
+                                    </label>
+                                    <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
 
-                            <div class="flex items-center justify-center w-full">
+                                <div class="flex items-center justify-center w-full">
                                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50     hover:bg-gray-100      ">
                                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                             {!values.file ? (<>
@@ -361,22 +363,22 @@ className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
 
 
 
-                            <div className="flex justify-end space-x-2 mt-4">
-                                <button
-                                    type="submit"
-                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                >
-                                    Update
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setIsEditModalOpen(false)}
-                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </Form>
+                                <div className="flex justify-end space-x-2 mt-4">
+                                    <button
+                                        type="submit"
+                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                    >
+                                        Update
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsEditModalOpen(false)}
+                                        className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            </Form>
                         )}
                     </Formik>
                 </Modal>

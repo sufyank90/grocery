@@ -17,6 +17,8 @@ export default function Product(props) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+
 
     const openEditModal = (product) => {
         setSelectedProduct(product);
@@ -70,9 +72,10 @@ export default function Product(props) {
                                     <th className="py-2 px-4 border-b text-left">Name</th>
                                     <th className="py-2 px-4 border-b text-left">Description</th>
                                     <th className="py-2 px-4 border-b text-left">Price</th>
-                                    <th className="py-2 px-4 border-b text-left">Status</th>
+                                    
                                     <th className="py-2 px-4 border-b text-left">Areas</th>
                                     <th className="py-2 px-4 border-b text-left">Image</th>
+                                    <th className="py-2 px-4 border-b text-left">Status</th>
                                     <th className="py-2 px-4 border-b text-left">Actions</th>
                                 </tr>
                             </thead>
@@ -91,7 +94,7 @@ export default function Product(props) {
                                                 <td className="py-2 px-4 border-b text-left">{product.name}</td>
                                                 <td className="py-2 px-4 border-b text-left">{product.description}</td>
                                                 <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
-                                                <td className="py-2 px-4 border-b text-left">{product.status}</td>
+                                               
                                                 <td className="py-2 px-4 border-b text-left">
                                                     { product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All' }
                                                 </td>
@@ -101,6 +104,32 @@ export default function Product(props) {
                                                     ) : (
                                                         <p>No image</p>
                                                     )}
+                                                </td>
+                                                <td className="py-2 px-4 border-b text-left">
+                                                {product.status === 'instock' && (
+                                                    <span
+                                                        onClick={() => {
+                                                            
+                                                            setIsStatusModalOpen(true);
+                                                            setSelectedProduct(product);
+                                                        }}
+                                                        className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                                        {product.status}
+                                                    </span>
+                                                )}
+                                                
+                                                {product.status === 'outofstock' && (
+                                                    <span
+                                                        onClick={() => {
+                                                            
+                                                            setIsStatusModalOpen(true);
+                                                            setSelectedProduct(product);
+
+                                                        }}
+                                                        className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                                        {product.status}
+                                                    </span>
+                                                )}
                                                 </td>
                                                 <td className="py-2 px-4 border-b text-left">
                                                     <div className="flex justify-center space-x-2">
@@ -150,6 +179,82 @@ export default function Product(props) {
                         </div>
                     </div>
                 </div>
+
+
+
+
+{/* status change modal */}
+
+                    <Modal
+                        show={isStatusModalOpen}
+                        onClose={() => setIsStatusModalOpen(false)}
+                        maxWidth="sm"
+                    >
+                        <div className="bg-white p-4 rounded-lg">
+                            <h3 className="text-lg font-bold mb-4">Change Status </h3>
+
+                            <Formik
+                                enableReinitialize
+                                initialValues={{ status: selectedProduct?.status }}
+                                validationSchema={Yup.object({
+                                    status: Yup.string().required('Required'),
+
+
+                                })}
+                                onSubmit={async(values) => {
+                                    // Handle form submission
+
+
+                                  await  router.put(route('product.status', selectedProduct.id), values, {
+
+                                        onSuccess: () => {
+                                            setIsStatusModalOpen(false);
+                                            setSelectedProduct(null);
+                                        },
+                                    });
+                                }}
+                            >
+                                {({ values }) => (
+                                    <Form>
+                                        <div>
+                                            <label>
+                                                <Field type="radio" name="status" value="instock" />
+                                                &nbsp;  Instock  &nbsp;
+                                            </label>
+                                            <label>
+                                                <Field type="radio" name="status" value="outofstock" />
+                                                &nbsp; Out of Stock  &nbsp;
+                                            </label>
+                                            
+                                        </div>
+                                        
+
+                                        <div className="flex justify-end mt-4 space-x-2">
+                                            <button type='submit'
+                                                className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                onClick={() => setIsStatusModalOpen(false)}
+                                                type='button'
+                                                className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+
+                                    </Form>
+                                )}
+                            </Formik>
+
+                        </div>
+                    </Modal>
+              
+
+
+
+
 
                 {/* Create Product Modal */}
                 <Modal

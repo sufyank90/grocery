@@ -52,6 +52,26 @@ class ProductController extends Controller
     ]);
     }
 
+
+    public function status(Request $request, $id)
+    {
+        // Debugging: Output all request data
+        //dd($request->all()); // You might want to comment this out after testing
+    
+        $product = Product::find($id);
+    
+        if ($product) {
+            $product->status = $request->status;
+    
+    
+            $product->save();
+    
+            return redirect()->back()->with('success', 'product status updated successfully.');
+        }
+    
+        return redirect()->back()->with('error', 'Product not found.');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
