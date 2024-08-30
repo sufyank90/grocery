@@ -6,8 +6,9 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { FaUserPlus } from "react-icons/fa";
 import { FaWallet } from "react-icons/fa";
+import { GiTwoCoins } from "react-icons/gi";
+
 
 function User(props) {
 
@@ -78,14 +79,30 @@ function User(props) {
                 style={{ color: '#fcb609' }}
                 /> */}
 
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-                <button style={{ background: '#fcb609' }} className=" text-black py-2 px-4 rounded-lg hover:bg-blue-600">
-                  Search
-                </button>
+                <Formik enableReinitialize initialValues={{ search: '' }}
+                  onSubmit={(values) => {
+                    router.visit(route('product.index', { search: values.search }), {
+                      method: 'get', // or 'post' depending on your needs
+                      preserveState: true,
+                    });
+                  }}
+                >
+                  <Form className="flex space-x-2">
+                    <div >
+                      <Field name="search"
+                        type="text"
+                        placeholder="Search..."
+                        className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      />
+
+                    </div>
+                    <button type="submit"
+                      style={{ background: '#fcb609' }}
+                      className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
+                      Search
+                    </button>
+                  </Form>
+                </Formik>
               </div>
             </div>
 
@@ -113,7 +130,9 @@ function User(props) {
                     <td className="py-2 px-4 border-b text-left">{index + 1}</td>
                     <td className="py-2 px-4 border-b truncate text-left">{user.name}</td>
                     <td className="py-2 px-4 border-b text-left">{user.email}</td>
-                    <td className="py-2 px-4 border-b text-left">{user.wallet.toString()}</td>
+                    <td className="py-2 px-4 border-b text-left">
+                      {user.wallet.toString()} <GiTwoCoins className="inline-flex ml-3 " color='#fcb609'/>
+                    </td>
                     <td className="py-2 px-4 border-b text-left">
                       <div className="flex items-center">
                         {/* <button
@@ -149,7 +168,7 @@ function User(props) {
                 <Link
                   key={index}
                   href={link.url}
-                  className={`px-3 py-1 border ${link.active ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                  className={`px-3 py-1 border ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
                   dangerouslySetInnerHTML={{ __html: link.label }}
                 />
               ))}
@@ -169,7 +188,12 @@ function User(props) {
                 wallet: Yup.string().required('Wallet is required'),
               })}
               onSubmit={(values, { resetForm }) => {
-                router.put(route('customer.walletupdate', { customer: selectedUser.id }), values, {
+                if (!selectedUser.id) {
+                  console.error("Error: selectedUser.id is undefined");
+                  return;
+                }
+
+                router.put(route('customer.wallet', { id: selectedUser.id }), values, {
                   onSuccess: () => {
                     resetForm();
                     setIsWalletModalOpen(false);
@@ -197,7 +221,7 @@ function User(props) {
                   <div className="w-full">
                     <button
                       type="submit"
-                      className="bg-blue-600 text-white py-2 px-4 rounded shadow hover:bg-blue-700 transition duration-300"
+                      className="bg-yellow-600 text-white py-2 px-4 rounded shadow hover:bg-yellow-700 transition duration-300"
                     >
                       Save
                     </button>
@@ -207,6 +231,7 @@ function User(props) {
             </Formik>
           </Modal>
         )}
+
 
 
 
@@ -224,6 +249,7 @@ function User(props) {
               email: Yup.string().email('Invalid email address').required('Email is required'),
               password: Yup.string().required('Password is required'),
               password_confirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+              wallet: Yup.string().required('Wallet is required'),
             })}
             onSubmit={(values, { resetForm }) => {
               router.post(route('customer.store'), values, {
@@ -305,10 +331,28 @@ function User(props) {
                   <ErrorMessage name="password_confirmation" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
 
+                {/* Wallet Field */}
+                <div className="relative z-0 w-full mb-5 group">
+                  <Field
+                    type="text"
+                    name="wallet"
+                    id="wallet"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    htmlFor="wallet"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Wallet
+                  </label>
+                  <ErrorMessage name="wallet" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
+
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 mt-4"
+                    className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 mt-4"
                   >
                     Create User
                   </button>
@@ -320,90 +364,90 @@ function User(props) {
 
         {/* Edit User Modal */}
         <Modal show={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} maxWidth="2xl">
-  <Formik
-    initialValues={{
-      name: selectedUser?.name || '',
-      email: selectedUser?.email || '',
-      wallet: selectedUser?.wallet || '', // Added wallet initial value
-    }}
-    validationSchema={Yup.object({
-      name: Yup.string().required('Name is required'),
-      email: Yup.string().email('Invalid email address').required('Email is required'),
-      wallet: Yup.string().required('Wallet is required'),
-    })}
-    onSubmit={(values) => {
-      handleUpdate(values);
-    }}
-  >
-    {({ errors, touched }) => (
-      <Form className="bg-white p-6 w-full max-w-lg mx-auto flex flex-col items-center">
-        <h2 className="text-lg font-bold mb-4">Edit User</h2>
-        
-        {/* Name Field */}
-        <div className="relative z-0 w-full mb-5 group">
-          <Field
-            type="text"
-            name="name"
-            id="name"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-          />
-          <label
-            htmlFor="name"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          <Formik
+            initialValues={{
+              name: selectedUser?.name || '',
+              email: selectedUser?.email || '',
+              wallet: selectedUser?.wallet || '', // Added wallet initial value
+            }}
+            validationSchema={Yup.object({
+              name: Yup.string().required('Name is required'),
+              email: Yup.string().email('Invalid email address').required('Email is required'),
+              wallet: Yup.string().required('Wallet is required'),
+            })}
+            onSubmit={(values) => {
+              handleUpdate(values);
+            }}
           >
-            Name
-          </label>
-          <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
-        </div>
+            {({ errors, touched }) => (
+              <Form className="bg-white p-6 w-full max-w-lg mx-auto flex flex-col items-center">
+                <h2 className="text-lg font-bold mb-4">Edit User</h2>
 
-        {/* Email Field */}
-        <div className="relative z-0 w-full mb-5 group">
-          <Field
-            type="email"
-            name="email"
-            id="email"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-          />
-          <label
-            htmlFor="email"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Email
-          </label>
-          <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
-        </div>
+                {/* Name Field */}
+                <div className="relative z-0 w-full mb-5 group">
+                  <Field
+                    type="text"
+                    name="name"
+                    id="name"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    htmlFor="name"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Name
+                  </label>
+                  <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
 
-        {/* Wallet Field */}
-        <div className="relative z-0 w-full mb-5 group">
-          <Field
-            type="text"
-            name="wallet"
-            id="wallet"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-          />
-          <label
-            htmlFor="wallet"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Wallet
-          </label>
-          <ErrorMessage name="wallet" component="div" className="text-red-600 text-sm mt-1" />
-        </div>
+                {/* Email Field */}
+                <div className="relative z-0 w-full mb-5 group">
+                  <Field
+                    type="email"
+                    name="email"
+                    id="email"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    htmlFor="email"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Email
+                  </label>
+                  <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-        >
-          Update
-        </button>
-      </Form>
-    )}
-  </Formik>
-</Modal>
+                {/* Wallet Field */}
+                <div className="relative z-0 w-full mb-5 group">
+                  <Field
+                    type="text"
+                    name="wallet"
+                    id="wallet"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                  />
+                  <label
+                    htmlFor="wallet"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Wallet
+                  </label>
+                  <ErrorMessage name="wallet" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
+                >
+                  Update
+                </button>
+              </Form>
+            )}
+          </Formik>
+        </Modal>
 
 
         {/* Delete Confirmation Modal */}
@@ -412,7 +456,7 @@ function User(props) {
             <h2 className="text-lg font-bold mb-4">Are you sure you want to delete this user?</h2>
             <button
               onClick={handleDelete}
-              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+              className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
             >
               Confirm
             </button>

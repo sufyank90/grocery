@@ -2,9 +2,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 
 export default function Home(props) {
-
-
-
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -13,33 +10,21 @@ export default function Home(props) {
         >
             <Head title="Setting" />
 
-            <div className="">
-               
+            <div className="pl-32 pr-32 mt-10"> {/* Reduced padding on the main container */}
 
                 {/* Main Content */}
-                <div className="w-full pl-32 pr-32 mt-10">
-                    <div className="py-4">
-                        <div className="">
-                          
-                          <Link href={route('banner.index')} >
-                        <div class="p-5 mt-10 overflow-x-auto    shadow-md rounded-lg bg-white border border-gray-200 rounded-lg shadow     ">
-                            <h1 >Banner</h1>
+                <div className="space-y-4 m-4"> {/* Using space-y to manage vertical spacing */}
+                    <Link href={route('banner.index')}>
+                        <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <h1 className="text-lg font-semibold">Banner</h1>
                         </div>
-                        </Link>
+                    </Link>
+
+                    <Link>
+                        <div className="p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <h1 className="text-lg font-semibold">Admin Panel Management</h1>
                         </div>
-                    </div>
-                </div>
-                <div className="w-full pl-32 pr-32">
-                    <div className="py-4">
-                        <div className="">
-                          
-                          <Link  >
-                        <div class="p-5 mt-10 overflow-x-auto    shadow-md rounded-lg bg-white border border-gray-200 rounded-lg shadow     ">
-                            <h1 >Admin Panel Management</h1>
-                        </div>
-                        </Link>
-                        </div>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </AuthenticatedLayout>

@@ -5,9 +5,12 @@ import InputLabel from '@/Components/InputLabel';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
+import Select from 'react-select';
+
+
 
 function Edit(props) {
-    const { product, categories } = props;
+    const { product, categories,shippingRates ,defaultshippingrate} = props;
 
     // Extract category IDs from the product to pre-check the checkboxes
     const initialCategoryIds = product.categories.map(category => category.id);
@@ -31,6 +34,7 @@ function Edit(props) {
                                 price: product ? product.price : '',
                                 status: product ? product.status : '',
                                 categories: initialCategoryIds, // Initialize with selected categories
+                                shipping_rates: defaultshippingrate ? defaultshippingrate : [],
                                 file:  product && product.media && product.media[0] && product.media[0].original_url
                                 ? product.media[0].original_url
                                 : null,
@@ -60,6 +64,7 @@ function Edit(props) {
                                 formData.append('description', values.description);
                                 formData.append('price', values.price);
                                 formData.append('status', values.status);
+                                formData.append('shipping_rates', values.shipping_rates);
                                 formData.append('categories', values.categories.join(',')); // Join category IDs into a string
                                 if (values.file && values.file !== product.media[0]?.original_url) {
                                     formData.append('file', values.file);
@@ -148,6 +153,11 @@ function Edit(props) {
                                         <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
 
+
+                                    
+
+
+
                                     <div className="relative z-0 w-full mb-5 group">
                                         <InputLabel className="" value={"Select Category"} />
                                         {categories.map((category) => (
@@ -174,6 +184,11 @@ function Edit(props) {
                                         ))}
                                         <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
+
+
+
+
+
 
                                     <div className="flex items-center justify-center w-full">
                                         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
@@ -206,6 +221,26 @@ function Edit(props) {
                                         </label>
                                     </div>
                                     <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
+
+
+
+                                    
+                                    <div className="relative z-0 w-full mb-5 mt-5 group">
+                               <InputLabel className="" value={"Select for specific areas"}/>
+                               <Select 
+                               defaultValue={defaultshippingrate}
+                                    onChange={(e) => {
+                                        setFieldValue("shipping_rates", e.map((item) => item.value));
+                                    }}
+                                    isMulti
+                                    name="shipping_rates"
+                                    options={shippingRates}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                                   <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
 
                                     <div className="flex justify-end space-x-2 mt-4">
                                         <button

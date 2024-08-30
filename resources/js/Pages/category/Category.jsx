@@ -8,6 +8,7 @@ import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
+
 function Category(props) {
     const { categorys } = props;
     console.log(categorys)
@@ -42,16 +43,30 @@ function Category(props) {
                                 >
                                     Create
                                 </button>
-                                <input
+                                <Formik  enableReinitialize initialValues={{ search: '' }}
+                                onSubmit={(values) => {
+                                    router.visit(route('category.index', { search: values.search }), {
+                                        method: 'get', // or 'post' depending on your needs
+                                        preserveState: true,
+                                      });
+                                }}
+                                >
+                                    <Form className="flex space-x-2">
+                                        <div >
+                                <Field name="search"
                                     type="text"
                                     placeholder="Search..."
                                     className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <button
+                              
+                                </div>
+                                <button  type="submit"
                                     style={{ background: '#fcb609' }}
                                     className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
                                     Search
                                 </button>
+                                </Form>
+                                </Formik>
                             </div>
                         </div>
 

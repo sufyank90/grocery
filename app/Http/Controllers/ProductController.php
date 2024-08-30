@@ -19,10 +19,12 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
     
-        $products = Product::orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
+        $products = Product::where('name','like','%'.$request->search.'%')
+        ->orwhere('description','like','%'.$request->search.'%')
+        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
      
         $categories = Category::all();
         return Inertia::render('product/Product', compact('products','categories'));
@@ -110,13 +112,30 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
     
+        $shippingRates = ShippingRate::all(['id', 'area_name']);
+
+        $formattedShippingRates = $shippingRates->map(function ($item) {
+            return [
+                'value' => $item->id,
+                'label' => $item->area_name ,
+            ];
+        });
+
+
+        $defaultshippingrate = $product->shipping_rates->map(function ($item) {
+            return [
+                'value' => $item->id,
+                'label' => $item->area_name,
+            ];
+        });
+
         $categories = Category::all();
-
         $product->load(['categories', 'media']);
-
         return Inertia::render('product/Edit', [
         'categories' => $categories,
         'product' => $product,
+        'shippingRates' => $formattedShippingRates,
+        'defaultshippingrate' => $defaultshippingrate
     ]);
     }
 
@@ -129,7 +148,13 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-      
+        $product->update($request->only(['name', 'description', 'price', 'status']));
+        $product->categories()->sync($request->categories);
+        $product->shipping_rates()->sync($request->shipping_rates);
+        if($request->file){
+            $product->addMedia($request->file)->toMediaCollection();
+        }
+        return redirect(route('product.index'))->with('success', 'Product updated successfully.');
     }
 
 

@@ -8,5 +8,5 @@ use Inertia\Inertia;
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('customer', UserController::class); 
-     
+    Route::put('customer/wallet/{id}', [UserController::class, 'updateWallet'])->name('customer.wallet');     
 });

@@ -16,10 +16,12 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categorys = Category::orderBy('id','desc')->with('media')->paginate(10);
-        
+    
+        $categorys = Category::where('name','like','%'.$request->search.'%')
+        ->orderBy('id','desc')->with('media')->paginate(10);
+       
         return Inertia::render('category/Category', compact('categorys'));
     }
 

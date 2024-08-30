@@ -172,21 +172,7 @@ function Create(props) {
                             </div>
 
 
-                            <div className="relative z-0 w-full mb-5 group">
-                               <InputLabel className="" value={"Select for specific areas"}/>
-                               <Select
-                                    onChange={(e) => {
-                                        setFieldValue("shipping_rates", e.map((item) => item.value));
-                                    }}
-                                    isMulti
-                                    name="shipping_rates"
-                                    options={shippingRates}
-                                    className="basic-multi-select"
-                                    classNamePrefix="select"
-                                />
-                                   <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
-                            </div>
-
+                      
 
 
 
@@ -222,6 +208,24 @@ function Create(props) {
                                     </label>
                             </div>
                                 <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
+
+
+
+                                <div className="relative z-0 w-full mb-5 mt-5 group">
+                               <InputLabel className="" value={"Select for specific areas"}/>
+                               <Select
+                                    onChange={(e) => {
+                                        setFieldValue("shipping_rates", e.map((item) => item.value));
+                                    }}
+                                    isMulti
+                                    name="shipping_rates"
+                                    options={shippingRates}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
+                                   <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
 
                             <div className="flex justify-end space-x-2 mt-4">
                                 <button
