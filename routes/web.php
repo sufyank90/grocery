@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +20,12 @@ use App\Models\Order;
 */
 
 Route::get('/', function () {
+    
     return redirect()->route('login');
 
 });
 
 Route::get('/dashboard', function () {
-
     $countuser = User::count();
     $countpendingorder = Order::where('status','pending')->count();
     $countcompletedorder = Order::where('status','completed')->count();
@@ -50,3 +51,4 @@ require __DIR__.'/dashboard/category.php';
 require __DIR__.'/dashboard/order.php';
 require __DIR__.'/dashboard/coupon.php';
 require __DIR__.'/dashboard/setting.php';
+require __DIR__.'/dashboard/adminManagement.php';
