@@ -100,6 +100,7 @@ function Orders(props) {
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
                                 </tr>
@@ -120,6 +121,7 @@ function Orders(props) {
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.total}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted }</td>
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
                                                 {order.status === 'pending' && (
