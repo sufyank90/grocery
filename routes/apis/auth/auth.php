@@ -55,6 +55,9 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
             'email' => $request->email,
             'password' => Hash::make($request->string('password')),
         ]);
+
+        //assign user role
+        $user->assignRole('user');
     
         return response()->json(["data"=>$user,"message"=>"Account Created"], 200);
 

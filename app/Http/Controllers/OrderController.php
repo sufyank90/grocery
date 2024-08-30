@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
 
+
+
 class OrderController extends Controller
 {
     /**
@@ -18,12 +20,18 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::orderBy('id', 'desc')->paginate(10);
-
+        $orders = Order::where('name', 'like', '%' . $request->search . '%')
+                       ->orWhere('email', 'like', '%' . $request->search . '%')
+                       ->orWhere('phone', 'like', '%' . $request->search . '%')
+                       ->orWhere('id', 'like', '%' . $request->search . '%')
+                       ->orderBy('id', 'desc')
+                       ->paginate(10);
+    
         return Inertia::render('order/Order', compact('orders'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -97,17 +105,12 @@ class OrderController extends Controller
 
     {
         
-        $nextId = Order::max('id');
-        $users = User::all();
-        $products = Product::with('categories')->get();
-        $coupons = Coupon::all();
-        return Inertia::render('order/View', [
-            'nextId' => $nextId,
-            'users' => $users,
-            'products' => $products,
-            'coupons' => $coupons
-        ]);
-        
+      // Load the order with its items and feedbacks
+      $orderWithDetails = $order->load(['items', 'feedbacks']);
+
+      return Inertia::render('order/View', [
+          'order' => $orderWithDetails, // Pass the order with its items and feedbacks
+      ]);
 
     }
 
