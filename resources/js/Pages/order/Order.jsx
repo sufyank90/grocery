@@ -73,7 +73,7 @@ function Orders(props) {
                                         <div >
                                             <Field name="search"
                                                 type="text"
-                                                placeholder="Search..."
+                                                placeholder="Search By Order Id"
                                                 className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                             />
 
@@ -95,6 +95,7 @@ function Orders(props) {
                             <thead>
                                 <tr>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
@@ -116,6 +117,7 @@ function Orders(props) {
                                     {orders.data.map((order, index) => (
                                         <tr key={order.id} className="hover:bg-gray-100">
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.id}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
