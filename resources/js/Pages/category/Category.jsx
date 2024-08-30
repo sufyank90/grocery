@@ -142,7 +142,7 @@ function Category(props) {
                                 <Link
                                     key={index}
                                     href={link.url}
-                                    className={`px-3 py-1 border ${link.active ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                                    className={`px-3 py-1 border ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                 />
                             ))}

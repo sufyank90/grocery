@@ -59,7 +59,7 @@ function Create(props) {
                         })}
                         onSubmit={(values, { resetForm }) => {
                             
-                            console.log(values);
+               
                             router.post(route('product.store'), values, {
                                 onSuccess: () => {
                                     resetForm();

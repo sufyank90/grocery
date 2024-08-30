@@ -50,6 +50,8 @@ class OrderController extends Controller
             'products' => $products,
             'coupons' => $coupons
         ]);
+
+
     }
 
     // order.status
@@ -92,7 +94,7 @@ class OrderController extends Controller
                 $coupon->save();
             }
         }
-        return back();
+        return redirect()->to(route('order.index'));
     }
 
     /**

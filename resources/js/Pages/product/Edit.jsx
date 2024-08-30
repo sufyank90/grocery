@@ -15,6 +15,19 @@ function Edit(props) {
     // Extract category IDs from the product to pre-check the checkboxes
     const initialCategoryIds = product.categories.map(category => category.id);
 
+
+    const extractShippingRateIds = (shippingRates) => {
+        if (Array.isArray(shippingRates)) {
+            return shippingRates.map(rate => rate.value); // Extract 'value' property for IDs
+        }
+        return []; // Return empty array if shippingRates is not an array
+    };
+    
+    // Assuming defaultshippingrate is available in your component
+    const shippingRateIds = extractShippingRateIds(defaultshippingrate);
+    
+    
+
     return (
         <>
             <AuthenticatedLayout
@@ -34,7 +47,7 @@ function Edit(props) {
                                 price: product ? product.price : '',
                                 status: product ? product.status : '',
                                 categories: initialCategoryIds, // Initialize with selected categories
-                                shipping_rates: defaultshippingrate ? defaultshippingrate : [],
+                                shipping_rates: defaultshippingrate ? shippingRateIds : [],
                                 file:  product && product.media && product.media[0] && product.media[0].original_url
                                 ? product.media[0].original_url
                                 : null,
@@ -77,7 +90,9 @@ function Edit(props) {
                                 });
                             }}
                         >
-                            {({ values, setFieldValue }) => (
+                            {({ values, setFieldValue }) => { 
+                              
+                                return (
                                 <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
                                     <h2 className="text-lg font-bold mb-4">Edit Product</h2>
 
@@ -251,7 +266,11 @@ function Edit(props) {
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => setIsModalOpen(false)}
+                                            
+                                            onClick={() => {
+                                            
+                                                router.get(route('product.index'));
+                                            }}
                                             className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
                                         >
                                             Close
@@ -259,7 +278,8 @@ function Edit(props) {
                                     </div>
 
                                 </Form>
-                            )}
+                               
+                            )}}
                         </Formik>
                     </div>
                 </div>

@@ -16,6 +16,6 @@ class UserSeeder extends Seeder
     {
         \App\Models\User::factory(1)->create();
         //assign admin role
-        \App\Models\User::first()->assignRole('admin');
+        \App\Models\User::first()->assignRole('super admin');
     }
 }

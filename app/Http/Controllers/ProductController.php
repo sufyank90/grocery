@@ -148,19 +148,12 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product->update($request->only(['name', 'description', 'price', 'status']));
-        $product->categories()->sync($request->categories);
-        $product->shipping_rates()->sync($request->shipping_rates);
-        if($request->file){
-            $product->addMedia($request->file)->toMediaCollection();
-        }
-        return redirect(route('product.index'))->with('success', 'Product updated successfully.');
+       
     }
 
 
     public function updatewithfile(Request $request, Product $product)
     {
-     
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -175,9 +168,19 @@ class ProductController extends Controller
         }
         $product->update($request->only(['name', 'description', 'price', 'status']));
 
+
         $categories = explode(',', $request->categories);
         $categories = array_map('intval', $categories);
         $product->categories()->sync($categories);
+        if(!empty($request->shipping_rates)){
+            $shipping_rates = explode(',', $request->shipping_rates);
+            $shipping_rates = array_map('intval', $shipping_rates);
+            $product->shipping_rates()->sync($shipping_rates);
+        }
+        else{
+            $product->shipping_rates()->detach();
+        }
+     
 
         if ($request->hasFile('file')) {
             $product->clearMediaCollection();
