@@ -58,11 +58,17 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
         // Apply whereHas conditionally
         if ($shipping_area) {
-            $query->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                $q->where('area_name', $shipping_area);
+            $query->where(function ($q) use ($shipping_area) {
+                $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
+                    $q->where('area_name', $shipping_area);
+                })
+                ->orWhereDoesntHave('shipping_rates');
             });
+        } else {
+            $query->whereDoesntHave('shipping_rates');
         }
-
+        
+     
         // Execute the query
         $data = $query->orderBy('id', 'desc')->get();
 
@@ -80,11 +86,16 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
         // Apply whereHas conditionally
         if ($shipping_area) {
-            $query->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                $q->where('area_name', $shipping_area);
+            $query->where(function ($q) use ($shipping_area) {
+                $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
+                    $q->where('area_name', $shipping_area);
+                })
+                ->orWhereDoesntHave('shipping_rates');
             });
+        } else {
+            $query->whereDoesntHave('shipping_rates');
         }
-
+        
         // Execute the query
         $data = $query->orderBy('id', 'desc')->get();
 
@@ -104,11 +115,16 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
         // Apply whereHas conditionally
         if ($shipping_area) {
-            $query->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                $q->where('area_name', $shipping_area);
+            $query->where(function ($q) use ($shipping_area) {
+                $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
+                    $q->where('area_name', $shipping_area);
+                })
+                ->orWhereDoesntHave('shipping_rates');
             });
+        } else {
+            $query->whereDoesntHave('shipping_rates');
         }
-
+        
         // Execute the query
         $data = $query->orderBy('id', 'desc')->get();
 
@@ -129,10 +145,16 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
         // Apply whereHas conditionally
         if ($shipping_area) {
-            $query->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                $q->where('area_name', $shipping_area);
+            $query->where(function ($q) use ($shipping_area) {
+                $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
+                    $q->where('area_name', $shipping_area);
+                })
+                ->orWhereDoesntHave('shipping_rates');
             });
+        } else {
+            $query->whereDoesntHave('shipping_rates');
         }
+        
 
         // Execute the query
         $data = $query->orderBy('id', 'desc')->get();

@@ -76,7 +76,7 @@ const View = (props) => {
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">Order Information</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="text-lg"><strong>Order ID:</strong> {order.id}</div>
-                        <div className="text-lg"><strong>Order Date:</strong> {order.created_at}</div>
+                        <div className="text-lg"><strong>Order Date:</strong> {order.created_at_formatted }</div>
                         <div className="text-lg"><strong>Status:</strong> {order.status}</div>
                         <div className="text-lg"><strong>Total:</strong> ${order.total}</div>
                     </div>
