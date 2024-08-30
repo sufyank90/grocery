@@ -10,7 +10,7 @@ Route::middleware('auth:sanctum')->prefix('wishlist')->group(function () {
 
     Route::get('', function (Request $request) {
         $user = $request->user();
-        $wishlist = Wishlist::where('user_id', $user->id)->with('product','product.media')
+        $wishlist = Wishlist::where('user_id', $user->id)->with('product','product.media','product.categories')
             ->orderBy('id', 'desc')
             ->get();
         
