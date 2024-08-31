@@ -70,17 +70,19 @@ class OrderController extends Controller
 {
     // Debugging: Output all request data
     //dd($request->all()); // You might want to comment this out after testing
-
+   
     $order = Order::find($id);
 
     if ($order) {
-        $order->status = $request->status;
+        $status = $request->status;
+        $order->update(['status'=>$status]);
 
         if ($request->status == 'cancelled') {
-            $order->reason = $request->reason;
+            $reason = $request->reason;
+            $order->update(['reason'=>$reason]);
         }
 
-        $order->save();
+      
 
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }

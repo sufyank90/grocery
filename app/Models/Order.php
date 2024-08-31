@@ -36,18 +36,18 @@ class Order extends Model
         'created_at' => 'datetime',
     ];
 
+    protected $appends = ['created_at_formatted'];
    
+
+    public function getCreatedAtFormattedAttribute()
+    {
+        return $this->created_at ? Carbon::parse($this->created_at)->format('d/M/Y h:i A') : null;
+    }
 
     protected static function boot()
     {
         parent::boot();
-
-        // Format created_at when retrieving from the database
-        static::retrieved(function ($model) {
-            if ($model->created_at) {
-                $model->created_at_formatted = Carbon::parse($model->created_at)->format('d/M/Y h:i A');
-            }
-        });
+        // No need to add any additional logic in the boot method
     }
 /**
      * Get the items for the order.
