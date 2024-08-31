@@ -21,16 +21,27 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        $orders = Order::where('name', 'like', '%' . $request->search . '%')
-                       ->orWhere('email', 'like', '%' . $request->search . '%')
-                       ->orWhere('phone', 'like', '%' . $request->search . '%')
-                       ->orWhere('id', 'like', '%' . $request->search . '%')
-                       ->orderBy('id', 'desc')
-                       ->paginate(10);
-    
-        return Inertia::render('order/Order', compact('orders'));
+{
+    $query = Order::query();
+
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('email', 'like', '%' . $request->search . '%')
+              ->orWhere('phone', 'like', '%' . $request->search . '%')
+              ->orWhere('id', 'like', '%' . $request->search . '%');
+        });
     }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    $orders = $query->orderBy('id', 'desc')->paginate(10);
+
+    return Inertia::render('order/Order', compact('orders'));
+}
+
     
 
     /**

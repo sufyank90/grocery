@@ -58,14 +58,14 @@ function AdminManagement(props) {
       <AuthenticatedLayout
         auth={props.auth}
         errors={props.errors}
-        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Customers List</h2>}
+        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Admin List</h2>}
       >
         <Head title="Admin Dashboard" />
 
         <div className="flex">
           <div className="w-full pl-32 pr-32 mt-10">
             <div className="flex justify-between items-center mt-6 mb-4">
-              <h3 className="text-lg font-bold">Customers</h3>
+              <h3 className="text-lg font-bold">Admin</h3>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setIsModalOpen(true)}
@@ -339,6 +339,15 @@ function AdminManagement(props) {
                     Email
                   </label>
                   <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 mt-4"
+                  >
+                    Update User
+                  </button>
                 </div>
 
                
