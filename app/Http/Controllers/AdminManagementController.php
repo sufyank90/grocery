@@ -21,20 +21,7 @@ class AdminManagementController extends Controller
         return Inertia::render('setting/AdminManagement', compact('users'));
     }
 
-    public function updateWallet(Request $request, $id)
-    {
-        $request->validate([
-            'wallet' => 'required|numeric|min:0',
-        ]);
     
-        // Fetch the user by ID
-        $user = User::findOrFail($id);
-    
-        // Update the user's wallet balance
-        $user->update(['wallet' => $request->wallet]);
-    
-        return redirect()->back()->with('success', 'Wallet updated successfully.');
-    }
     
 
 
@@ -44,7 +31,7 @@ class AdminManagementController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'wallet' => 'required|numeric|min:0',
+            
         ]);
 
        $user =  User::create([
@@ -52,7 +39,7 @@ class AdminManagementController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'wallet' => $request->wallet,
+            
         ]);
         $user->assignRole('admin');
         return redirect()->back(); // Or redirect to any desired route
@@ -70,16 +57,16 @@ class AdminManagementController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'wallet' => 'required|numeric|min:0',
             
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'wallet' => $request->wallet,
             
         ]);
+        
+
 
         return redirect()->back()->with('message', 'User updated successfully!');
     }

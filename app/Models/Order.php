@@ -45,7 +45,7 @@ class Order extends Model
         // Format created_at when retrieving from the database
         static::retrieved(function ($model) {
             if ($model->created_at) {
-                $model->created_at_formatted = $model->created_at ->timezone(config('app.timezone'))->format('j/M/Y g:i A');
+                $model->created_at_formatted = Carbon::parse($model->created_at)->format('d/M/Y h:i A');
             }
         });
     }
