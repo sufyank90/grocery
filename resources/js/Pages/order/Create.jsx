@@ -6,8 +6,11 @@ import * as Yup from 'yup';
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import Modal from '@/Components/Modal';
+import Select from 'react-select';
+import InputLabel from '@/Components/InputLabel';
+
 const Create = (props) => {
-    const { nextId, users, products, coupons } = props;
+    const { nextId, users, products, coupons, shippingRates } = props;
     const [selectedName, setSelectedName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
@@ -71,6 +74,7 @@ const Create = (props) => {
                             status: '',
                             payable: '',
                             user_id: '',
+                            shipping_rates: '',
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -102,7 +106,9 @@ const Create = (props) => {
                                 payable: finalPrice,
                                 items: selectedItem,
                                 coupon: couponCode,
-                                user_id:values.user_id,
+                                user_id: values.user_id,
+                                shipping_rates: values.shipping_rates
+
                             }, {
                                 onSuccess: () => {
                                     resetForm();
@@ -123,10 +129,11 @@ const Create = (props) => {
                                             as="select"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             name="email"
-                                            onChange={(e) => { handleEmailChange(e, setFieldValue); setFieldValue('email', e.target.value); 
+                                            onChange={(e) => {
+                                                handleEmailChange(e, setFieldValue); setFieldValue('email', e.target.value);
                                                 const id = users.find(user => user.email === e.target.value).id;
                                                 setFieldValue('user_id', id);
-                                             }}
+                                            }}
                                         >
                                             <option value="">Select Email</option>
                                             {users.map((user) => (
@@ -253,6 +260,47 @@ const Create = (props) => {
 
                                         <ErrorMessage name="method" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
+
+
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+                                    {/* <div className="relative z-0 w-full mb-5 mt-5 group">
+                                        <InputLabel className="" value={"Select for specific areas"} />
+                                        <Select
+                                            onChange={(e) => {
+                                                setFieldValue("shipping_rates", e.map((item) => item.value));
+                                            }}
+                                            isMulti
+                                            name="shipping_rates"
+                                            options={shippingRates}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        />
+                                        <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div> */}
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            as="select"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            name="shipping_rates"
+                                        >
+                                            <option value="" disabled>Select area</option>
+                                            {shippingRates && shippingRates.length > 0 ? (
+                                                shippingRates.map(rate => (
+                                                    <option key={rate.value} value={rate.value}>
+                                                        {rate.label} {/* Ensure this matches the property names from formatted data */}
+                                                    </option>
+                                                ))
+                                            ) : (
+                                                <option value="" disabled>No areas available</option>
+                                            )}
+                                        </Field>
+                                        <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
 
 
                                 </div>
@@ -386,7 +434,7 @@ const Create = (props) => {
                                         </tbody>
                                     </table>
                                 </div>
-                                
+
 
                                 <div className="flex justify-end space-x-2 mt-4">
                                     <button

@@ -12,7 +12,7 @@ import { MdDelete } from "react-icons/md";
 
 export default function Product(props) {
     const { products, categories } = props;
-
+    console.log(products)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);

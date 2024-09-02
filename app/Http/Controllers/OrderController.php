@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Models\ShippingRate;
 
 
 
@@ -24,8 +25,9 @@ class OrderController extends Controller
 {
     $query = Order::query();
 
+    // Apply search filters
     if ($request->filled('search')) {
-        $query->where(function($q) use ($request) {
+        $query->where(function ($q) use ($request) {
             $q->where('name', 'like', '%' . $request->search . '%')
               ->orWhere('email', 'like', '%' . $request->search . '%')
               ->orWhere('phone', 'like', '%' . $request->search . '%')
@@ -33,14 +35,20 @@ class OrderController extends Controller
         });
     }
 
+    // Apply status filter
     if ($request->filled('status')) {
         $query->where('status', $request->status);
     }
 
-    $orders = $query->orderBy('id', 'desc')->paginate(10);
+    // Eager load the shippingRate relationship and paginate
+    $orders = $query->with('shippingRate')->orderBy('id', 'desc')->paginate(10);
 
-    return Inertia::render('order/Order', compact('orders'));
+    // Return the data to the Inertia view
+    return Inertia::render('order/Order', [
+        'orders' => $orders,
+    ]);
 }
+
 
     
 
@@ -49,20 +57,52 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function create()
+    // {
+    //     $nextId = Order::max('id') + 1;
+    //     $users = User::all();
+    //     $products = Product::with('categories')->get();
+    //     $coupons = Coupon::all();
+    //     return Inertia::render('order/Create', [
+    //         'nextId' => $nextId,
+    //         'users' => $users,
+    //         'products' => $products,
+    //         'coupons' => $coupons
+    //     ]);
+
+
+    // }
+
     public function create()
     {
+        
+        // Get the next order ID
         $nextId = Order::max('id') + 1;
+
+        // Fetch all users, products, and coupons
         $users = User::all();
         $products = Product::with('categories')->get();
         $coupons = Coupon::all();
+
+        // Fetch all shipping rates with id and area_name
+        $shippingRates = ShippingRate::all(['id', 'area_name']);
+
+        // Format shipping rates for use in the front-end
+        $formattedShippingRates = $shippingRates->map(function ($item) {
+            return [
+                'value' => $item->id,
+                'label' => $item->area_name,
+            ];
+        });
+
+        // Pass all data to the Inertia view for order creation
         return Inertia::render('order/Create', [
             'nextId' => $nextId,
             'users' => $users,
             'products' => $products,
-            'coupons' => $coupons
+            'coupons' => $coupons,
+            'shippingRates' => $formattedShippingRates, // Add shipping rates here
         ]);
-
-
     }
 
     // order.status
@@ -98,17 +138,34 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        $order = Order::create($request->validated());
-        $order->items()->createMany($request->items);
-        if ($request->coupon) {
+        // Validate the request and create the order
+        $orderData = $request->validated();
+    
+        // Create the order
+        $order = Order::create($orderData);
+    
+        // Create items associated with the order
+        if (isset($request->items) && is_array($request->items)) {
+            $order->items()->createMany($request->items);
+        }
+    
+        // Handle coupon usage
+        if (!empty($request->coupon)) {
             $coupon = Coupon::where('code', $request->couponcode)->first();
             if ($coupon) {
                 $coupon->usage_limit = $coupon->usage_limit - 1;
                 $coupon->save();
             }
         }
-        return redirect()->to(route('order.index'));
+    
+        // Assign shipping_id if provided
+        if (isset($request->shipping_rates) && !empty($request->shipping_rates)) {
+            $order->update(['shipping_id' => $request->shipping_rates]);
+        }
+    
+        return redirect()->route('order.index');
     }
+    
 
     /**
      * Display the specified resource.
