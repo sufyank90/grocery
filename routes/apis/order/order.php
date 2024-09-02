@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
                 'discount' => 'nullable|numeric',
                 'status' => 'nullable|string|max:50',
                 'payable' => 'required|numeric',
-        
+                'shipping_id' => 'required',
         ]);
 
         if($validator->fails()){

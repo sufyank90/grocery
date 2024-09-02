@@ -31,6 +31,7 @@ class Order extends Model
         'status',
         'payable',
         'user_id',
+        'shipping_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',
