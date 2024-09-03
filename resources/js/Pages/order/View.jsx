@@ -59,7 +59,7 @@ const View = (props) => {
                 <div className="flex justify-end mb-4 no-print">
                     <button
                         onClick={() => window.print()}
-                        className="bg-blue-600 text-white py-2 px-4 rounded shadow hover:bg-blue-700 transition duration-300"
+                        className="bg-yellow-500 text-white py-2 px-4 rounded shadow hover:bg-yellow-600 transition duration-300"
                     >
                         Print
                     </button>

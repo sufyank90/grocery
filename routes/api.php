@@ -29,3 +29,4 @@ include __DIR__ . '/apis/shippingrate/getshippingrate.php';
 include __DIR__ . '/apis/banner/getbanner.php';
 include __DIR__ . '/apis/wishlist/wishlist.php';
 include __DIR__ . '/apis/feedback/feedback.php';
+include __DIR__ . '/apis/notification/notification.php';

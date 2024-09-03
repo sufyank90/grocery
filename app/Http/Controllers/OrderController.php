@@ -12,6 +12,9 @@ use Inertia\Inertia;
 use App\Models\User;
 use App\Models\ShippingRate;
 
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OrderNotification;
+
 
 
 class OrderController extends Controller
@@ -95,6 +98,9 @@ class OrderController extends Controller
             ];
         });
 
+
+
+
         // Pass all data to the Inertia view for order creation
         return Inertia::render('order/Create', [
             'nextId' => $nextId,
@@ -162,6 +168,8 @@ class OrderController extends Controller
         if (isset($request->shipping_rates) && !empty($request->shipping_rates)) {
             $order->update(['shipping_id' => $request->shipping_rates]);
         }
+
+        Notification::send($order->user, new OrderNotification($order));
     
         return redirect()->route('order.index');
     }

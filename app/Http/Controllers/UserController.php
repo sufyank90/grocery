@@ -52,6 +52,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'wallet' => $request->wallet,
+            
         ]);
         $user->assignRole('user');
         return redirect()->back(); // Or redirect to any desired route
