@@ -90,14 +90,18 @@ class CouponController extends Controller
      */
     public function update(Request $request, Coupon $coupon)
 {
+    
     $request->validate([
         'code' => 'required|string|unique:coupons,code,' . $coupon->id,
         'type' => 'required|string|in:fixed,percentage',
         'value' => 'required|numeric|min:0',
         'usage_type' => 'required|string|in:single,multiple',
-        'usage_limit' => 'required_if:usage_type,multiple|nullable|integer|min:1',
+        'usage_limit' => 'required',
         'expiry_date' => 'required|date|after:today',
     ]);
+  
+    $request->usage_type = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
+
 
     $coupon->code = $request->input('code');
     $coupon->type = $request->input('type');

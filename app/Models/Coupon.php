@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class Coupon extends Model
 {
     use HasFactory;
@@ -17,6 +17,10 @@ class Coupon extends Model
     {
         return $this->expiry_date && $this->expiry_date->isPast();
     }
+
+    // protected $casts = [
+    //     'expiry_date' => 'date',
+    // ];
 
     public function canBeUsed()
     {
