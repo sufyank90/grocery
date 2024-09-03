@@ -449,14 +449,14 @@ const Create = (props) => {
                                                 setIsCouponModalOpen(true)
                                             }
                                         }}
-                                        className={`text-white bg-yellow-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
                                         {couponCode && couponCode.code ? 'Remove Coupon' : 'Apply Coupon'}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={selectedItem.length == [] ? true : false}
-                                        className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`text-white bg-yellow-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
                                         {isSubmitting ? 'Submitting...' : 'Submit'}
                                     </button>

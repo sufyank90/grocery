@@ -68,5 +68,10 @@ class Order extends Model
     {
         return $this->belongsTo(ShippingRate::class, 'shipping_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     
 }

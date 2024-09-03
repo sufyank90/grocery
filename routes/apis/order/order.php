@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OrderNotification;
 
 Route::middleware('auth:sanctum')->prefix('order')->group(function () {
 
@@ -54,6 +56,8 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         $order = Order::create(array_merge($validatedData, [
             'user_id' => $user->id,
         ]));
+
+        Notification::send($order->user, new OrderNotification($order));
 
 
         return response()->json(["data" => $order, "message" => "Order created successfully"], 201);
