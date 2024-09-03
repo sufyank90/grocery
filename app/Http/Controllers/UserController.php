@@ -39,32 +39,37 @@ class UserController extends Controller
 
 
     public function store(Request $request)
-{
-
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'wallet' => 'required|numeric|min:0',
+        ]);
     
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users,email',
-        'password' => 'required|string|min:8|confirmed',
-        'wallet' => 'required|numeric|min:0',
-    ]);
-
+        // Email existence ko manually check karein
+        // $existingUser = User::where('email', $request->email)->first();
     
-
-    // Create the user
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'wallet' => $request->wallet,
-    ]);
-
-    // Assign role to the user
-    $user->assignRole('user');
-
-    // Redirect back or to any other route
-    return redirect()->back()->with('success', 'User created successfully!');
-}
+        // if ($existingUser) {
+        //     return back()->withErrors(['email' => 'The email address is already registered.'])->withInput();
+        // }
+    
+        // Agar email exist nahi karti, toh user create karein
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'wallet' => $request->wallet,
+        ]);
+    
+        // User role assign karein
+        $user->assignRole('user');
+    
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'User created successfully!');
+    }
+    
+    
     public function update(Request $request, $id)
     {
         // dd($request->all());
