@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -31,6 +32,14 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
+       $check= Auth::user()->hasRole('user');
+        if($check) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'status' => 'You are not allowed to login',
+            ]);
+        }
 
         $request->session()->regenerate();
 

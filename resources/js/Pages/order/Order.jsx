@@ -13,6 +13,7 @@ import { IoCreate } from "react-icons/io5";
 
 function Orders(props) {
     const { orders } = props; // Update this to use orders instead of categorys
+    console.log(orders);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -45,51 +46,51 @@ function Orders(props) {
                                     Create
                                 </Link>
                                 <Formik
-    enableReinitialize
-    initialValues={{ search: '', status: '' }}
-    onSubmit={(values) => {
-        router.visit(route('order.index', { search: values.search, status: values.status }), {
-            method: 'get',
-            preserveState: true,
-        });
-    }}
->
-    {({ submitForm, setFieldValue }) => (
-        <Form className="flex space-x-2">
-            <div>
-                <Field
-                    as="select"
-                    name="status"
-                    className="py-2 pr-7 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    onChange={(e) => {
-                        setFieldValue('status', e.target.value);
-                        submitForm();  // Automatically submit the form on change
-                    }}
-                >
-                    <option value="">All</option>
-                    <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                </Field>
-            </div>
-            <div>
-                <Field
-                    name="search"
-                    type="text"
-                    placeholder="Search By Order Id"
-                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-            </div>
-            <button
-                type="submit"
-                style={{ background: '#fcb609' }}
-                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
-            >
-                Search
-            </button>
-        </Form>
-    )}
-</Formik>
+                                    enableReinitialize
+                                    initialValues={{ search: '', status: '' }}
+                                    onSubmit={(values) => {
+                                        router.visit(route('order.index', { search: values.search, status: values.status }), {
+                                            method: 'get',
+                                            preserveState: true,
+                                        });
+                                    }}
+                                >
+                                    {({ submitForm, setFieldValue }) => (
+                                        <Form className="flex space-x-2">
+                                            <div>
+                                                <Field
+                                                    as="select"
+                                                    name="status"
+                                                    className="py-2 pr-7 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                    onChange={(e) => {
+                                                        setFieldValue('status', e.target.value);
+                                                        submitForm();  // Automatically submit the form on change
+                                                    }}
+                                                >
+                                                    <option value="">All</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="cancelled">Cancelled</option>
+                                                </Field>
+                                            </div>
+                                            <div>
+                                                <Field
+                                                    name="search"
+                                                    type="text"
+                                                    placeholder="Search By Order Id"
+                                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                />
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                style={{ background: '#fcb609' }}
+                                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
+                                            >
+                                                Search
+                                            </button>
+                                        </Form>
+                                    )}
+                                </Formik>
 
 
 
@@ -107,6 +108,7 @@ function Orders(props) {
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
                                 </tr>
@@ -129,7 +131,11 @@ function Orders(props) {
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.total}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td>
+                                            <td className="py-2 px-4 border-b text-left">
+                                            {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
+                                            </td>
+
+                                            {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
                                                 {order.status === 'pending' && (
                                                     <span

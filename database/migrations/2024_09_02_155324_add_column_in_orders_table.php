@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('shipping_id')->nullable(); // Foreign key column
             $table->foreign('shipping_id')->references('id')->on('shipping_rates')->onDelete('set null');
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.

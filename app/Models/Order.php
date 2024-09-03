@@ -62,4 +62,11 @@ class Order extends Model
     {
         return $this->hasMany(Feedback::class, 'order_id');
     }
+
+    // Define the relationship with ShippingRate
+    public function shippingRate()
+    {
+        return $this->belongsTo(ShippingRate::class, 'shipping_id');
+    }
+    
 }
