@@ -236,7 +236,7 @@ function Create(props) {
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => setIsModalOpen(false)}
+                                            onClick={ () => router.get(route('product.index'))}
                                             className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
                                         >
                                             Close

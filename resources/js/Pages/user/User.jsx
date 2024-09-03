@@ -131,7 +131,7 @@ function User(props) {
                     <td className="py-2 px-4 border-b truncate text-left">{user.name}</td>
                     <td className="py-2 px-4 border-b text-left">{user.email}</td>
                     <td className="py-2 px-4 border-b text-left">
-                      {user.wallet.toString()} <GiTwoCoins className="inline-flex ml-3 " color='#fcb609'/>
+                      {user.wallet.toString()} <GiTwoCoins className="inline-flex ml-3 " color='#fcb609' />
                     </td>
                     <td className="py-2 px-4 border-b text-left">
                       <div className="flex items-center">

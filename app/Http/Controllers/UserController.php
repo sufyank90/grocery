@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash; // Add this line
 
 
+
 class UserController extends Controller
 {
     public function index(Request $request){
@@ -38,30 +39,32 @@ class UserController extends Controller
 
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'wallet' => 'required|numeric|min:0',
-        ]);
+{
 
-       $user =  User::create([
-        
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'wallet' => $request->wallet,
-            
-        ]);
-        $user->assignRole('user');
-        return redirect()->back(); // Or redirect to any desired route
-    }
+    
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users,email',
+        'password' => 'required|string|min:8|confirmed',
+        'wallet' => 'required|numeric|min:0',
+    ]);
 
     
 
-    
+    // Create the user
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'wallet' => $request->wallet,
+    ]);
 
+    // Assign role to the user
+    $user->assignRole('user');
+
+    // Redirect back or to any other route
+    return redirect()->back()->with('success', 'User created successfully!');
+}
     public function update(Request $request, $id)
     {
         // dd($request->all());
