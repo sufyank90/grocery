@@ -245,7 +245,7 @@ export default function Product(props) {
 
                                     <div className="flex justify-end mt-4 space-x-2">
                                         <button type='submit'
-                                            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                            className="text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                         >
                                             Save
                                         </button>

@@ -373,9 +373,9 @@ function AdminManagement(props) {
             <h2 className="text-lg font-bold mb-4">Are you sure you want to delete this Admin?</h2>
             <button
               onClick={handleDelete}
-              className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
+              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
             >
-              Confirm
+              Delete
             </button>
             <button
               onClick={() => setIsDeleteModalOpen(false)}
