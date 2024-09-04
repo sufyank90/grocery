@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->prefix('coupon')->group(function () {
             'value' => 'required|numeric',
             'usage_type' => 'required|in:single,multiple,infinite',
             'usage_limit' => 'nullable|integer|min:1',
+            'minimum_amount' => 'nullable|numeric|min:0',
+            'limit' => 'nullable|integer|min:1',
             'expiry_date' => 'nullable|date',
         ]);
 

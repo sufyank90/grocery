@@ -10,7 +10,7 @@ class Coupon extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'type', 'value', 'usage_type', 'usage_limit', 'expiry_date'
+        'code', 'type', 'value', 'usage_type', 'usage_limit', 'expiry_date','min_amount','limit'
     ];
 
     public function isExpired()
@@ -37,5 +37,9 @@ class Coupon extends Model
         }
 
         return true;
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

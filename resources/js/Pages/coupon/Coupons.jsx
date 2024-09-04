@@ -150,6 +150,7 @@ function Coupons(props) {
                             value: '',
                             usage_type: '',
                             usage_limit: '',
+                            min_amount:'',
                             expiry_date: '',
                         }}
                         validationSchema={Yup.object({
@@ -158,10 +159,13 @@ function Coupons(props) {
                             value: Yup.number().required('Value is required'),
                             usage_type: Yup.string().required('Usage Type is required'),
                             usage_limit: Yup.number().required('Usage Limit is required'),
+
                             expiry_date: Yup.date().required('Expiry Date is required'),
                         })}
                         onSubmit={(values, { resetForm }) => {
+                           
                             router.post(route('coupon.store'), values, {
+                                
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpen(false);
@@ -216,6 +220,21 @@ function Coupons(props) {
                                 </label>
                                 <ErrorMessage name="value" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
+                            <div className="relative z-0 w-full mb-5">
+                                <Field
+                                    name="min_amount"
+                                    type="number"
+                                    placeholder=" "
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                />
+                                <label
+                                    htmlFor="min_amount"
+                                    className="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                                >
+                                    Minimum Amount
+                                </label>
+                                <ErrorMessage name="min_amount" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
 
                             <div className="relative z-0 w-full mb-5">
                                 <Field
@@ -229,6 +248,8 @@ function Coupons(props) {
                                 </Field>
                                 <ErrorMessage name="usage_type" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
+
+
 
                             <div className="relative z-0 w-full mb-5">
                                 <Field

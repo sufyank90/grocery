@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
     // Route to get all products with optional shipping_area filtering
     Route::get('', function(Request $request) {
+    
         // Retrieve the optional query parameters
         $shipping_area = $request->query('shipping_area');
 
@@ -60,7 +61,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
         if ($shipping_area) {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                    $q->where('area_name', $shipping_area);
+                    $q->where('id', $shipping_area);
                 })
                 ->orWhereDoesntHave('shipping_rates');
             });
@@ -88,7 +89,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
         if ($shipping_area) {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                    $q->where('area_name', $shipping_area);
+                    $q->where('id', $shipping_area);
                 })
                 ->orWhereDoesntHave('shipping_rates');
             });
@@ -117,7 +118,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
         if ($shipping_area) {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                    $q->where('area_name', $shipping_area);
+                    $q->where('id', $shipping_area);
                 })
                 ->orWhereDoesntHave('shipping_rates');
             });
@@ -147,7 +148,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
         if ($shipping_area) {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
-                    $q->where('area_name', $shipping_area);
+                    $q->where('id', $shipping_area);
                 })
                 ->orWhereDoesntHave('shipping_rates');
             });
