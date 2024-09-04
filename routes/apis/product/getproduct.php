@@ -148,8 +148,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
                     $q->where('id', $shipping_area);
-                })
-                ->orWhereDoesntHave('shipping_rates');
+                });
             });
         } else {
             $query->whereDoesntHave('shipping_rates');
