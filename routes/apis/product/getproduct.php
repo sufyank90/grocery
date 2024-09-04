@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
     Route::get('/{slug}', function(Request $request, $slug) {
         // Retrieve the optional query parameters
         $shipping_area = $request->query('shipping_area');
-
+        //return $shipping_area;
         // Build the query
         $query = Product::with('categories', 'media')
             ->where('name', 'like', '%' . $slug . '%');
@@ -90,8 +90,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
                     $q->where('id', $shipping_area);
-                })
-                ->orWhereDoesntHave('shipping_rates');
+                });
             });
         } else {
             $query->whereDoesntHave('shipping_rates');
@@ -149,8 +148,7 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
                     $q->where('id', $shipping_area);
-                })
-                ->orWhereDoesntHave('shipping_rates');
+                });
             });
         } else {
             $query->whereDoesntHave('shipping_rates');
