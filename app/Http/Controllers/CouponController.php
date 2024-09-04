@@ -37,12 +37,14 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
+    
         $request->validate([
             'code' => 'required|string|unique:coupons,code',
             'type' => 'required|string|in:fixed,percentage',
             'value' => 'required|numeric|min:0',
             'usage_type' => 'required|string|in:single,multiple',
             'usage_limit' => 'required_if:usage_type,multiple|nullable|integer|min:1',
+            'min_amount' => 'required|numeric',
             'expiry_date' => 'required|date|after:today',
         ]);
     
@@ -52,6 +54,7 @@ class CouponController extends Controller
         $coupon->value = $request->input('value');
         $coupon->usage_type = $request->input('usage_type');
         $coupon->usage_limit = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
+        $coupon->min_amount = $request->input('min_amount');
         $coupon->expiry_date = $request->input('expiry_date');
         $coupon->save();
     
@@ -97,6 +100,7 @@ class CouponController extends Controller
         'value' => 'required|numeric|min:0',
         'usage_type' => 'required|string|in:single,multiple',
         'usage_limit' => 'required',
+        'minimum_amount' => 'required|numeric|min:0',
         'expiry_date' => 'required|date|after:today',
     ]);
   
@@ -108,6 +112,7 @@ class CouponController extends Controller
     $coupon->value = $request->input('value');
     $coupon->usage_type = $request->input('usage_type');
     $coupon->usage_limit = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
+    $coupon->minimum_amount = $request->input('minimum_amount');
     $coupon->expiry_date = $request->input('expiry_date');
     $coupon->save();
 
