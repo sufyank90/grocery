@@ -15,7 +15,10 @@ Route::middleware('auth:sanctum')->prefix('banner')->group(function () {
     //     $data = Banner::orderBy('id','desc')->with('media')->get();
     //     return response()->json(["data"=>$data,"message"=>"success"], 200);
     // });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 29fdd75113e8b3c06b28724570de631ca9c6bdf4
     Route::get('', function(Request $request) {
         $data = Banner::orderBy('id', 'desc')
                     ->with(['media', 'category']) // Load the category with the banner

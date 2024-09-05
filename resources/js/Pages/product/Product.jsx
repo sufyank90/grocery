@@ -82,6 +82,7 @@ export default function Product(props) {
                         <table className="min-w-full bg-white rounded-lg shadow">
                             <thead>
                                 <tr>
+                                    {/* <th className="py-2 px-4 border-b text-left">#</th> */}
                                     <th className="py-2 px-4 border-b text-left">#</th>
                                     <th className="py-2 px-4 border-b text-left">Name</th>
                                     <th className="py-2 px-4 border-b text-left">Description</th>
@@ -104,7 +105,8 @@ export default function Product(props) {
                                     <>
                                         {products.data.map((product, index) => (
                                             <tr key={product.id}>
-                                                <td className="py-2 px-4 border-b text-left">{index + 1}</td>
+                                                {/* <td className="py-2 px-4 border-b text-left">{index + 1}</td> */}
+                                                <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
                                                 <td className="py-2 px-4 border-b text-left">{product.name}</td>
                                                 <td className="py-2 px-4 border-b text-left">{product.description}</td>
                                                 <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>

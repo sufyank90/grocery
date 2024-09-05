@@ -100,7 +100,7 @@ function Orders(props) {
                         <table className="min-w-full bg-white rounded-lg shadow-lg">
                             <thead>
                                 <tr>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th>
+                                    {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
@@ -123,13 +123,13 @@ function Orders(props) {
                                 ) : (<>
                                     {orders.data.map((order, index) => (
                                         <tr key={order.id} className="hover:bg-gray-100">
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.id}</td>
+                                            {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(products.current_page - 1) * products.per_page + index + 1}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.total}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs.{order.total}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
                                             <td className="py-2 px-4 border-b text-left">
                                             {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}

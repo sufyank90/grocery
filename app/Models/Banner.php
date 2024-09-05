@@ -13,9 +13,17 @@ class Banner extends Model implements HasMedia
         'category_id',
         'product_id',
     ];
+<<<<<<< HEAD
 
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+=======
+     // Define the relationship with Category
+     public function category()
+     {
+         return $this->belongsTo(Category::class, 'category_id');
+     }
+>>>>>>> 29fdd75113e8b3c06b28724570de631ca9c6bdf4
 }

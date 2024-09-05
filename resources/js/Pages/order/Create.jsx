@@ -347,7 +347,7 @@ const Create = (props) => {
                                                         {item.category}
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        {item.price}
+                                                        Rs.{item.price}
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         {item.qty}
@@ -371,7 +371,7 @@ const Create = (props) => {
                                                     Sub Total
                                                 </td>
                                                 <td class="px-6 py-4 ">
-                                                    {totalPrice}
+                                                    Rs.{totalPrice}
                                                 </td>
                                             </tr>
                                             {couponCode && couponCode.code &&
@@ -427,7 +427,7 @@ const Create = (props) => {
                                                     Total
                                                 </td>
                                                 <td class="px-6 py-4 ">
-                                                    {finalPrice}
+                                                    Rs.{finalPrice}
                                                 </td>
                                             </tr>
 
