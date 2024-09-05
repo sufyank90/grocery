@@ -124,7 +124,7 @@ function Orders(props) {
                                     {orders.data.map((order, index) => (
                                         <tr key={order.id} className="hover:bg-gray-100">
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(products.current_page - 1) * products.per_page + index + 1}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(order.current_page - 1) * order.per_page + index + 1}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
