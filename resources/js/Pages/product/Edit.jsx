@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import InputLabel from '@/Components/InputLabel';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
-import { IoIosAddCircleOutline } from 'react-icons/io';
+import { IoIosAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import Select from 'react-select';
 
 
@@ -26,7 +26,9 @@ function Edit(props) {
     // Assuming defaultshippingrate is available in your component
     const shippingRateIds = extractShippingRateIds(defaultshippingrate);
     
-    
+    const initialFiles = product?.media?.length > 0 
+    ? product.media.map(media => ({ url: media.original_url, id: media.id })) 
+    : [];
 
     return (
         <>
@@ -48,9 +50,8 @@ function Edit(props) {
                                 status: product ? product.status : '',
                                 categories: initialCategoryIds, // Initialize with selected categories
                                 shipping_rates: defaultshippingrate ? shippingRateIds : [],
-                                file:  product && product.media && product.media[0] && product.media[0].original_url
-                                ? product.media[0].original_url
-                                : null,
+                                file:  initialFiles
+                                
                             }}
                             validationSchema={Yup.object({
                                 name: Yup.string().required('Required'),
@@ -79,8 +80,17 @@ function Edit(props) {
                                 formData.append('status', values.status);
                                 formData.append('shipping_rates', values.shipping_rates);
                                 formData.append('categories', values.categories.join(',')); // Join category IDs into a string
-                                if (values.file && values.file !== product.media[0]?.original_url) {
-                                    formData.append('file', values.file);
+                                if (values.file) {
+                                    values.file.forEach((file) => {
+                                        // Ensure that only File objects are appended
+                                        if (file instanceof File) {
+                                            formData.append('file[]', file); // Append each file separately
+                                        }
+                                        else
+                                        {
+                                            formData.append('ids[]', file.id);
+                                        }
+                                    });
                                 }
 
                                 router.post(route('product.updatewithfile', product.id), formData, {
@@ -205,35 +215,78 @@ function Edit(props) {
 
 
 
-                                    <div className="flex items-center justify-center w-full">
-                                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                    <div class="flex items-center justify-center w-full">
+                                        <label
+                                            htmlFor="dropzone-file"
+                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                                        >
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                {!values.file ? (
+                                                {!values.file || values.file.length === 0 ? (
                                                     <>
-                                                        <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                        <svg
+                                                            className="w-8 h-8 mb-4 text-gray-500"
+                                                            aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 20 16"
+                                                        >
+                                                            <path
+                                                                stroke="currentColor"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
+                                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                            />
                                                         </svg>
-                                                        <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                                        <p className="mb-2 text-sm text-gray-500">
+                                                            <span className="font-semibold">Click to upload</span> or drag and
+                                                            drop
+                                                        </p>
                                                         <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                                     </>
                                                 ) : (
-                                                    <div className="relative">
-                                                        <img height={100} width={100} className='rounded-lg' src={typeof values.file === 'string' ? values.file : URL.createObjectURL(values.file)}  alt="Preview" />
-                                                        <IoIosAddCircleOutline size={30} onClick={() => setFieldValue("file", null)} className="absolute top-[-20px] right-[-20px] m-2 p-1 bg-white rounded-full cursor-pointer" />
-                                                    </div>
+                                                    <span></span>
                                                 )}
                                             </div>
-                                            <input onChange={(event) => {
-                                                const file = event.currentTarget.files[0];
-                                                const fileType = file.type;
-                                                const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
-                                                if (!allowedTypes.includes(fileType)) {
-                                                    toast.error('Unsupported file type. Only SVG, PNG, JPG, JPEG, GIF are allowed.');
-                                                    return;
-                                                }
-                                                setFieldValue("file", file);
-                                            }} id="dropzone-file" type="file" className="hidden" />
+                                            <input
+                                                onChange={(event) => {
+                                                    const files = event.currentTarget.files;
+                                                    const newFiles = Array.from(event.currentTarget.files);
+                                                    setFieldValue('file', [...values.file, ...newFiles]); // Append new files to existing ones
+                                                    //setFieldValue("file", files ? Array.from(files) : []); // Convert FileList to array
+                                                    //setFieldValue('file', files); // Replace the files with new selections
+                                                }}
+                                                id="dropzone-file"
+                                                type="file"
+                                                className="hidden"
+                                                multiple
+                                            />
                                         </label>
+
+                                    </div>
+                                    <div className="flex flex-wrap gap-4 w-full">
+                                        {values.file && Array.from(values.file).map((file, index) => (
+                                            <div key={index} className="relative">
+                                                <img
+                                                    height={100}
+                                                    width={100}
+                                                    className="rounded-lg"
+                                                    src={file.url ? file.url : URL.createObjectURL(file)}
+                                                    alt="Preview"
+                                                />
+                                                {/* Delete Icon */}
+                                                <IoMdRemoveCircleOutline
+                                                    size={30}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // Prevent file input from triggering
+                                                        const newFiles = Array.from(values.file).filter((_, i) => i !== index);
+                                                        setFieldValue('file', newFiles.length > 0 ? newFiles : null); // Set to null if all files are removed
+                                                    }}
+                                                    className="absolute top-[-10px] right-[-10px] m-2 p-1 bg-white rounded-full cursor-pointer text-red-500"
+                                                    title="Remove Image"
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
                                     <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
 
