@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import InputLabel from '@/Components/InputLabel';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
-import { IoIosAddCircleOutline } from 'react-icons/io';
+import { IoIosAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
+
 import Select from 'react-select';
+import { useEffect } from 'react';
 
 
+const FormObserver = () => {
+    const { values } = useFormikContext();
+
+    useEffect(() => {
+        console.log("Form values have changed:", values);
+
+        // Perform your logic based on values
+        //   if (values.email === 'example@example.com') {
+        //     console.log("This email is already taken.");
+        //   }
+    }, [values]);
+
+    return null;
+};
 
 function Create(props) {
     const { products, categories, shippingRates } = props;
-
-
 
     return (
         <>
@@ -37,7 +51,7 @@ function Create(props) {
                                 status: 'instock',
                                 categories: [],
                                 shipping_rates: [],
-                                file: null,
+                                file: [],
                             }}
                             validationSchema={Yup.object({
                                 name: Yup.string().required('Required'),
@@ -45,18 +59,22 @@ function Create(props) {
                                 price: Yup.number().required('Required').positive(),
                                 status: Yup.string().required('Required'),
                                 categories: Yup.array().min(1, 'At least one category is required').required('Required'),
-                                file: Yup.mixed()
-                                    .required('File is required')
-                                    .test(
-                                        'fileFormat',
-                                        'Unsupported file format',
-                                        (value) => {
-                                            console.log(value)
-                                            if (!value) return true; // If no file uploaded, skip validation
-                                            return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
-                                        }
-                                    ),
-                            })}
+                                file: Yup.array()
+                                  .min(1, 'At least one file is required')
+                                  .required('File is required')
+                                  .test(
+                                    'fileFormat',
+                                    'Unsupported file format',
+                                    (files) => {
+                                      if (!files || files.length === 0) return true; // Skip validation if no file uploaded
+                                      return files.every(file =>
+                                        ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type)
+                                      );
+                                    }
+                                  ),
+                              })}
+                              
+                            
                             onSubmit={(values, { resetForm }) => {
 
 
@@ -69,6 +87,7 @@ function Create(props) {
                             }}
                         >
                             {({ values, setFieldValue }) => (
+
                                 <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
                                     <h2 className="text-lg font-bold mb-4">Create Product</h2>
                                     <div className="relative z-0 w-full mb-5 group">
@@ -178,34 +197,75 @@ function Create(props) {
 
 
                                     <div class="flex items-center justify-center w-full">
-                                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50     hover:bg-gray-100      ">
-                                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                {!values.file ? (<>
-                                                    <svg class="w-8 h-8 mb-4 text-gray-500  " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p class="mb-2 text-sm text-gray-500  "><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                    <p class="text-xs text-gray-500  ">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                                </>) : (
+                                        <label
+                                            htmlFor="dropzone-file"
+                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                                        >
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                {!values.file || values.file.length === 0 ? (
                                                     <>
-                                                        <div className="relative">
-                                                            <img height={100} width={100} className='rounded-lg' src={URL.createObjectURL(values.file)} alt="Preview" />
-                                                            <IoIosAddCircleOutline size={30} onClick={() => setFieldValue("file", null)} className="absolute top-[-20px] right-[-20px] m-2 p-1 bg-white rounded-full cursor-pointer" />
-                                                        </div>
+                                                        <svg
+                                                            className="w-8 h-8 mb-4 text-gray-500"
+                                                            aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none"
+                                                            viewBox="0 0 20 16"
+                                                        >
+                                                            <path
+                                                                stroke="currentColor"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
+                                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                            />
+                                                        </svg>
+                                                        <p className="mb-2 text-sm text-gray-500">
+                                                            <span className="font-semibold">Click to upload</span> or drag and
+                                                            drop
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                                     </>
+                                                ) : (
+                                                    <span></span>
                                                 )}
                                             </div>
-                                            <input onChange={(event) => {
-                                                // validate the file type
-                                                const fileType = event.target.files[0].type;
-                                                const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
-                                                if (!allowedTypes.includes(fileType)) {
-                                                    toast.error('Unsupported file type. Only SVG, PNG, JPG, JPEG, GIF are allowed.');
-                                                    return;
-                                                }
-                                                setFieldValue("file", event.currentTarget.files[0])
-                                            }} id="dropzone-file" type="file" class="hidden" />
+                                            <input
+                                                onChange={(event) => {
+                                                    const files = event.currentTarget.files;
+                                                    setFieldValue("file", files ? Array.from(files) : []); // Convert FileList to array
+                                                    //setFieldValue('file', files); // Replace the files with new selections
+                                                }}
+                                                id="dropzone-file"
+                                                type="file"
+                                                className="hidden"
+                                                multiple
+                                            />
                                         </label>
+
+                                    </div>
+                                    <div className="flex flex-wrap gap-4 w-full">
+                                        {values.file && Array.from(values.file).map((file, index) => (
+                                            <div key={index} className="relative">
+                                                <img
+                                                    height={100}
+                                                    width={100}
+                                                    className="rounded-lg"
+                                                    src={URL.createObjectURL(file)}
+                                                    alt="Preview"
+                                                />
+                                                {/* Delete Icon */}
+                                                <IoMdRemoveCircleOutline
+                                                    size={30}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // Prevent file input from triggering
+                                                        const newFiles = Array.from(values.file).filter((_, i) => i !== index);
+                                                        setFieldValue('file', newFiles.length > 0 ? newFiles : null); // Set to null if all files are removed
+                                                    }}
+                                                    className="absolute top-[-10px] right-[-10px] m-2 p-1 bg-white rounded-full cursor-pointer text-red-500"
+                                                    title="Remove Image"
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
                                     <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
 
@@ -236,17 +296,18 @@ function Create(props) {
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={ () => router.get(route('product.index'))}
+                                            onClick={() => router.get(route('product.index'))}
                                             className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
                                         >
                                             Close
                                         </button>
                                     </div>
 
-
+                                    <FormObserver />
 
                                 </Form>
                             )}
+
                         </Formik>
                     </div>
                 </div>

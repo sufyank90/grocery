@@ -73,7 +73,7 @@ function Category(props) {
                         <table className="min-w-full bg-white rounded-lg shadow-lg">
                             <thead>
                                 <tr>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Image</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
@@ -89,7 +89,8 @@ function Category(props) {
                                     <>
                                         {categorys.data.map((product, index) => (
                                             <tr key={product.id} className="hover:bg-gray-100">
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td>
+                                                {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(categorys.current_page - 1) * categorys.per_page + index + 1}</td>
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{product.name}</td>
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
                                                     {product.media && product.media.length > 0 && product.media[0].original_url ? (
@@ -196,7 +197,7 @@ function Category(props) {
 
                         {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
                             <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                                <h2 className="text-lg font-bold mb-4">Create Product</h2>
+                                <h2 className="text-lg font-bold mb-4">Create Category</h2>
                                 <div className="relative z-0 w-full mb-5 group">
                                     <Field
                                         name="name"
@@ -322,7 +323,7 @@ function Category(props) {
                     >
                         {({ isSubmitting, handleSubmit, setFieldValue, values }) => (
                             <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                                <h2 className="text-lg font-bold mb-4">Edit Product </h2>
+                                <h2 className="text-lg font-bold mb-4">Edit Category </h2>
 
                                 <div className="relative z-0 w-full mb-5 group">
                                     <Field

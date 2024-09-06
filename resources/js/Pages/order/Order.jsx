@@ -129,7 +129,7 @@ function Orders(props) {
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs.{order.total}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
                                             <td className="py-2 px-4 border-b text-left">
                                             {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}

@@ -85,8 +85,13 @@ class ProductController extends Controller
   
         $product = Product::create($request->only(['name', 'description', 'price', 'status']));
         $product->categories()->attach($request->categories);
-        if($request->file){
-            $product->addMedia($request->file)->toMediaCollection();
+        // if($request->file){
+        //     $product->addMedia($request->file)->toMediaCollection();
+        // }
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $file) {
+                $product->addMedia($file)->toMediaCollection();
+            }
         }
         $product->shipping_rates()->attach($request->shipping_rates);
         session()->flash('success', 'Product created successfully.');
@@ -131,6 +136,12 @@ class ProductController extends Controller
 
         $categories = Category::all();
         $product->load(['categories', 'media']);
+        // dd([
+        //     'categories' => $categories,
+        //     'product' => $product,
+        //     'shippingRates' => $formattedShippingRates,
+        //     'defaultshippingrate' => $defaultshippingrate
+        // ]);
         return Inertia::render('product/Edit', [
         'categories' => $categories,
         'product' => $product,
@@ -154,6 +165,7 @@ class ProductController extends Controller
 
     public function updatewithfile(Request $request, Product $product)
     {
+        //dd($request->file('file'));
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -181,11 +193,23 @@ class ProductController extends Controller
             $product->shipping_rates()->detach();
         }
      
+        // if ($request->hasFile('file')) {
+        //     $product->clearMediaCollection();
+        //     $product->addMedia($request->file('file'))->toMediaCollection();
+        // }  
+        // if ($request->hasFile('file')) {
+        //     $product->clearMediaCollection();
+        //     $product->addMedia($request->file('file'))->toMediaCollection();
+        // }   
 
+        if($request->has('ids')){
+            $product->media()->whereNotIn('id', $request->ids)->delete();
+        }
         if ($request->hasFile('file')) {
-            $product->clearMediaCollection();
-            $product->addMedia($request->file('file'))->toMediaCollection();
-        }     
+            foreach ($request->file('file') as $file) {
+                $product->addMedia($file)->toMediaCollection();
+            }
+        }  
         return redirect(route('product.index'))->with('success', 'Category updated successfully.');
     }
 

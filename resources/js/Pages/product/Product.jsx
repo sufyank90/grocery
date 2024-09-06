@@ -83,7 +83,7 @@ export default function Product(props) {
                             <thead>
                                 <tr>
                                     {/* <th className="py-2 px-4 border-b text-left">#</th> */}
-                                    <th className="py-2 px-4 border-b text-left">#</th>
+                                    <th className="py-2 px-4 border-b text-left">ID</th>
                                     <th className="py-2 px-4 border-b text-left">Name</th>
                                     <th className="py-2 px-4 border-b text-left">Description</th>
                                     <th className="py-2 px-4 border-b text-left">Price</th>
@@ -109,17 +109,21 @@ export default function Product(props) {
                                                 <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
                                                 <td className="py-2 px-4 border-b text-left">{product.name}</td>
                                                 <td className="py-2 px-4 border-b text-left">{product.description}</td>
-                                                <td className="py-2 px-4 border-b text-left">${parseFloat(product.price).toFixed(2)}</td>
+                                                <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.price).toFixed(2)}</td>
 
                                                 <td className="py-2 px-4 border-b text-left">
                                                     {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
                                                 </td>
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                    {product.media && product.media.length > 0 && product.media[0].original_url ? (
-                                                        <img src={product.media[0].original_url} height={100} width={100} className='rounded-lg' />
+                                                    {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
+                                                        <img src={product.media[1].original_url} height={100} width={100} className='rounded-lg' />
                                                     ) : (
                                                         <p>No image</p>
-                                                    )}
+                                                    )} */}
+                                                    {product.media && product.media.length > 0 && product.media.map((media) => (
+                                                        console.log(media),
+                                                        <img src={media.original_url} height={100} width={100} className='rounded-lg' />
+                                                    ))}
                                                 </td>
                                                 <td className="py-2 px-4 border-b text-left">
                                                     {product.status === 'instock' && (
