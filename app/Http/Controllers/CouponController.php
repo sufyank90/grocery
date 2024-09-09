@@ -13,9 +13,10 @@ class CouponController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $coupons = Coupon::orderBy('id','desc')->paginate(10);
+        $coupons = Coupon::where('code','like','%'.$request->search.'%')
+        ->orderBy('id','desc')->paginate(10);
         return Inertia::render('coupon/Coupons',compact('coupons'));
     }
 

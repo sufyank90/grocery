@@ -41,16 +41,30 @@ function Coupons(props) {
                                 >
                                     Create
                                 </button>
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                />
-                                <button
-                                    style={{ background: '#fcb609' }}
-                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
-                                    Search
-                                </button>
+                                <Formik enableReinitialize initialValues={{ search: '' }}
+                                    onSubmit={(values) => {
+                                        router.visit(route('coupon.index', { search: values.search }), {
+                                            method: 'get', // or 'post' depending on your needs
+                                            preserveState: true,
+                                        });
+                                    }}
+                                >
+                                    <Form className="flex space-x-2">
+                                        <div >
+                                            <Field name="search"
+                                                type="text"
+                                                placeholder="Search by code.."
+                                                className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            />
+
+                                        </div>
+                                        <button type="submit"
+                                            style={{ background: '#fcb609' }}
+                                            className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
+                                            Search
+                                        </button>
+                                    </Form>
+                                </Formik>
                             </div>
                         </div>
 
