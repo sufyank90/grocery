@@ -29,4 +29,5 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsToMany(Attributevalue::class, 'attributevalue_product', 'product_id', 'attributevalue_id');
     }
+    
 }

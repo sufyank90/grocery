@@ -6,7 +6,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { IoIosAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import Select from 'react-select';
-
+import { useEffect } from 'react';
 
 
 function Edit(props) {
@@ -56,6 +56,7 @@ function Edit(props) {
                             validationSchema={Yup.object({
                                 name: Yup.string().required('Required'),
                                 description: Yup.string().required('Required'),
+                                //price: Yup.number().required('Required').positive(),
                                 price: Yup.number().required('Required').positive(),
                                 status: Yup.string().required('Required'),
                                 categories: Yup.array().min(1, 'At least one category is required').required('Required'),
@@ -69,6 +70,19 @@ function Edit(props) {
                                                 console.log(value)
                                                 if (!value) return true; // If no file uploaded, skip validation
                                                 return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
+                                            }
+                                        ),
+                                        regular_price: Yup.number()
+                                        .required('Regular price is required')
+                                        .positive('Regular price must be a positive number'),
+                                    sale_price: Yup.number()
+                                        .positive('Sale price must be a positive number')
+                                        .test(
+                                            'is-less-than-or-equal-to-regular-price',
+                                            'Sale price must be less than or equal to regular price',
+                                            function (value) {
+                                                const { regular_price } = this.parent;
+                                                return !value || value <= regular_price;
                                             }
                                         )
                             })}
@@ -100,7 +114,10 @@ function Edit(props) {
                             }}
                         >
                             {({ values, setFieldValue }) => {
-
+                                useEffect(() => {
+                                    const price = values.sale_price < values.regular_price ? values.sale_price : values.regular_price;
+                                    setFieldValue('price', price);
+                                }, [values.sale_price, values.regular_price, setFieldValue]);
                                 return (
                                     <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
                                         <h2 className="text-lg font-bold mb-4">Edit Product</h2>
@@ -140,22 +157,115 @@ function Edit(props) {
                                         </div>
 
                                         <div className="relative z-0 w-full mb-5 group">
-                                            <Field
-                                                name="price"
-                                                type="number"
-                                                id="price"
-                                                step="0.01"
-                                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                                placeholder=" "
-                                            />
-                                            <label
-                                                htmlFor="price"
-                                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                            >
-                                                Price
-                                            </label>
-                                            <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
-                                        </div>
+                                    <Field
+                                        name="price"
+                                        type="number"
+                                        id="price"
+                                        step="0.01"
+                                        min="0"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="price"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Price
+                                    </label>
+                                    <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
+
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        name="regular_price"
+                                        type="number"
+                                        id="regular_price"
+                                        step="0.01"
+                                        min="0"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="regular_price"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Regular price
+                                    </label>
+                                    <ErrorMessage name="regular_price" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
+
+                                <div className="relative z-0 w-full mb-5 group">
+                                    <Field
+                                        name="sale_price"
+                                        type="number"
+                                        id="sale_price"
+                                        min="0"
+                                        step="0.01"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="sale_price"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Sale price
+                                    </label>
+                                    <ErrorMessage name="sale_price" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
+
+                                <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                        as="select"
+                                        name="tax_class"
+                                        id="tax_class"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    >
+                                        <option value="fixed">Fixed</option>
+                                        <option value="percentage">Percentage</option>
+                                </Field>
+                                    <label
+                                        htmlFor="tax_class"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Tax Class
+                                    </label>
+                                    <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
+
+                                <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                        name="tax"
+                                        type="number"
+                                        id="tax"
+                                        min="0"
+                                        step="0"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="tax"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        Tax
+                                    </label>
+                                    <ErrorMessage name="tax" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
+                                <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                        name="sku"
+                                        type="text"
+                                        id="sku"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        placeholder=" "
+                                    />
+                                    <label
+                                        htmlFor="sku"
+                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >
+                                        SKU
+                                    </label>
+                                    <ErrorMessage name="sku" component="div" className="text-red-600 text-sm mt-1" />
+                                </div>
 
                                         <div className="relative z-0 w-full mb-5 group">
                                             <Field

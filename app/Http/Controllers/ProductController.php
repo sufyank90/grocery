@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request; // Correct import statement
 
 use App\Models\Category;
+use App\Models\Attribute;
 use App\Models\ShippingRate;
+use App\Models\Attributevalue;
 
 class ProductController extends Controller
 {
@@ -21,12 +23,14 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+       
     
         $products = Product::where('name','like','%'.$request->search.'%')
         ->orwhere('description','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
-     
+        ->orderBy('id','desc')->with('media','shipping_rates','attributeValues','attributeValues.attribute')->paginate(10);
+      
         $categories = Category::all();
+
         return Inertia::render('product/Product', compact('products','categories'));
     }
 
@@ -38,19 +42,25 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
+        
+        $attribute = Attributevalue::with('attribute')->get();
+      
 
-        $shippingRates = ShippingRate::all(['id', 'area_name']);
+
+        $shippingRates = ShippingRate::all(['id', 'area_name'] );
 
         $formattedShippingRates = $shippingRates->map(function ($item) {
             return [
                 'value' => $item->id,
                 'label' => $item->area_name ,
+
             ];
         });
         
         return Inertia::render('product/Create', [
         'categories' => $categories,
-        'shippingRates' => $formattedShippingRates
+        'shippingRates' => $formattedShippingRates,
+        'attribute' => $attribute
     ]);
     }
 
@@ -82,7 +92,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-  
+  dd($request->all());
         $product = Product::create($request->only(['name', 'description', 'price', 'status']));
         $product->categories()->attach($request->categories);
         // if($request->file){

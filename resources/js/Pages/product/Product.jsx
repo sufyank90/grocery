@@ -89,6 +89,9 @@ export default function Product(props) {
                                     <th className="py-2 px-4 border-b text-left">Price</th>
 
                                     <th className="py-2 px-4 border-b text-left">Areas</th>
+
+                                    <th className="py-2 px-4 border-b text-left">Attributes</th>
+
                                     <th className="py-2 px-4 border-b text-left">Image</th>
                                     <th className="py-2 px-4 border-b text-left">Status</th>
                                     <th className="py-2 px-4 border-b text-left">Actions</th>
@@ -104,6 +107,7 @@ export default function Product(props) {
                                 ) : (
                                     <>
                                         {products.data.map((product, index) => (
+                                            console.log(product),
                                             <tr key={product.id}>
                                                 {/* <td className="py-2 px-4 border-b text-left">{index + 1}</td> */}
                                                 <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
@@ -114,6 +118,45 @@ export default function Product(props) {
                                                 <td className="py-2 px-4 border-b text-left">
                                                     {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
                                                 </td>
+                                                {/* 
+                                                <td className="py-2 px-4 border-b text-left">
+  <ul className={` ${product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'} `}>
+    {product.attribute_values.length > 0 ? (
+      product.attribute_values.map((attribute, index) => (
+        <li key={index}>
+          {attribute.attribute.name}: {attribute.value}
+        </li>
+      ))
+    ) : (
+      <li>N/A</li>
+    )}
+  </ul>
+</td> */}
+
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    <ul className={product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'}>
+                                                        {product.attribute_values.length > 0 ? (
+                                                            // Group attributes by name
+                                                            Object.entries(
+                                                                product.attribute_values.reduce((acc, { attribute, value }) => {
+                                                                    if (!acc[attribute.name]) {
+                                                                        acc[attribute.name] = [];
+                                                                    }
+                                                                    acc[attribute.name].push(value);
+                                                                    return acc;
+                                                                }, {})
+                                                            ).map(([name, values], index) => (
+                                                                <li key={index}>
+                                                                    {name}: {values.join(', ')}
+                                                                </li>
+                                                            ))
+                                                        ) : (
+                                                            <li>N/A</li>
+                                                        )}
+                                                    </ul>
+                                                </td>
+
+
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
                                                     {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
                                                         <img src={product.media[1].original_url} height={100} width={100} className='rounded-lg' />
