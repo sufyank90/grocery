@@ -115,7 +115,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax']));
+        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
         $product->categories()->attach($request->categories);
         $product->attributeValues()->attach($request->attribute_id);
         // if($request->file){
@@ -209,7 +209,7 @@ class ProductController extends Controller
             'regular_price' => 'nullable|numeric|min:0',
             'tax_class' => 'nullable|string|max:255',
             'tax' => 'nullable|string|max:255',
-            
+            'stock_count' => 'nullable|numeric|min:0',
        
         ];
        
@@ -217,7 +217,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax']));
+        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
 
 
         $categories = explode(',', $request->categories);

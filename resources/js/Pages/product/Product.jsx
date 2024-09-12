@@ -160,6 +160,7 @@ export default function Product(props) {
                                     <th className="py-2 px-4 border-b text-left">Attributes</th>
 
                                     <th className="py-2 px-4 border-b text-left">Image</th>
+                                    <th className="py-2 px-4 border-b text-left">Stock Count</th>
                                     <th className="py-2 px-4 border-b text-left">Status</th>
                                     <th className="py-2 px-4 border-b text-left">Actions</th>
                                 </tr>
@@ -235,6 +236,7 @@ export default function Product(props) {
                                                         <img src={media.original_url} height={100} width={100} className='rounded-lg' />
                                                     ))}
                                                 </td>
+                                                <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
                                                 <td className="py-2 px-4 border-b text-left">
                                                     {product.status === 'instock' && (
                                                         <span

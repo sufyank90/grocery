@@ -43,6 +43,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $exist = Category::where('name', $request->name)->first();
+        if ($exist) {
+            session()->flash('error', 'Category already exist');
+            return back();
+        }
+        
         $data = $request->except(['file']);
         $category = Category::create($data);
         if($request->file){

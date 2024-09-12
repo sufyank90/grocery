@@ -13,7 +13,7 @@ class Product extends Model implements HasMedia
     use HasFactory,InteractsWithMedia;
 
     protected $fillable = [
-        'name','description','price','status','sku','sale_price','regular_price','tax_class','tax',
+        'name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count'
     ];
 
     public function categories()

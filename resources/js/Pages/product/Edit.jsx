@@ -55,7 +55,8 @@ function Edit(props) {
                                 tax_class: product ? product.tax_class : '',
                                 categories: initialCategoryIds, // Initialize with selected categories
                                 shipping_rates: defaultshippingrate ? shippingRateIds : [],
-                                file: initialFiles
+                                file: initialFiles,
+                                stock_count: product ? product.stock_count : '',
 
                             }}
                             validationSchema={Yup.object({
@@ -65,6 +66,7 @@ function Edit(props) {
                                 price: Yup.number().required('Required').positive(),
                                 status: Yup.string().required('Required'),
                                 categories: Yup.array().min(1, 'At least one category is required').required('Required'),
+                                stock_count: Yup.number().required('Required').positive(),
                                 file: product && product.media && product.media[0] && product.media[0].original_url
                                     ? null : Yup.mixed()
                                         .required('File is required')
@@ -297,6 +299,24 @@ function Edit(props) {
                                             </label>
                                             <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
                                         </div>
+
+
+                                        <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="stock_count"
+                                            type="number"
+                                            id="stock_count"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="Stock Count"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Stock Count
+                                        </label>
+                                        <ErrorMessage name="stock_count" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
 
                                         <div className="relative z-0 w-full mb-5 group">
                                             <InputLabel className="" value={"Select Category"} />
