@@ -30,7 +30,7 @@ function Coupons(props) {
                 <Head title="Admin Dashboard" />
 
                 <div className="flex">
-                    <div className="w-full pl-32 pr-32 mt-10">
+                    <div className="max-w-7xl mt-10 mx-auto w-full">
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Coupons</h3>
                             <div className="flex space-x-2">

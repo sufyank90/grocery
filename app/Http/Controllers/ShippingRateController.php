@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ShippingRate;
 use App\Http\Requests\StoreShippingRateRequest;
 use App\Http\Requests\UpdateShippingRateRequest;
+use Illuminate\Http\Request; // Correct import statement
+use Inertia\Inertia;
 
 class ShippingRateController extends Controller
 {
@@ -13,9 +15,17 @@ class ShippingRateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->search)
+        {
+            $shipments = ShippingRate::where('area_name','like','%'.$request->search.'%')->paginate(10);
+        }
+        else
+        {
+            $shipments = ShippingRate::paginate(10);
+        }
+        return Inertia::render('shipment/Index', compact('shipments'));
     }
 
     /**
@@ -68,9 +78,13 @@ class ShippingRateController extends Controller
      * @param  \App\Models\ShippingRate  $shippingRate
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateShippingRateRequest $request, ShippingRate $shippingRate)
+    public function update(Request $request, ShippingRate $shippingRate)
     {
-        //
+
+        
+        $shippingRate->fee = $request->fees;
+        $shippingRate->update();
+        return redirect()->back()->with('success', 'Shipping rate updated successfully.');
     }
 
     /**

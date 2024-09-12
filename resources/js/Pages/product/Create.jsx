@@ -20,7 +20,8 @@ const FormObserver = () => {
 };
 
 function Create(props) {
-    const { products, categories, shippingRates } = props;
+    const { products, categories, shippingRates, attribute } = props;
+
 
     return (
         <AuthenticatedLayout
@@ -40,7 +41,17 @@ function Create(props) {
                             categories: [],
                             shipping_rates: [],
                             file: [],
+                            attribute_id: [],
                             thumbnail: null, // Separate thumbnail field
+                            regular_price: '',
+                            sale_price: '',
+                            stock: '',
+                            sku: '',
+                            tax_class: '',
+                            tax: '',
+                            
+
+                            
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -56,9 +67,26 @@ function Create(props) {
                                         ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type)
                                     );
                                 }),
-                            thumbnail: Yup.mixed().required('Thumbnail is required')
+                            thumbnail: Yup.mixed().required('Thumbnail is required'),
+                            regular_price: Yup.number()
+                                .required('Regular price is required')
+                                .positive('Regular price must be a positive number'),
+                            sale_price: Yup.number()
+                                .positive('Sale price must be a positive number')
+                                .test(
+                                    'is-less-than-or-equal-to-regular-price',
+                                    'Sale price must be less than or equal to regular price',
+                                    function (value) {
+                                        const { regular_price } = this.parent;
+                                        return !value || value <= regular_price;
+                                    }
+                                ),
+                                tax_class: Yup.string().required('Required'),
+                                tax: Yup.number().required('Required'),
+                                sku: Yup.string().required('Required'),
                         })}
                         onSubmit={(values, { resetForm }) => {
+                            // console.log(values)
                             const formData = {
                                 ...values,
                                 file: [values.thumbnail, ...values.file], // Ensure thumbnail is always the first element
@@ -70,268 +98,423 @@ function Create(props) {
                             });
                         }}
                     >
-                        {({ values, setFieldValue }) => (
-                            <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                                <h2 className="text-lg font-bold mb-4">Create Product</h2>
-                                
-                                {/* Name Field */}
-                                <div className="relative z-0 w-full mb-5 group">
-                                    <Field
-                                        name="name"
-                                        type="text"
-                                        id="name"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        placeholder=" "
-                                    />
-                                    <label
-                                        htmlFor="name"
-                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                    >
-                                        Name
-                                    </label>
-                                    <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
+                        {({ values, setFieldValue }) => {
+                            // Update the price field value whenever regular_price or sale_price changes
+                            useEffect(() => {
+                                const price = values.sale_price < values.regular_price ? values.sale_price : values.regular_price;
+                                setFieldValue('price', price);
+                            }, [values.sale_price, values.regular_price, setFieldValue]);
 
-                                {/* Description Field */}
-                                <div className="relative z-0 w-full mb-5 group">
-                                    <Field
-                                        name="description"
-                                        as="textarea"
-                                        id="description"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        placeholder=" "
-                                    />
-                                    <label
-                                        htmlFor="description"
-                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                    >
-                                        Description
-                                    </label>
-                                    <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
+                            return (
+                                <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
+                                    <h2 className="text-lg font-bold mb-4">Create Product</h2>
 
-                                {/* Price Field */}
-                                <div className="relative z-0 w-full mb-5 group">
-                                    <Field
-                                        name="price"
-                                        type="number"
-                                        id="price"
-                                        step="0.01"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        placeholder=" "
-                                    />
-                                    <label
-                                        htmlFor="price"
-                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                    >
-                                        Price
-                                    </label>
-                                    <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                {/* Status Field */}
-                                <div className="relative z-0 w-full mb-5 group">
-                                    <Field
-                                        as="select"
-                                        name="status"
-                                        id="status"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    >
-                                        <option value="instock">In Stock</option>
-                                        <option value="outofstock">Out of Stock</option>
-                                        <option value="active">Active</option>
-                                    </Field>
-                                    <label
-                                        htmlFor="status"
-                                        className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                    >
-                                        Status
-                                    </label>
-                                    <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-                                {/* Categories Field */}
-                                <div className="relative z-0 w-full mb-5 group">
-                                    <InputLabel className="" value={"Select Category"} />
-                                    {categories.map((category) => (
-                                        <div key={category.id} className="flex items-center">
-                                            <label className="flex items-center">
-                                                <Field
-                                                    type="checkbox"
-                                                    name="categories"
-                                                    value={category.id}
-                                                    checked={values.categories.includes(category.id)}
-                                                    onChange={(e) => {
-                                                        const { checked } = e.target;
-                                                        if (checked) {
-                                                            setFieldValue("categories", [...values.categories, category.id]);
-                                                        } else {
-                                                            setFieldValue("categories", values.categories.filter((id) => id !== category.id));
-                                                        }
-                                                    }}
-                                                    className="mr-2"
-                                                />
-                                                {category.name}
-                                            </label>
-                                        </div>
-                                    ))}
-                                    <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
-
-          {/* Thumbnail Upload */}
-          <div className="flex items-center justify-center w-full">
-                <label htmlFor="thumbnail" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        {!values.thumbnail ? (
-                            <>
-                                <svg className="w-8 h-8 mb-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
-                                <p className="mb-2 text-sm text-gray-500">
-                                    <span className="font-semibold">Click to upload</span> or drag and drop
-                                </p>
-                                <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                            </>
-                        ) : (
-                            <span></span>
-                        )}
-                    </div>
-                    <input
-                        onChange={(event) => {
-                            const file = event.currentTarget.files[0];
-                            setFieldValue('thumbnail', file);
-                        }}
-                        id="thumbnail"
-                        type="file"
-                        className="hidden"
-                        accept="image/*"
-                    />
-                </label>
-            </div>
-
-            {/* Thumbnail Preview */}
-            <div className='w-full space-y-4 mb-5'>
-                {values.thumbnail && (
-                    <div className="relative flex items-center justify-between bg-[#f3d08140] px-2 py-2 rounded-lg">
-                        <img
-                            height={100}
-                            width={100}
-                            className="rounded-lg"
-                            src={URL.createObjectURL(values.thumbnail)}
-                            alt="Thumbnail Preview"
-                        />
-                        {/* Delete Icon */}
-                        <IoMdRemoveCircleOutline
-                            size={30}
-                            onClick={() => {
-                                // Clear the file input
-                                document.getElementById('thumbnail').value = null;
-                                // Reset the thumbnail in Formik state
-                                setFieldValue('thumbnail', null);
-                            }}
-                            className="absolute top-[-10px] right-[-10px] m-2 p-1 bg-white rounded-full cursor-pointer text-red-500"
-                            title="Remove Thumbnail"
-                        />
-                    </div>
-                )}
-                <ErrorMessage name="thumbnail" component="div" className="text-red-500 text-sm mt-1" />
-            </div>
-
-
-                                {/* File Upload */}
-                                <div className="flex items-center justify-center w-full">
-                                    <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                            {!values.file || values.file.length === 0 ? (
-                                                <>
-                                                    <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                    </svg>
-                                                    <p className="mb-2 text-sm text-gray-500">
-                                                        <span className="font-semibold">Click to upload</span> or drag and drop
-                                                    </p>
-                                                    <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                                </>
-                                            ) : (
-                                                <span></span>
-                                            )}
-                                        </div>
-                                        <input
-                                            onChange={(event) => {
-                                                const newFiles = Array.from(event.currentTarget.files);
-                                                const updatedFiles = values.file ? [...values.file, ...newFiles] : newFiles;
-                                                setFieldValue('file', updatedFiles);
-                                            }}
-                                            id="dropzone-file"
-                                            type="file"
-                                            className="hidden"
-                                            multiple
-                                            accept="image/*"
+                                    {/* Name Field */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="name"
+                                            type="text"
+                                            id="name"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
                                         />
-                                    </label>
-                                </div>
+                                        <label
+                                            htmlFor="name"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Name
+                                        </label>
+                                        <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
 
-                                <div className="w-full space-y-4">
-                                    {values.file && Array.from(values.file).map((file, index) => (
-                                        <div key={index} className="relative flex items-center justify-between bg-[#f3d08140] px-2 py-2 rounded-lg">
-                                            <img
-                                                height={100}
-                                                width={100}
-                                                className="rounded-lg"
-                                                src={file.url ? file.url : URL.createObjectURL(file)}
-                                                alt="Preview"
-                                            />
-                                            {/* Delete Icon */}
-                                            <IoMdRemoveCircleOutline
-                                                size={30}
-                                                onClick={(e) => {
-                                                    e.stopPropagation(); 
-                                                    const newFiles = Array.from(values.file).filter((_, i) => i !== index);
-                                                    setFieldValue('file', newFiles.length > 0 ? newFiles : null); 
+                                    {/* Description Field */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="description"
+                                            as="textarea"
+                                            id="description"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="description"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Description
+                                        </label>
+                                        <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    {/* Price Field */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="price"
+                                            type="number"
+                                            id="price"
+                                            step="0.01"
+                                            min="0"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="price"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Price
+                                        </label>
+                                        <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="regular_price"
+                                            type="number"
+                                            id="regular_price"
+                                            step="0.01"
+                                            min="0"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="regular_price"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Regular price
+                                        </label>
+                                        <ErrorMessage name="regular_price" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="sale_price"
+                                            type="number"
+                                            id="sale_price"
+                                            min="0"
+                                            step="0.01"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="sale_price"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Sale price
+                                        </label>
+                                        <ErrorMessage name="sale_price" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            as="select"
+                                            name="tax_class"
+                                            id="tax_class"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        >
+                                            <option value="fixed">Fixed</option>
+                                            <option value="percentage">Percentage</option>
+                                        </Field>
+                                        <label
+                                            htmlFor="tax_class"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Tax Class
+                                        </label>
+                                        <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="tax"
+                                            type="number"
+                                            id="tax"
+                                            min="0"
+                                            step="0"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="tax"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Tax
+                                        </label>
+                                        <ErrorMessage name="tax" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            name="sku"
+                                            type="text"
+                                            id="sku"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            placeholder=" "
+                                        />
+                                        <label
+                                            htmlFor="sku"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            SKU
+                                        </label>
+                                        <ErrorMessage name="sku" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+                                    {/* Status Field */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            as="select"
+                                            name="status"
+                                            id="status"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        >
+                                            <option value="instock">In Stock</option>
+                                            <option value="outofstock">Out of Stock</option>
+                                            <option value="active">Active</option>
+                                        </Field>
+
+                                        <label
+                                            htmlFor="status"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Status
+                                        </label>
+                                        <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+
+
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <InputLabel value={"Select Attribute"} />
+                                        <ul className="list-disc list-inside">
+                                            {attribute.length > 0 ? (
+                                                Object.entries(
+                                                    attribute.reduce((acc, { attribute, value }) => {
+                                                        // Group attributes by their name
+                                                        if (!acc[attribute.name]) {
+                                                            acc[attribute.name] = [];
+                                                        }
+                                                        acc[attribute.name].push({ id: attribute.id, value });
+                                                        return acc;
+                                                    }, {})
+                                                ).map(([name, values]) => (
+                                                    <li key={name}>
+                                                        {name}:
+                                                        <ul className='ml-8'>
+                                                            {values.map((item) => (
+                                                                <li key={item.id} className="flex items-center gap-2 my-1">
+                                                                    <Field
+                                                                        type="checkbox"
+                                                                        name={`attribute_id`}
+                                                                        value={item.id}
+                                                                        checked={values.attribute_id && values.attribute_id.some(v => v.id === item.id)}
+                                                                        onChange={(e) => {
+                                                                            const { checked } = e.target;
+                                                                            const currentValues = values.map(v => v.id); // Get all current values
+                                                                            const updatedValues = checked
+                                                                                ? [...currentValues, item.id]
+                                                                                : currentValues.filter(id => id !== item.id);
+
+                                                                            // Update the form field with new array of selected attribute IDs
+                                                                            setFieldValue("attribute_id", updatedValues);
+                                                                        }}
+                                                                    />
+                                                                    {item.value}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <li>N/A</li>
+                                            )}
+                                        </ul>
+                                    </div>
+
+
+
+
+
+
+                                    {/* Categories Field */}
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <InputLabel className="" value={"Select Category"} />
+                                        {categories.map((category) => (
+                                            <div key={category.id} className="flex items-center">
+                                                <label className="flex items-center">
+                                                    <Field
+                                                        type="checkbox"
+                                                        name="categories"
+                                                        value={category.id}
+                                                        checked={values.categories.includes(category.id)}
+                                                        onChange={(e) => {
+                                                            const { checked } = e.target;
+                                                            if (checked) {
+                                                                setFieldValue("categories", [...values.categories, category.id]);
+                                                            } else {
+                                                                setFieldValue("categories", values.categories.filter((id) => id !== category.id));
+                                                            }
+                                                        }}
+                                                        className="mr-2"
+                                                    />
+                                                    {category.name}
+                                                </label>
+                                            </div>
+                                        ))}
+                                        <ErrorMessage name="categories" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    {/* Thumbnail Upload */}
+                                    <div className="flex items-center justify-center w-full">
+                                        <label htmlFor="thumbnail" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                {!values.thumbnail ? (
+                                                    <>
+                                                        <svg className="w-8 h-8 mb-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                        </svg>
+                                                        <p className="mb-2 text-sm text-gray-500">
+                                                            <span className="font-semibold">Click to upload</span> or drag and drop
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                    </>
+                                                ) : (
+                                                    <span></span>
+                                                )}
+                                            </div>
+                                            <input
+                                                onChange={(event) => {
+                                                    const file = event.currentTarget.files[0];
+                                                    setFieldValue('thumbnail', file);
                                                 }}
-                                                className="absolute top-[-10px] right-[-10px] m-2 p-1 bg-white rounded-full cursor-pointer text-red-500"
-                                                title="Remove Image"
+                                                id="thumbnail"
+                                                type="file"
+                                                className="hidden"
+                                                accept="image/*"
                                             />
-                                        </div>
-                                    ))}
-                                </div>
-                                <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
+                                        </label>
+                                    </div>
 
-                                {/* Shipping Rates */}
-                                <div className="relative z-0 w-full mb-5 mt-5 group">
-                                    <InputLabel className="" value={"Select for specific areas"} />
-                                    <Select
-                                        onChange={(e) => {
-                                            setFieldValue("shipping_rates", e.map((item) => item.value));
-                                        }}
-                                        isMulti
-                                        name="shipping_rates"
-                                        options={shippingRates}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                    />
-                                    <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
-                                </div>
+                                    {/* Thumbnail Preview */}
+                                    <div className='w-full space-y-4 mb-5'>
+                                        {values.thumbnail && (
+                                            <div className="relative flex items-center justify-between bg-[#f3d08140] px-2 py-2 rounded-lg">
+                                                <img
+                                                    height={100}
+                                                    width={100}
+                                                    className="rounded-lg"
+                                                    src={URL.createObjectURL(values.thumbnail)}
+                                                    alt="Thumbnail Preview"
+                                                />
+                                                {/* Delete Icon */}
+                                                <IoMdRemoveCircleOutline
+                                                    size={30}
+                                                    onClick={() => {
+                                                        // Clear the file input
+                                                        document.getElementById('thumbnail').value = null;
+                                                        // Reset the thumbnail in Formik state
+                                                        setFieldValue('thumbnail', null);
+                                                    }}
+                                                    className="absolute top-[-10px] right-[-10px] m-2 p-1 bg-white rounded-full cursor-pointer text-red-500"
+                                                    title="Remove Thumbnail"
+                                                />
+                                            </div>
+                                        )}
+                                        <ErrorMessage name="thumbnail" component="div" className="text-red-500 text-sm mt-1" />
+                                    </div>
 
-                                <div className="flex justify-end space-x-2 mt-4">
-                                    <button
-                                        type="submit"
-                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                    >
-                                        Submit
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => router.get(route('product.index'))}
-                                        className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-                                    >
-                                        Close
-                                    </button>
-                                </div>
 
-                                <FormObserver />
-                            </Form>
-                        )}
+                                    {/* File Upload */}
+                                    <div className="flex items-center justify-center w-full">
+                                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                {!values.file || values.file.length === 0 ? (
+                                                    <>
+                                                        <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                        </svg>
+                                                        <p className="mb-2 text-sm text-gray-500">
+                                                            <span className="font-semibold">Click to upload</span> or drag and drop
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                    </>
+                                                ) : (
+                                                    <span></span>
+                                                )}
+                                            </div>
+                                            <input
+                                                onChange={(event) => {
+                                                    const newFiles = Array.from(event.currentTarget.files);
+                                                    const updatedFiles = values.file ? [...values.file, ...newFiles] : newFiles;
+                                                    setFieldValue('file', updatedFiles);
+                                                }}
+                                                id="dropzone-file"
+                                                type="file"
+                                                className="hidden"
+                                                multiple
+                                                accept="image/*"
+                                            />
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full space-y-4">
+                                        {values.file && Array.from(values.file).map((file, index) => (
+                                            <div key={index} className="relative flex items-center justify-between bg-[#f3d08140] px-2 py-2 rounded-lg">
+                                                <img
+                                                    height={100}
+                                                    width={100}
+                                                    className="rounded-lg"
+                                                    src={file.url ? file.url : URL.createObjectURL(file)}
+                                                    alt="Preview"
+                                                />
+                                                {/* Delete Icon */}
+                                                <IoMdRemoveCircleOutline
+                                                    size={30}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const newFiles = Array.from(values.file).filter((_, i) => i !== index);
+                                                        setFieldValue('file', newFiles.length > 0 ? newFiles : null);
+                                                    }}
+                                                    className="absolute top-[-10px] right-[-10px] m-2 p-1 bg-white rounded-full cursor-pointer text-red-500"
+                                                    title="Remove Image"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
+
+                                    {/* Shipping Rates */}
+                                    <div className="relative z-0 w-full mb-5 mt-5 group">
+                                        <InputLabel className="" value={"Select for specific areas"} />
+                                        <Select
+                                            onChange={(e) => {
+                                                setFieldValue("shipping_rates", e.map((item) => item.value));
+                                            }}
+                                            isMulti
+                                            name="shipping_rates"
+                                            options={shippingRates}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        />
+                                        <ErrorMessage name="shipping_rates" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    <div className="flex justify-end space-x-2 mt-4">
+                                        <button
+                                            type="submit"
+                                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                        >
+                                            Submit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => router.get(route('product.index'))}
+                                            className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+
+                                    <FormObserver />
+                                </Form>
+                            );
+                        }}
                     </Formik>
                 </div>
             </div>

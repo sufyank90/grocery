@@ -15,6 +15,6 @@ class AttributevalueSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Attributevalue::factory()->count(10)->create();
+        \App\Models\Attributevalue::factory()->count(6)->create();
     }
 }

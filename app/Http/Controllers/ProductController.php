@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request; // Correct import statement
 
 use App\Models\Category;
+use App\Models\Attribute;
 use App\Models\ShippingRate;
+use App\Models\Attributevalue;
 
 class ProductController extends Controller
 {
@@ -21,12 +23,14 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+       
     
         $products = Product::where('name','like','%'.$request->search.'%')
         ->orwhere('description','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
-     
+        ->orderBy('id','desc')->with('media','shipping_rates','attributeValues','attributeValues.attribute')->paginate(10);
+      
         $categories = Category::all();
+
         return Inertia::render('product/Product', compact('products','categories'));
     }
 
@@ -38,19 +42,25 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
+        
+        $attribute = Attributevalue::with('attribute')->get();
+      
 
-        $shippingRates = ShippingRate::all(['id', 'area_name']);
+
+        $shippingRates = ShippingRate::all(['id', 'area_name'] );
 
         $formattedShippingRates = $shippingRates->map(function ($item) {
             return [
                 'value' => $item->id,
                 'label' => $item->area_name ,
+
             ];
         });
         
         return Inertia::render('product/Create', [
         'categories' => $categories,
-        'shippingRates' => $formattedShippingRates
+        'shippingRates' => $formattedShippingRates,
+        'attribute' => $attribute
     ]);
     }
 
@@ -82,9 +92,9 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-  
-        $product = Product::create($request->only(['name', 'description', 'price', 'status']));
+        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax']));
         $product->categories()->attach($request->categories);
+        $product->attributeValues()->attach($request->attribute_id);
         // if($request->file){
         //     $product->addMedia($request->file)->toMediaCollection();
         // }
@@ -171,6 +181,12 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'status' => 'required|in:instock,outofstock,active',
+            'sku' => 'required|string|max:255',
+            'sale_price' => 'nullable|numeric|min:0',
+            'regular_price' => 'nullable|numeric|min:0',
+            'tax_class' => 'nullable|string|max:255',
+            'tax' => 'nullable|string|max:255',
+            
        
         ];
        
@@ -178,12 +194,13 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $product->update($request->only(['name', 'description', 'price', 'status']));
+        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax']));
 
 
         $categories = explode(',', $request->categories);
         $categories = array_map('intval', $categories);
         $product->categories()->sync($categories);
+        $product->attributeValues()->sync($request->attribute_id);
         if(!empty($request->shipping_rates)){
             $shipping_rates = explode(',', $request->shipping_rates);
             $shipping_rates = array_map('intval', $shipping_rates);
