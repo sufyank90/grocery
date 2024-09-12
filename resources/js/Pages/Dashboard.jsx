@@ -30,7 +30,7 @@ export default function AdminPanel(props) {
 
 
                 {/* Main Content */}
-                <div className="w-full pl-32 pr-32 mt-10">
+                <div className="max-w-7xl mt-10 mx-auto w-full">
                 <div className="py-4">
                         <div className="flex space-x-4">
                             {/* Cards */}

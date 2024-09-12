@@ -43,6 +43,15 @@ function Create(props) {
                             file: [],
                             attribute_id: [],
                             thumbnail: null, // Separate thumbnail field
+                            regular_price: '',
+                            sale_price: '',
+                            stock: '',
+                            sku: '',
+                            tax_class: '',
+                            tax: '',
+                            
+
+                            
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -71,19 +80,22 @@ function Create(props) {
                                         const { regular_price } = this.parent;
                                         return !value || value <= regular_price;
                                     }
-                                )
+                                ),
+                                tax_class: Yup.string().required('Required'),
+                                tax: Yup.number().required('Required'),
+                                sku: Yup.string().required('Required'),
                         })}
                         onSubmit={(values, { resetForm }) => {
-                            console.log(values)
-                            // const formData = {
-                            //     ...values,
-                            //     file: [values.thumbnail, ...values.file], // Ensure thumbnail is always the first element
-                            // };
-                            // router.post(route('product.store'), formData, {
-                            //     onSuccess: () => {
-                            //         resetForm();
-                            //     },
-                            // });
+                            // console.log(values)
+                            const formData = {
+                                ...values,
+                                file: [values.thumbnail, ...values.file], // Ensure thumbnail is always the first element
+                            };
+                            router.post(route('product.store'), formData, {
+                                onSuccess: () => {
+                                    resetForm();
+                                },
+                            });
                         }}
                     >
                         {({ values, setFieldValue }) => {

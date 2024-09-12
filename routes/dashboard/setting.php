@@ -14,6 +14,12 @@ Route::middleware(['auth'])->prefix('dashboard/setting')->group(function () {
         Route::post('/posters/upload', [SettingController::class, 'posters_upload'])->name('setting.posters.upload');
 });
 
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    Route::get('/settings', [SettingController::class, 'all'])->name('settings.all');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+});
+
+
 
 Route::middleware(['auth'])->prefix('dashboard/setting')->group(function () {
     Route::resource('banner', BannerController::class);

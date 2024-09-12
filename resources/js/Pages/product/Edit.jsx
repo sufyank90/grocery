@@ -48,6 +48,11 @@ function Edit(props) {
                                 description: product ? product.description : '',
                                 price: product ? product.price : '',
                                 status: product ? product.status : '',
+                                sku: product ? product.sku : '',
+                                regular_price: product ? product.regular_price : '',
+                                sale_price: product ? product.sale_price : '',
+                                tax: product ? product.tax : '',
+                                tax_class: product ? product.tax_class : '',
                                 categories: initialCategoryIds, // Initialize with selected categories
                                 shipping_rates: defaultshippingrate ? shippingRateIds : [],
                                 file: initialFiles
@@ -92,6 +97,12 @@ function Edit(props) {
                                 formData.append('description', values.description);
                                 formData.append('price', values.price);
                                 formData.append('status', values.status);
+                                formData.append('sku', values.sku);
+                                formData.append('regular_price', values.regular_price);
+                                formData.append('sale_price', values.sale_price);
+                                formData.append('tax', values.tax);
+                                formData.append('tax_class', values.tax_class);
+                                
                                 formData.append('shipping_rates', values.shipping_rates);
                                 formData.append('categories', values.categories.join(',')); // Join category IDs into a string
                                 if (values.file) {

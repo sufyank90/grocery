@@ -5,15 +5,21 @@ import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import InputLabel from '@/Components/InputLabel';
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaWallet  } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-
 
 
 export default function Index(props) {
     const { shipments } = props;
-    console.log(shipments)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedShipment, setSelectedShipment] = useState({});
     
+    
+    const openShipmentModal = (user) => {
+        //console.log(selectedShipment)
+        setSelectedShipment(user);
+        setIsModalOpen(true);
+      }
 
     return (
         <>
@@ -25,7 +31,7 @@ export default function Index(props) {
                 <Head title="Admin Dashboard" />
 
                 <div className="flex">
-                    <div className="w-full pl-32 pr-32 mt-10">
+                    <div className="max-w-7xl mt-10 mx-auto w-full">
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Shipments</h3>
                             <div className="flex space-x-2">
@@ -104,6 +110,8 @@ export default function Index(props) {
                                                                 className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                                                         </Link>
 
+                                                        <FaEdit onClick={() => openShipmentModal(shipment)} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
+
 
                                                         {/* <button
                                                             onClick={() => {
@@ -141,6 +149,54 @@ export default function Index(props) {
                         </div>
                     </div>
                 </div>
+                <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)} maxWidth="2xl">
+                    <Formik
+                        initialValues={{
+                        fees: selectedShipment.fee,
+                        }}
+                        validationSchema={Yup.object({
+                        fees: Yup.string().required('Fees is required'),
+                        })}
+                        onSubmit={(values, { resetForm, setErrors }) => {
+                            console.log(selectedShipment.id)
+                        router.put(route('shipment.update', selectedShipment.id), values, {
+                            onSuccess: () => {
+                            resetForm();
+                            setIsModalOpen(false);
+                            },
+                            onError: (errors) => {
+                            setErrors(errors);
+                            },
+                        });
+                        }}
+                    >
+                        {({ errors, touched }) => (
+                        <Form className="bg-white p-6 w-full max-w-lg mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Fees</h2>
+                            {/* Name Field */}
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    type="number"
+                                    name="fees"
+                                    id="fees"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                />
+                                <label
+                                    htmlFor="fees"
+                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                >
+                                    Fees
+                                </label>
+                                <ErrorMessage name="fees" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+                            <div className="flex justify-end">
+                                <button type="submit" className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 mt-4" > Update Fees </button>
+                            </div>
+                        </Form>
+                        )}
+                    </Formik>
+                    </Modal>
 
             </AuthenticatedLayout>
         </>
