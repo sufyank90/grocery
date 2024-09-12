@@ -8,7 +8,8 @@ import InputLabel from '@/Components/InputLabel';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-
+import { FaFileDownload } from "react-icons/fa";
+import { SiMicrosoftexcel } from "react-icons/si";
 
 export default function Product(props) {
     const { products, categories } = props;
@@ -25,9 +26,59 @@ export default function Product(props) {
         setIsEditModalOpen(true);
     };
     console.log(products)
+  // Function to handle file selection
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0]; // Selecting the first file from the FileList object
+    if (file) {
+      // Check if the selected file is a CSV file
+      if (file.type === "text/csv" || file.name.endsWith(".csv")) {
+        // FileReader instance to read file contents
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const csvContent = e.target.result;
+          const rows = csvContent.split("\n").slice(1); // Split by lines and exclude the header row
+          
+          // Parse CSV rows into JSON objects
+          const jsonData = rows.reduce((acc, row) => {
+            const columns = row.split(",");
+            // Check if all columns are empty
+            if (columns.every(col => col.trim() === "")) {
+              return acc; // Ignore empty rows
+            }
+
+            // Construct JSON object name,description,price,status,sku,sale_price,regular_price,tax_class,tax
+            const data = {
+                name : columns[0],
+                description: columns[1],
+                price: columns[2],
+                status: columns[3],
+                sku: columns[4],
+                sale_price: columns[5],
+                regular_price: columns[6],
+                tax_class: columns[7],
+                tax: columns[8]
+            };
+
+            acc.push(data); // Push non-empty row to accumulator
+            return acc;
+          }, []);
+
+          console.log("Parsed JSON:", jsonData);
+          router.post(route('product.csvstore'), jsonData)
+        };
+        reader.readAsText(file); // Read file as text
+      } else {
+        console.error("Please select a CSV file."); // Handle non-CSV file selection
+      }
+    }
+  };
 
     return (
         <>
+
+
+
+
             <AuthenticatedLayout
                 auth={props.auth}
                 errors={props.errors}
@@ -46,6 +97,22 @@ export default function Product(props) {
                                 >
                                     Create
                                 </button> */}
+                                  <a href='productexample.csv' className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg' download={'productexample.csv'}>
+                                    <span class="flex items-stretch transition-all duration-200 rounded-md px-4 py-2 text-sm"> <FaFileDownload className="mr-2 h-5 w-5" />
+                                        Download CSV Template
+                                        </span>
+                                    </a>
+
+                                    <label  className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'>
+                                        <span class="flex items-stretch transition-all duration-200 rounded-md px-4 py-2 text-sm">   <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                                            Import CSV File
+                                            <input
+                                            type="file"
+                                            accept=".csv"
+                                            onChange={handleFileSelect}
+                                            className="hidden"
+                                            />  </span>
+                                        </label>
 
                                 <Link href={route('product.create')}
                                     style={{ background: '#fcb609' }}

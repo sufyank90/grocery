@@ -21,6 +21,29 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function csvstore(Request $request)
+    {
+        // Validate incoming request data if necessary
+        // $request->validate([...]);
+    //    name,description,price,status,sku,sale_price,regular_price,tax_class,tax
+        $jsonData = json_decode($request->getContent(), true);
+
+        if (!$jsonData) {
+            return response()->json(['error' => 'Invalid JSON data'], 400);
+        }
+
+        foreach ($jsonData as $data) {
+            $product = Product::create(['name' => $data['name'], 'description' => $data['description'], 'price' => $data['price'], 'status' => $data['status'], 'sku' => $data['sku'], 'sale_price' => $data['sale_price'], 'regular_price' => $data['regular_price'] , 'tax_class' => $data['tax_class'], 'tax' => $data['tax'] ]);
+        }
+
+        // Flash success message to session
+        session()->flash('message', 'Records created successfully!');
+
+        // Redirect back to previous page or any desired route
+        return redirect()->back();
+    }
+
+
     public function index(Request $request)
     {
        
