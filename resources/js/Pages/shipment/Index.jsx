@@ -42,11 +42,6 @@ export default function Index(props) {
                                     Create
                                 </button> */}
 
-                                <Link href={route('shipment.create')}
-                                    style={{ background: '#fcb609' }}
-                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600">
-                                    Create
-                                </Link>
                                 <Formik enableReinitialize initialValues={{ search: '' }}
                                     onSubmit={(values) => {
                                         router.visit(route('shipment.index', { search: values.search }), {
@@ -110,7 +105,7 @@ export default function Index(props) {
                                                                 className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                                                         </Link> */}
 
-                                                        <FaEdit href={route('shipment.edit', shipment.id)} onClick={() => openShipmentModal(shipment)} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        <FaEdit onClick={() => openShipmentModal(shipment)} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
 
 
                                                         {/* <button
@@ -159,7 +154,7 @@ export default function Index(props) {
                         })}
                         onSubmit={(values, { resetForm, setErrors }) => {
                             console.log(selectedShipment.id)
-                        router.put(route('shipment.update', selectedShipment.id), values, {
+                        router.post(route('shipment.feeupdate', selectedShipment.id), values, {
                             onSuccess: () => {
                             resetForm();
                             setIsModalOpen(false);

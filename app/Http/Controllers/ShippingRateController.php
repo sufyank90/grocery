@@ -78,12 +78,12 @@ class ShippingRateController extends Controller
      * @param  \App\Models\ShippingRate  $shippingRate
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ShippingRate $shippingRate)
+    public function update(Request $request, $shippingRate)
     {
-
-        
+        $shippingRate = ShippingRate::find($shippingRate);
+        //dd($shippingRate);
         $shippingRate->fee = $request->fees;
-        $shippingRate->update();
+        $shippingRate->save();
         return redirect()->back()->with('success', 'Shipping rate updated successfully.');
     }
 
