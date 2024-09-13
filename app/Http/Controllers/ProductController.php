@@ -13,6 +13,11 @@ use App\Models\Category;
 use App\Models\Attribute;
 use App\Models\ShippingRate;
 use App\Models\Attributevalue;
+//Response
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+
 
 class ProductController extends Controller
 {
@@ -21,6 +26,77 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function csvstore(Request $request)
+    {
+       
+    //    name,description,price,status,sku,sale_price,regular_price,tax_class,tax
+        $jsonData = json_decode($request->getContent(), true);
+
+        if (!$jsonData) {
+            return response()->json(['error' => 'Invalid JSON data'], 400);
+        }
+
+        foreach ($jsonData as $data) {
+            $product = Product::create(['name' => $data['name'], 'description' => $data['description'], 'price' => $data['price'], 'status' => $data['status'], 'sku' => $data['sku'], 'sale_price' => $data['sale_price'], 'regular_price' => $data['regular_price'] , 'tax_class' => $data['tax_class'], 'tax' => $data['tax'] ]);
+        }
+
+        // Flash success message to session
+        session()->flash('message', 'Records created successfully!');
+
+        // Redirect back to previous page or any desired route
+        return redirect()->back();
+    }
+
+    public function csvExport(Request $request)
+    {
+  
+        // Fetch all products from the database
+        $products = Product::all();
+    
+        // Define the headers for the CSV file
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=products.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+    
+        // Define the columns for the CSV file
+        $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax'];
+    
+        // Create a callback to stream the CSV content
+        $callback = function() use ($products, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            // Write the column headers
+            fputcsv($file, $columns);
+    
+            // Write product data to the CSV
+            foreach ($products as $product) {
+                fputcsv($file, [
+                    $product->name,
+                    $product->description,
+                    $product->price,
+                    $product->status,
+                    $product->sku,
+                    $product->sale_price,
+                    $product->regular_price,
+                    $product->tax_class,
+                    $product->tax
+                ]);
+            }
+    
+            fclose($file);
+        };
+    
+        // Return the streamed CSV file as a download
+       
+        return response()->stream($callback, 200, $headers);
+
+    }
+    
+
     public function index(Request $request)
     {
        
@@ -92,7 +168,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax']));
+        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
         $product->categories()->attach($request->categories);
         $product->attributeValues()->attach($request->attribute_id);
         // if($request->file){
@@ -129,6 +205,7 @@ class ProductController extends Controller
     
         $shippingRates = ShippingRate::all(['id', 'area_name']);
 
+
         $formattedShippingRates = $shippingRates->map(function ($item) {
             return [
                 'value' => $item->id,
@@ -145,6 +222,11 @@ class ProductController extends Controller
         });
 
         $categories = Category::all();
+
+        //$attribute = Attributevalue::with('attribute')->get();
+        $attribute = Attribute::with('attributeValues')->get();
+        $attributeValues = $product->attributeValues()->pluck('id');
+        //dd($attributeValues);
         $product->load(['categories', 'media']);
         // dd([
         //     'categories' => $categories,
@@ -156,7 +238,10 @@ class ProductController extends Controller
         'categories' => $categories,
         'product' => $product,
         'shippingRates' => $formattedShippingRates,
-        'defaultshippingrate' => $defaultshippingrate
+        'defaultshippingrate' => $defaultshippingrate,
+        'attribute' => $attribute,
+        'attributeValues' => $attributeValues
+        
     ]);
     }
 
@@ -175,7 +260,6 @@ class ProductController extends Controller
 
     public function updatewithfile(Request $request, Product $product)
     {
-        //dd($request->file('file'));
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -186,7 +270,7 @@ class ProductController extends Controller
             'regular_price' => 'nullable|numeric|min:0',
             'tax_class' => 'nullable|string|max:255',
             'tax' => 'nullable|string|max:255',
-            
+            'stock_count' => 'nullable|numeric|min:0',
        
         ];
        
@@ -194,13 +278,16 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax']));
-
+        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
+        
 
         $categories = explode(',', $request->categories);
         $categories = array_map('intval', $categories);
         $product->categories()->sync($categories);
-        $product->attributeValues()->sync($request->attribute_id);
+
+        $attributes = explode(',', $request->attribute_id);
+        $attributes = array_map('intval', $attributes);
+        $product->attributeValues()->sync($attributes);
         if(!empty($request->shipping_rates)){
             $shipping_rates = explode(',', $request->shipping_rates);
             $shipping_rates = array_map('intval', $shipping_rates);

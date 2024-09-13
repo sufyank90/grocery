@@ -51,16 +51,37 @@ export default function Authenticated({ auth, header, children }) {
                                     Coupon
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            {/* <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink href={route('setting.index')} active={route().current('setting.index')}>
                                     Setting
                                 </NavLink>
+                            </div> */}
+                            {auth.superadmin &&  (
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('settings.update')} active={route().current('settings.update')}>
+                                    Setting
+                                </NavLink>
                             </div>
+                            )}
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink href={route('shipment.index')} active={route().current('shipment.index')}>
                                     Shipment
                                 </NavLink>
                             </div>
+                            {auth.superadmin &&  (
+                                <>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('banner.index')} active={route().current('banner.index')}>
+                                    Banner
+                                </NavLink>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink href={route('admin.index')} active={route().current('admin.index')}>
+                                    Admin Management
+                                </NavLink>
+                            </div>
+                            </>
+                            )}
                             
                         </div>
 
