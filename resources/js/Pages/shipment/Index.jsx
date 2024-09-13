@@ -102,15 +102,15 @@ export default function Index(props) {
                                                 <td className="py-2 px-4 border-b text-left">
                                                     <div className="flex justify-center space-x-2">
 
-                                                        <Link
+                                                        {/* <Link
                                                             href={route('shipment.edit', shipment.id)}
 
                                                         >
                                                             <FaEdit
                                                                 className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                        </Link>
+                                                        </Link> */}
 
-                                                        <FaEdit onClick={() => openShipmentModal(shipment)} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        <FaEdit href={route('shipment.edit', shipment.id)} onClick={() => openShipmentModal(shipment)} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
 
 
                                                         {/* <button

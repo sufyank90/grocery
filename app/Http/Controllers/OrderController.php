@@ -45,7 +45,7 @@ class OrderController extends Controller
     }
 
     // Eager load the shippingRate relationship and paginate
-    $orders = $query->with('shippingRate')->orderBy('id', 'desc')->paginate(10);
+    $orders = $query->with('shippingRate','user')->orderBy('id', 'desc')->paginate(10);
 
     // Return the data to the Inertia view
     return Inertia::render('order/Order', [
