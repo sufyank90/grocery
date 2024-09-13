@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    Route::resource('shipment', ShippingRateController::class); 
-    //Route::get('/shipment', [ShippingRateController::class, 'index'])->name('settings.index');
-    //Route::post('/shipment', [ShippingRateController::class, 'update'])->name('settings.update');
+    // Route::resource('shipment', ShippingRateController::class); 
+    Route::get('/shipment', [ShippingRateController::class, 'index'])->name('shipment.index');
+    Route::post('/shipments/{id}', [ShippingRateController::class, 'update'])->name('shipment.feeupdate');
 });
