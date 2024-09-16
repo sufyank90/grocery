@@ -43,7 +43,9 @@ class OrderObserver
 
             // Check if the user exists
             if ($user) {
-                $user->earn_rewards += $rewardPoints;
+                //want items length
+                $item = $order->items->count();
+                $user->earn_rewards += $rewardPoints * $item;
                 $user->save();
             }
         }
@@ -54,7 +56,8 @@ class OrderObserver
 
             // Check if the user exists and has enough earn_rewards
             if ($user && $user->earn_rewards != null && $user->earn_rewards >= $rewardPoints) {
-                $user->earn_rewards -= $rewardPoints;
+                $item = $order->items->count();
+                $user->earn_rewards -= $rewardPoints * $item;
                 $user->save();
             }
         }
