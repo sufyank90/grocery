@@ -63,7 +63,7 @@ class ProductController extends Controller
         ];
     
         // Define the columns for the CSV file
-        $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax'];
+        $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax','stock_count'];
     
         // Create a callback to stream the CSV content
         $callback = function() use ($products, $columns) {
@@ -83,7 +83,8 @@ class ProductController extends Controller
                     $product->sale_price,
                     $product->regular_price,
                     $product->tax_class,
-                    $product->tax
+                    $product->tax,
+                    $product->stock_count
                 ]);
             }
     
