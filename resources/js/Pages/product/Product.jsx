@@ -56,7 +56,8 @@ export default function Product(props) {
                             sale_price: columns[5],
                             regular_price: columns[6],
                             tax_class: columns[7],
-                            tax: columns[8]
+                            tax: columns[8],
+                            stock_count: columns[9],
                         };
 
                         acc.push(data); // Push non-empty row to accumulator

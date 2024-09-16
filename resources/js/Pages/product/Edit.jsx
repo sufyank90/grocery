@@ -106,7 +106,7 @@ console.log(attribute)
                                 formData.append('sale_price', values.sale_price);
                                 formData.append('tax', values.tax);
                                 formData.append('tax_class', values.tax_class);
-
+                                formData.append('stock_count', values.stock_count);
                                 formData.append('shipping_rates', values.shipping_rates);
                                 formData.append('attribute_id', values.attribute_id);
                                 formData.append('categories', values.categories.join(',')); // Join category IDs into a string
