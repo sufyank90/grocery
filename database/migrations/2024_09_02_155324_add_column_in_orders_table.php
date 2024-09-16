@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->unsignedBigInteger('shipping_id')->nullable(); // Foreign key column
+            
             $table->foreign('shipping_id')->references('id')->on('shipping_rates')->onDelete('set null');
         });
     } 

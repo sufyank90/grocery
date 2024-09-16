@@ -78,7 +78,7 @@ const View = (props) => {
                         <div className="text-lg"><strong>Order ID:</strong> {order.id}</div>
                         <div className="text-lg"><strong>Order Date:</strong> {order.created_at_formatted }</div>
                         <div className="text-lg"><strong>Status:</strong> {order.status}</div>
-                        <div className="text-lg"><strong>Total:</strong> ${order.total}</div>
+                        <div className="text-lg"><strong>Total:</strong> Rs. {order.total}</div>
                     </div>
                 </div>
 
@@ -115,9 +115,9 @@ const View = (props) => {
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="px-4 py-4">{item.name}</td>
                                         <td className="px-4 py-4">{item.category}</td>
-                                        <td className="px-4 py-4">${item.price}</td>
+                                        <td className="px-4 py-4">Rs. {item.price}</td>
                                         <td className="px-4 py-4">{item.qty}</td>
-                                        <td className="px-4 py-4">${(item.price * item.qty).toFixed(2)}</td>
+                                        <td className="px-4 py-4">Rs. {(item.price * item.qty).toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -129,14 +129,14 @@ const View = (props) => {
                 <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">Summary</h2>
                     <div className="grid grid-cols-2 gap-6">
-                        <div className="text-lg"><strong>Subtotal:</strong> ${order.total}</div>
+                        <div className="text-lg"><strong>Subtotal:</strong> Rs. {order.total}</div>
                         {order.couponcode && (
                             <>
                                 <div className="text-lg"><strong>Coupon:</strong> {order.couponcode}</div>
-                                <div className="text-lg"><strong>Discount:</strong> -${order.discount}</div>
+                                <div className="text-lg"><strong>Discount:</strong> -Rs. {order.discount}</div>
                             </>
                         )}
-                        <div className="text-lg"><strong>Total Payable:</strong> ${order.payable}</div>
+                        <div className="text-lg"><strong>Total Payable:</strong> Rs. {order.payable}</div>
                     </div>
                 </div>
 
