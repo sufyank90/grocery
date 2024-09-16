@@ -35,9 +35,19 @@ class ProductController extends Controller
         if (!$jsonData) {
             return response()->json(['error' => 'Invalid JSON data'], 400);
         }
-
         foreach ($jsonData as $data) {
-            $product = Product::create(['name' => $data['name'], 'description' => $data['description'], 'price' => $data['price'], 'status' => $data['status'], 'sku' => $data['sku'], 'sale_price' => $data['sale_price'], 'regular_price' => $data['regular_price'] , 'tax_class' => $data['tax_class'], 'tax' => $data['tax'] ]);
+            $product = Product::create([
+                'name' => $data['name'],
+                'description' => $data['description'], 
+                'price' => intVal($data['price']) ? intVal($data['price']) : 0, 
+                'status' => $data['status'], 
+                'sku' => $data['sku'], 
+                'sale_price' => intVal($data['sale_price']) ? intVal($data['sale_price']) : 0, 
+                'regular_price' => intVal($data['regular_price']) ? intVal($data['regular_price']) : 0, 
+                'tax_class' => $data['tax_class'], 
+                'tax' => intVal($data['tax']) ? intVal($data['tax']) : 0,
+                'stock_count' => intVal($data['stock_count']) ? intVal($data['stock_count']) : 0 
+                ]);
         }
 
         // Flash success message to session
