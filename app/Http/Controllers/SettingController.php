@@ -37,7 +37,7 @@ class SettingController extends Controller
         //     $path = $request->file('site_logo')->store('logos', 'public');
         //     $settings['site_logo'] = $path;
         // }
-        dd($request->all());
+        // dd($request->all());
     
         // Update each setting
         foreach ($request->all() as $key => $value) {
