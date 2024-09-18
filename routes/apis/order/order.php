@@ -24,8 +24,8 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
 
     Route::post('', function (Request $request) {
         // Validate the incoming request data
+      
         $validator = Validator::make($request->all(), [
-
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
                 'phone' => 'required|string|max:20',
@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
                 'zipcode' => 'nullable|string|max:10',
                 'city' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-                'method' => 'required|in:cash,card',
+                'method' => 'required|in:cash,card,wallet',
                 'total' => 'required|numeric',
                 'couponcode' => 'nullable|string|max:50',
                 'coupontype' => 'nullable|in:fixed,percent',
@@ -42,11 +42,9 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
                 'payable' => 'required|numeric',
                 'shipping_id' => 'required',
         ]);
-
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         }
-
         $validatedData = $validator->validated();
 
         // Get the currently authenticated user
@@ -56,11 +54,15 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         $order = Order::create(array_merge($validatedData, [
             'user_id' => $user->id,
         ]));
-
+        if($validatedData['method'] == 'wallet'){
+            $user->wallet = $user->wallet - $validatedData['total'];
+            $user->save();
+        }
         Notification::send($order->user, new OrderNotification($order));
-
-
         return response()->json(["data" => $order, "message" => "Order created successfully"], 201);
     });
+
+
+
 
 });

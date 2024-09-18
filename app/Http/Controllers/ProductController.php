@@ -179,6 +179,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
+        dd($request->all());
         $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
         $product->categories()->attach($request->categories);
         $product->attributeValues()->attach($request->attribute_id);
