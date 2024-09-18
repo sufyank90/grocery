@@ -326,7 +326,7 @@ console.log(attribute)
                                         <div className="relative z-0 w-full mb-5 group">
                                         <InputLabel value={"Select Attribute"} />
                                         <ul className="list-disc list-inside">
-                                        {attribute.length > 0 && attribute.map((attributes) => (
+                                            {attribute.length > 0 && attribute.map((attributes) => (
                                                 <li key={attributes.id}>
                                                     {attributes.name}:
                                                     <ul className='ml-8'>
@@ -357,7 +357,7 @@ console.log(attribute)
                                                         ))}
                                                     </ul>
                                                 </li>
-                              ))}
+                                            ))}
                                         </ul>
                                     </div>
 

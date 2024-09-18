@@ -129,8 +129,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        
-        $attribute = Attributevalue::with('attribute')->get();
+        $attribute = Attribute::with('attributeValues')->get();
+        //$attribute = Attributevalue::with('attribute')->get();
       
 
 
@@ -179,10 +179,10 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-        dd($request->all());
+        //dd($request->all());
         $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
         $product->categories()->attach($request->categories);
-        $product->attributeValues()->attach($request->attribute_id);
+        // $product->attributeValues()->attach($request->attribute_id);
         // if($request->file){
         //     $product->addMedia($request->file)->toMediaCollection();
         // }
@@ -299,7 +299,8 @@ class ProductController extends Controller
 
         $attributes = explode(',', $request->attribute_id);
         $attributes = array_map('intval', $attributes);
-        $product->attributeValues()->sync($attributes);
+        // $product->attributeValues()->sync($attributes);
+        
         if(!empty($request->shipping_rates)){
             $shipping_rates = explode(',', $request->shipping_rates);
             $shipping_rates = array_map('intval', $shipping_rates);

@@ -9,6 +9,7 @@ import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import Select from 'react-select';
 import { useEffect } from 'react';
 
+
 const FormObserver = () => {
     const { values } = useFormikContext();
 
@@ -19,8 +20,36 @@ const FormObserver = () => {
     return null;
 };
 
+const data = [
+    {
+        weight: '500g',
+        sizes: ['Small', 'Large'],
+        colors: ['Red', 'Blue'],
+        packOptions: ['Pack of 1', 'Pack of 10'],
+        salePrice: 100,
+        regularPrice: 500,
+        sku: 3454,
+        stock: 60,
+        status: 'instock',
+    },
+    {
+        weight: '500g',
+        sizes: ['Small', 'Large'],
+        colors: ['Red', 'Blue'],
+        packOptions: ['Pack of 1', 'Pack of 10'],
+        salePrice: 100,
+        regularPrice: 500,
+        sku: 3454,
+        stock: 60,
+        status: 'instock',
+    },
+    // You can add more items if needed
+];
 function Create(props) {
     const { products, categories, shippingRates, attribute } = props;
+
+    console.log(attribute);
+
 
 
     return (
@@ -50,6 +79,7 @@ function Create(props) {
                             tax_class: '',
                             tax: '',
                             stock_count: '',
+                            attributes_price: [],
 
                         }}
                         validationSchema={Yup.object({
@@ -80,10 +110,10 @@ function Create(props) {
                                         return !value || value <= regular_price;
                                     }
                                 ),
-                                tax_class: Yup.string().required('Required'),
-                                tax: Yup.number().required('Required'),
-                                sku: Yup.string().required('Required'),
-                                stock_count: Yup.number().required('Required').positive(),
+                            tax_class: Yup.string().required('Required'),
+                            tax: Yup.number().required('Required'),
+                            sku: Yup.string().required('Required'),
+                            stock_count: Yup.number().required('Required').positive(),
                         })}
                         onSubmit={(values, { resetForm }) => {
                             // console.log(values)
@@ -297,55 +327,124 @@ function Create(props) {
 
 
 
-                                    <div className="relative z-0 w-full mb-5 group">
+                                    <div className="relative z-0 w-full mb-5 group bg-gray-100 p-3 rounded-lg">
                                         <InputLabel value={"Select Attribute"} />
                                         <ul className="list-disc list-inside">
-                                            {attribute.length > 0 ? (
-                                                Object.entries(
-                                                    attribute.reduce((acc, { attribute, value }) => {
-                                                        // Group attributes by their name
-                                                        if (!acc[attribute.name]) {
-                                                            acc[attribute.name] = [];
-                                                        }
-                                                        acc[attribute.name].push({ id: attribute.id, value });
-                                                        return acc;
-                                                    }, {})
-                                                ).map(([name, values]) => (
-                                                    <li key={name}>
-                                                        {name}:
-                                                        <ul className='ml-8'>
-                                                            {values.map((item) => (
-                                                                <li key={item.id} className="flex items-center gap-2 my-1">
-                                                                    <Field
-                                                                        type="checkbox"
-                                                                        name={`attribute_id`}
-                                                                        value={item.id}
-                                                                        checked={values.attribute_id && values.attribute_id.some(v => v.id === item.id)}
-                                                                        onChange={(e) => {
-                                                                            const { checked } = e.target;
-                                                                            const currentValues = values.map(v => v.id); // Get all current values
-                                                                            const updatedValues = checked
-                                                                                ? [...currentValues, item.id]
-                                                                                : currentValues.filter(id => id !== item.id);
+                                            {attribute.length > 0 && attribute.map((attributes) => (
+                                                <li key={attributes.id}>
+                                                    {attributes.name} :
+                                                    <ul className='ml-8'>
+                                                        {attributes.attribute_values && attributes.attribute_values.map((item) => (
+                                                            <li key={item.id} className="flex items-center gap-2 my-1">
+                                                                <Field
+                                                                    type="checkbox"
+                                                                    name="attribute_id"
+                                                                    value={item.id}
+                                                                    checked={values.attribute_id && values.attribute_id.includes(item.id)}
+                                                                    onChange={(e) => {
+                                                                        const { checked } = e.target; // corrected to get the checked status directly
+                                                                        const currentValues = values.attribute_id || []; // Get current values from Formik
 
-                                                                            // Update the form field with new array of selected attribute IDs
-                                                                            setFieldValue("attribute_id", updatedValues);
-                                                                        }}
-                                                                    />
-                                                                    {item.value}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li>N/A</li>
-                                            )}
+                                                                        let newValues;
+                                                                        if (checked) {
+                                                                            // Add the ID if the checkbox is checked
+                                                                            newValues = [...currentValues, item.id];
+                                                                        } else {
+                                                                            // Remove the ID if the checkbox is unchecked
+                                                                            newValues = currentValues.filter(id => id !== item.id);
+                                                                        }
+                                                                        setFieldValue("attribute_id", newValues);
+                                                                    }}
+                                                                />
+                                                                {item.value}
+                                                                {values.attribute_id && values.attribute_id.includes(item.id) && (
+                                                                    <Field type="number" name="attribute_price" placeholder="price" className="w-20 border-gray-300 rounded h-8" />
+                                                                )}
+
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </li>
+                                            ))}
                                         </ul>
+                                        <button type="button" className='bg-[#fcb609] text-white px-3 py-1 rounded mt-3' >Create Variation</button>
                                     </div>
 
 
-
+                                    <div className="overflow-x-auto">
+                                        <table className="bg-white w-full border border-gray-200 rounded-lg shadow-sm">
+                                            <thead>
+                                                <tr className="w-full bg-gray-200 text-gray-600 uppercase text-xs leading-normal">
+                                                    <th className="py-1 px-2 text-left">Wgt</th>
+                                                    <th className="py-1 px-2 text-left">Size</th>
+                                                    <th className="py-1 px-2 text-left">Color</th>
+                                                    <th className="py-1 px-2 text-left">Pack</th>
+                                                    <th className="py-1 px-2 text-left">Sale</th>
+                                                    <th className="py-1 px-2 text-left">Regular</th>
+                                                    <th className="py-1 px-2 text-left">SKU</th>
+                                                    <th className="py-1 px-2 text-left">Stock</th>
+                                                    <th className="py-1 px-2 text-left">Status</th>
+                                                    <th className="py-1 px-2 text-left">Act</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="text-gray-600 text-xs font-light">
+                                                {data.map((item, index) => (
+                                                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                                                        <td className="py-1 px-2">{item.weight}</td>
+                                                        <td className="py-1 px-2">{item.sizes.join(', ')}</td>
+                                                        <td className="py-1 px-2">{item.colors.join(', ')}</td>
+                                                        <td className="py-1 px-2">{item.packOptions.join(', ')}</td>
+                                                        <td className="py-1 px-2">
+                                                            <input
+                                                                type="number"
+                                                                value={item.salePrice}
+                                                                onChange={(e) => handleChange(index, 'salePrice', e.target.value)}
+                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                            />
+                                                        </td>
+                                                        <td className="py-1 px-2">
+                                                            <input
+                                                                type="number"
+                                                                value={item.regularPrice}
+                                                                onChange={(e) => handleChange(index, 'regularPrice', e.target.value)}
+                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                            />
+                                                        </td>
+                                                        <td className="py-1 px-2">
+                                                            <input
+                                                                type="text"
+                                                                value={item.sku}
+                                                                onChange={(e) => handleChange(index, 'sku', e.target.value)}
+                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                            />
+                                                        </td>
+                                                        <td className="py-1 px-2">
+                                                            <input
+                                                                type="number"
+                                                                value={item.stock}
+                                                                onChange={(e) => handleChange(index, 'stock', e.target.value)}
+                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                            />
+                                                        </td>
+                                                        <td className="py-1 px-2">
+                                                            <select
+                                                                value={item.status}
+                                                                onChange={(e) => handleChange(index, 'status', e.target.value)}
+                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                            >
+                                                                <option value="instock">In</option>
+                                                                <option value="outofstock">Out</option>
+                                                                <option value="preorder">Pre</option>
+                                                            </select>
+                                                        </td>
+                                                        <td className="py-1 px-2">
+                                                            <button className="text-blue-500 hover:underline text-xs">Save</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
 
 
 
@@ -371,6 +470,7 @@ function Create(props) {
                                                         className="mr-2"
                                                     />
                                                     {category.name}
+
                                                 </label>
                                             </div>
                                         ))}

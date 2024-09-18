@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
             $user->wallet = $user->wallet - $validatedData['total'];
             $user->save();
         }
+        
         Notification::send($order->user, new OrderNotification($order));
         return response()->json(["data" => $order, "message" => "Order created successfully"], 201);
     });
