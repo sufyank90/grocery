@@ -8,6 +8,8 @@ import Modal from '@/Components/Modal';
 import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import Select from 'react-select';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FaMinus, FaRemoveFormat, FaTrash } from 'react-icons/fa';
 
 
 const FormObserver = () => {
@@ -20,35 +22,11 @@ const FormObserver = () => {
     return null;
 };
 
-const data = [
-    {
-        weight: '500g',
-        sizes: ['Small', 'Large'],
-        colors: ['Red', 'Blue'],
-        packOptions: ['Pack of 1', 'Pack of 10'],
-        salePrice: 100,
-        regularPrice: 500,
-        sku: 3454,
-        stock: 60,
-        status: 'instock',
-    },
-    {
-        weight: '500g',
-        sizes: ['Small', 'Large'],
-        colors: ['Red', 'Blue'],
-        packOptions: ['Pack of 1', 'Pack of 10'],
-        salePrice: 100,
-        regularPrice: 500,
-        sku: 3454,
-        stock: 60,
-        status: 'instock',
-    },
-    // You can add more items if needed
-];
+
 function Create(props) {
     const { products, categories, shippingRates, attribute } = props;
 
-    console.log(attribute);
+    // const [variation, setVariation] = useState([]);
 
 
 
@@ -60,8 +38,8 @@ function Create(props) {
         >
             <Head title="Admin Dashboard" />
             <div className='flex justify-center mt-10 '>
-                <div className="block w-1/2 p-6 bg-white border border-gray-200 rounded-lg shadow h-full mb-10">
-                    <Formik
+                <div className="block w-2/4 p-6 bg-white border border-gray-200 rounded-lg shadow  mb-10">
+                    <Formik 
                         initialValues={{
                             name: '',
                             description: '',
@@ -76,11 +54,11 @@ function Create(props) {
                             sale_price: '',
                             stock: '',
                             sku: '',
-                            tax_class: '',
+                            tax_class: 'fixed',
                             tax: '',
                             stock_count: '',
-                            attributes_price: [],
-
+                            variation : "single",
+                            variations : []
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -114,6 +92,12 @@ function Create(props) {
                             tax: Yup.number().required('Required'),
                             sku: Yup.string().required('Required'),
                             stock_count: Yup.number().required('Required').positive(),
+                            variations: Yup.array().when('variation', {
+                                is: 'variation',
+                                then: scheme=>scheme.required().min(1, 'At least one variation is required'),
+                                otherwise: scheme=>scheme.optional()
+                            }),
+
                         })}
                         onSubmit={(values, { resetForm }) => {
                             // console.log(values)
@@ -126,7 +110,7 @@ function Create(props) {
                                     resetForm();
                                 },
                             });
-                        }}
+                        }}className="bg-white  mt-2 mb-2 w-full max-w-lg mx-auto "
                     >
                         {({ values, setFieldValue }) => {
                             // Update the price field value whenever regular_price or sale_price changes
@@ -135,9 +119,108 @@ function Create(props) {
                                 setFieldValue('price', price);
                             }, [values.sale_price, values.regular_price, setFieldValue]);
 
+                            // const addVariation = (items) => {
+                            //     if(items.length === 0){
+                            //         toast.error('Please add at least one item');
+                            //         return;
+                            //     }
+                                
+                            //     // console.log(items)
+                            //     // attribute_values
+                            //     let variationDataInFormat = []
+                            //      console.log(attribute)
+                            //      items.forEach((id) => {
+                            //         attribute.forEach((item) => {
+                            //             if(item.attribute_values.length > 0){
+                            //                 const check= item.attribute_values.find(element => element.id === id)
+                            //                 if(check){
+                            //                     variationDataInFormat.push({ "category" : item.name ,"name": item.attribute_values.find(element => element.id === id).value })
+                            //                 }
+                            //             }
+                            //         })
+                            //      })
+                               
+                              
+                            //      setFieldValue( 'variations', [
+                            //         ...values.variations,
+                            //         {
+                            //             attribute: variationDataInFormat,
+                            //             sale_price: 0,
+                            //             regular_price: 0,
+                            //             sku: '',
+                            //             status: 'instock',
+                            //             stock_count: 0
+                            //         }
+                            //     ]);
+                            //     setFieldValue('attribute_id', [])
+                                
+                            // }
+                            const addVariation = (items) => {
+                                if (items.length === 0) {
+                                    toast.error('Please add at least one item');
+                                    return;
+                                }
+                            
+                                let variationDataInFormat = [];
+                                let existingAttributes = [];
+                            
+                                // Build the variation data from the selected items
+                                items.forEach((id) => {
+                                    attribute.forEach((item) => {
+                                        if (item.attribute_values.length > 0) {
+                                            const check = item.attribute_values.find(element => element.id === id);
+                                            if (check) {
+                                                variationDataInFormat.push({
+                                                    category: item.name,
+                                                    name: check.value
+                                                });
+                                            }
+                                        }
+                                    });
+                                });
+                            
+                                // Check if this variation already exists
+                                const isDuplicate = values.variations.some(variation => {
+                                    const variationAttributes = variation.attribute.map(attr => `${attr.category}:${attr.name}`).join('|');
+                                    const newVariationAttributes = variationDataInFormat.map(attr => `${attr.category}:${attr.name}`).join('|');
+                                    return variationAttributes === newVariationAttributes;
+                                });
+                            
+                                if (isDuplicate) {
+                                    toast.error('This variation has already been added.');
+                                    return;
+                                }
+                                
+                                setFieldValue('variations', [
+                                    ...values.variations,
+                                    {
+                                        attribute: variationDataInFormat,
+                                        sale_price: 0,
+                                        regular_price: 0,
+                                        sku: '',
+                                        status: 'instock',
+                                        stock_count: 0
+                                    }
+                                ]);
+                            
+                               
+                                setFieldValue('attribute_id', []);
+                            };
+                            
+
+                            const removeVariation = (index) => {
+                                const newVariations = [...values.variations];
+                                newVariations.splice(index, 1);
+                                setFieldValue('variations', newVariations);
+                            };
+
+
+                            const [searchAttribute, setSearchAttribute] = useState('');
+                            const [searchedAttributes, setSearchedAttributes] = useState([]);
+
                             return (
-                                <Form className="bg-white p-2 mt-2 mb-2 w-full max-w-lg mx-auto flex flex-col items-center">
-                                    <h2 className="text-lg font-bold mb-4">Create Product</h2>
+                                <Form >
+                                    <h2 className="text-lg font-bold mb-4 text-center">Create Product</h2>
 
                                     {/* Name Field */}
                                     <div className="relative z-0 w-full mb-5 group">
@@ -175,8 +258,28 @@ function Create(props) {
                                         <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
 
-                                    {/* Price Field */}
+
                                     <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            as="select"
+                                            name="variation"
+                                            id="variation"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        >
+                                            <option value="single">Single</option>
+                                            <option value="variation">Variation</option>
+                                        </Field>
+                                        <label
+                                            htmlFor="tax_class"
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                            Tax Class
+                                        </label>
+                                        <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+
+                                    {/* Price Field */}
+                                    {/* <div className="relative z-0 w-full mb-5 group">
                                         <Field
                                             name="price"
                                             type="number"
@@ -193,7 +296,7 @@ function Create(props) {
                                             Price
                                         </label>
                                         <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
-                                    </div>
+                                    </div> */}
 
                                     <div className="relative z-0 w-full mb-5 group">
                                         <Field
@@ -233,6 +336,9 @@ function Create(props) {
                                         <ErrorMessage name="sale_price" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
 
+
+                                    
+
                                     <div className="relative z-0 w-full mb-5 group">
                                         <Field
                                             as="select"
@@ -251,6 +357,8 @@ function Create(props) {
                                         </label>
                                         <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
+
+
 
                                     <div className="relative z-0 w-full mb-5 group">
                                         <Field
@@ -325,12 +433,42 @@ function Create(props) {
                                         <ErrorMessage name="stock_count" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
 
-
-
+                                    {values.variation === "variation" && (
+                                    <>
                                     <div className="relative z-0 w-full mb-5 group bg-gray-100 p-3 rounded-lg">
                                         <InputLabel value={"Select Attribute"} />
-                                        <ul className="list-disc list-inside">
-                                            {attribute.length > 0 && attribute.map((attributes) => (
+
+                                        <input type='text' value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)} placeholder='Search attribute' className=" mt-2 border border-gray-300 rounded p-0.5  w-full" />
+
+                                        {searchAttribute !== "" && (
+                                        <>    
+                                        
+                                        <ul className=" list-inside mt-2">
+                                            {attribute.length > 0 && attribute.filter(element => 
+                                                element.name.toLowerCase().includes(searchAttribute.toLowerCase())
+                                            ).map((attributes) => (
+                                                <li key={attributes.id} className=''>
+                                                  <input type="checkbox" className='mb-1 mr-1' checked={searchedAttributes.includes(attributes.name)} onChange={() => {
+                                                    if(searchedAttributes.includes(attributes.name)) {
+                                                        setSearchedAttributes(searchedAttributes.filter(item => item !== attributes.name))
+                                                    }
+                                                    else{
+                                                        setSearchedAttributes([...searchedAttributes, attributes.name])
+                                                    }
+                                                 
+                                                  }} />  {attributes.name} 
+                                                  
+                                                </li>
+                                            ))}
+                                        </ul>
+                                       
+                                        </>
+                                        )}
+
+                                        {searchedAttributes.length > 0 && (
+                                            <>
+                                             <ul className=" list-inside mt-2">
+                                            {attribute.length > 0 && attribute.filter(element=>searchedAttributes.includes(element.name) ).map((attributes) => (
                                                 <li key={attributes.id}>
                                                     {attributes.name} :
                                                     <ul className='ml-8'>
@@ -357,9 +495,7 @@ function Create(props) {
                                                                     }}
                                                                 />
                                                                 {item.value}
-                                                                {values.attribute_id && values.attribute_id.includes(item.id) && (
-                                                                    <Field type="number" name="attribute_price" placeholder="price" className="w-20 border-gray-300 rounded h-8" />
-                                                                )}
+                                                                
 
                                                             </li>
                                                         ))}
@@ -367,46 +503,56 @@ function Create(props) {
                                                 </li>
                                             ))}
                                         </ul>
-                                        <button type="button" className='bg-[#fcb609] text-white px-3 py-1 rounded mt-3' >Create Variation</button>
+                                            <button type="button" className='bg-[#fcb609] text-white px-3 py-1 rounded mt-3' 
+                                            onClick={() => addVariation(values.attribute_id)}
+                                        >Create Variation</button>
+                                        </>
+                                        )}
+
+                                    <ErrorMessage name="variations" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
 
-
-                                    <div className="overflow-x-auto">
+                                    <div className="overflow-x-auto mt-5 mb-10">
+                                        <InputLabel value={"Product Variants"} />
                                         <table className="bg-white w-full border border-gray-200 rounded-lg shadow-sm">
                                             <thead>
                                                 <tr className="w-full bg-gray-200 text-gray-600 uppercase text-xs leading-normal">
-                                                    <th className="py-1 px-2 text-left">Wgt</th>
-                                                    <th className="py-1 px-2 text-left">Size</th>
-                                                    <th className="py-1 px-2 text-left">Color</th>
-                                                    <th className="py-1 px-2 text-left">Pack</th>
+                                                    <th className="py-1 px-2 text-left">Attribute</th>
+                                                 
                                                     <th className="py-1 px-2 text-left">Sale</th>
                                                     <th className="py-1 px-2 text-left">Regular</th>
                                                     <th className="py-1 px-2 text-left">SKU</th>
                                                     <th className="py-1 px-2 text-left">Stock</th>
                                                     <th className="py-1 px-2 text-left">Status</th>
-                                                    <th className="py-1 px-2 text-left">Act</th>
+                                                    <th className="py-1 px-2 text-left">
+                                                    
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody className="text-gray-600 text-xs font-light">
-                                                {data.map((item, index) => (
+                                                {values.variations.map((item, index) => (
                                                     <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                                                        <td className="py-1 px-2">{item.weight}</td>
-                                                        <td className="py-1 px-2">{item.sizes.join(', ')}</td>
-                                                        <td className="py-1 px-2">{item.colors.join(', ')}</td>
-                                                        <td className="py-1 px-2">{item.packOptions.join(', ')}</td>
+                                                        <td className="py-1 px-2">
+                                                            <ul className='list-disc list-inside'>
+                                                            {item.attribute.map((attribute,index) => (
+                                                                <li key={index}><span className='font-bold'>{attribute.category}</span>:{attribute.name}</li>
+                                                            ))}
+                                                            </ul>
+                                                            </td>
+                                                      
                                                         <td className="py-1 px-2">
                                                             <input
                                                                 type="number"
-                                                                value={item.salePrice}
-                                                                onChange={(e) => handleChange(index, 'salePrice', e.target.value)}
+                                                                value={item.sale_price}
+                                                                 onChange={(e) => setFieldValue(`variations.${index}.sale_price`, e.target.value)}
                                                                 className="border border-gray-300 rounded p-0.5 text-xs w-full"
                                                             />
                                                         </td>
                                                         <td className="py-1 px-2">
                                                             <input
                                                                 type="number"
-                                                                value={item.regularPrice}
-                                                                onChange={(e) => handleChange(index, 'regularPrice', e.target.value)}
+                                                                value={item.regular_price}
+                                                                onChange={(e) => setFieldValue(`variations.${index}.regular_price`, e.target.value)}
                                                                 className="border border-gray-300 rounded p-0.5 text-xs w-full"
                                                             />
                                                         </td>
@@ -414,37 +560,49 @@ function Create(props) {
                                                             <input
                                                                 type="text"
                                                                 value={item.sku}
-                                                                onChange={(e) => handleChange(index, 'sku', e.target.value)}
+                                                                onChange={(e) => setFieldValue(`variations.${index}.sku`, e.target.value)}
                                                                 className="border border-gray-300 rounded p-0.5 text-xs w-full"
                                                             />
                                                         </td>
                                                         <td className="py-1 px-2">
                                                             <input
                                                                 type="number"
-                                                                value={item.stock}
-                                                                onChange={(e) => handleChange(index, 'stock', e.target.value)}
+                                                                value={item.stock_count}
+                                                                onChange={(e) => setFieldValue(`variations.${index}.stock_count`, e.target.value)}
                                                                 className="border border-gray-300 rounded p-0.5 text-xs w-full"
                                                             />
                                                         </td>
                                                         <td className="py-1 px-2">
                                                             <select
                                                                 value={item.status}
-                                                                onChange={(e) => handleChange(index, 'status', e.target.value)}
+                                                                onChange={(e) => setFieldValue(`variations.${index}.status`, e.target.value)}
                                                                 className="border border-gray-300 rounded p-0.5 text-xs w-full"
                                                             >
-                                                                <option value="instock">In</option>
-                                                                <option value="outofstock">Out</option>
-                                                                <option value="preorder">Pre</option>
+                                                                <option value="instock">InStock</option>
+                                                                <option value="outofstock">Out of Stock</option>
                                                             </select>
                                                         </td>
                                                         <td className="py-1 px-2">
-                                                            <button className="text-blue-500 hover:underline text-xs">Save</button>
+                                                           <FaTrash color='red' className='cursor-pointer'
+                                                           onClick={() => removeVariation(index)}
+                                                           />
                                                         </td>
+                                                       
                                                     </tr>
                                                 ))}
+
+                                                {values.variations.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="6" className="py-1 px-2">
+                                                            No Variations
+                                                        </td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </table>
                                     </div>
+                                    </>
+                                    )}
 
 
 
@@ -599,6 +757,7 @@ function Create(props) {
                                     {/* Shipping Rates */}
                                     <div className="relative z-0 w-full mb-5 mt-5 group">
                                         <InputLabel className="" value={"Select for specific areas"} />
+                                        
                                         <Select
                                             onChange={(e) => {
                                                 setFieldValue("shipping_rates", e.map((item) => item.value));

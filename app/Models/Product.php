@@ -13,7 +13,7 @@ class Product extends Model implements HasMedia
     use HasFactory,InteractsWithMedia;
 
     protected $fillable = [
-        'name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count'
+        'name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count','variation'
     ];
 
     public function categories()
@@ -28,6 +28,11 @@ class Product extends Model implements HasMedia
     public function attributeValues()
     {
         return $this->belongsToMany(Attributevalue::class, 'attributevalue_product', 'product_id', 'attributevalue_id');
+    }
+
+    public function variations()
+    {
+        return $this->hasMany(Variation::class, 'product_id');
     }
     
 }

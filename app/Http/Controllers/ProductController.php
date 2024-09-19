@@ -13,6 +13,7 @@ use App\Models\Category;
 use App\Models\Attribute;
 use App\Models\ShippingRate;
 use App\Models\Attributevalue;
+use App\Models\Variation;
 //Response
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -179,9 +180,31 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-        //dd($request->all());
-        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
+        //  dd($request->all());
+        $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count','variation']));
         $product->categories()->attach($request->categories);
+        
+        $collection = [];
+        $variations = $request->variations;
+
+            if (is_string($variations)) {
+                $variations = json_decode($variations);
+            }
+
+        foreach ($variations as $variation) {
+            //dd($variation);
+            // Add the product ID and attributes to the collection
+            $collection[] = [
+                'product_id' =>$product->id,
+                'attributes' =>  json_encode($variation["attribute"]),
+                'sale_price' =>$variation["sale_price"],
+                'regular_price' => $variation["regular_price"],
+                'sku' =>$variation["sku"],
+                'status' => $variation["status"], // Default value
+                'stock_count' => $variation["stock_count"],
+            ];
+        }
+        Variation::insert($collection);
         // $product->attributeValues()->attach($request->attribute_id);
         // if($request->file){
         //     $product->addMedia($request->file)->toMediaCollection();
@@ -283,6 +306,7 @@ class ProductController extends Controller
             'tax_class' => 'nullable|string|max:255',
             'tax' => 'nullable|string|max:255',
             'stock_count' => 'nullable|numeric|min:0',
+            'variation' => 'nullable|string|max:255',
        
         ];
        
@@ -290,7 +314,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count']));
+        $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count', 'variation']));
         
 
         $categories = explode(',', $request->categories);
