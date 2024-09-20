@@ -115,7 +115,7 @@ class ProductController extends Controller
     
         $products = Product::where('name','like','%'.$request->search.'%')
         ->orwhere('description','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->with('media','shipping_rates','attributeValues','attributeValues.attribute')->paginate(10);
+        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
       
         $categories = Category::all();
 
@@ -180,32 +180,37 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
-        //  dd($request->all());
+        //   dd($request->attributesdata);
         $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count','variation']));
         $product->categories()->attach($request->categories);
         
-        $collection = [];
-        $variations = $request->variations;
 
-            if (is_string($variations)) {
-                $variations = json_decode($variations);
+        if($request->variation === 'variation'){
+            $collection = [];
+            $variations = $request->variations;
+
+                if (is_string($variations)) {
+                    $variations = json_decode($variations);
+                }
+
+            foreach ($variations as $variation) {
+                //dd($variation);
+                // Add the product ID and attributes to the collection
+                $collection[] = [
+                    'product_id' =>$product->id,
+                    'attributes' =>  json_encode($variation["attribute"]),
+                    'sale_price' =>$variation["sale_price"],
+                    'regular_price' => $variation["regular_price"],
+                    'sku' =>$variation["sku"],
+                    'status' => $variation["status"], // Default value
+                    'stock_count' => $variation["stock_count"],
+                ];
             }
-
-        foreach ($variations as $variation) {
-            //dd($variation);
-            // Add the product ID and attributes to the collection
-            $collection[] = [
-                'product_id' =>$product->id,
-                'attributes' =>  json_encode($variation["attribute"]),
-                'sale_price' =>$variation["sale_price"],
-                'regular_price' => $variation["regular_price"],
-                'sku' =>$variation["sku"],
-                'status' => $variation["status"], // Default value
-                'stock_count' => $variation["stock_count"],
-            ];
+            Variation::insert($collection);
         }
-        Variation::insert($collection);
-        // $product->attributeValues()->attach($request->attribute_id);
+
+
+        $product->attributes()->attach($request->attributesdata);
         // if($request->file){
         //     $product->addMedia($request->file)->toMediaCollection();
         // }
@@ -260,7 +265,7 @@ class ProductController extends Controller
 
         //$attribute = Attributevalue::with('attribute')->get();
         $attribute = Attribute::with('attributeValues')->get();
-        $attributeValues = $product->attributeValues()->pluck('id');
+
         //dd($attributeValues);
         $product->load(['categories', 'media']);
         // dd([
@@ -275,7 +280,6 @@ class ProductController extends Controller
         'shippingRates' => $formattedShippingRates,
         'defaultshippingrate' => $defaultshippingrate,
         'attribute' => $attribute,
-        'attributeValues' => $attributeValues
         
     ]);
     }

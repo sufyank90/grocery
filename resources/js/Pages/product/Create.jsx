@@ -28,6 +28,7 @@ function Create(props) {
 
     // const [variation, setVariation] = useState([]);
 
+    const [searchedAttributes, setSearchedAttributes] = useState([]);
 
 
     return (
@@ -58,7 +59,8 @@ function Create(props) {
                             tax: '',
                             stock_count: '',
                             variation : "single",
-                            variations : []
+                            variations : [],
+                            attributesdata : [],
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -101,6 +103,11 @@ function Create(props) {
                         })}
                         onSubmit={(values, { resetForm }) => {
                             // console.log(values)
+                            let aids = []
+                            searchedAttributes.forEach(element => {
+                                aids.push( parseInt(attribute.find(item => item.name === element).id) )
+                            })
+                            values.attributesdata = aids;
                             const formData = {
                                 ...values,
                                 file: [values.thumbnail, ...values.file], // Ensure thumbnail is always the first element
@@ -119,78 +126,46 @@ function Create(props) {
                                 setFieldValue('price', price);
                             }, [values.sale_price, values.regular_price, setFieldValue]);
 
-                            // const addVariation = (items) => {
-                            //     if(items.length === 0){
-                            //         toast.error('Please add at least one item');
-                            //         return;
-                            //     }
-                                
-                            //     // console.log(items)
-                            //     // attribute_values
-                            //     let variationDataInFormat = []
-                            //      console.log(attribute)
-                            //      items.forEach((id) => {
-                            //         attribute.forEach((item) => {
-                            //             if(item.attribute_values.length > 0){
-                            //                 const check= item.attribute_values.find(element => element.id === id)
-                            //                 if(check){
-                            //                     variationDataInFormat.push({ "category" : item.name ,"name": item.attribute_values.find(element => element.id === id).value })
-                            //                 }
-                            //             }
-                            //         })
-                            //      })
-                               
-                              
-                            //      setFieldValue( 'variations', [
-                            //         ...values.variations,
-                            //         {
-                            //             attribute: variationDataInFormat,
-                            //             sale_price: 0,
-                            //             regular_price: 0,
-                            //             sku: '',
-                            //             status: 'instock',
-                            //             stock_count: 0
-                            //         }
-                            //     ]);
-                            //     setFieldValue('attribute_id', [])
-                                
-                            // }
+
                             const addVariation = (items) => {
-                                if (items.length === 0) {
-                                    toast.error('Please add at least one item');
+                                if (items.length !== searchedAttributes.length) {
+                                    toast.error('Please select relevant terms for all attributes');
                                     return;
                                 }
                             
                                 let variationDataInFormat = [];
-                                let existingAttributes = [];
-                            
+
                                 // Build the variation data from the selected items
                                 items.forEach((id) => {
                                     attribute.forEach((item) => {
                                         if (item.attribute_values.length > 0) {
                                             const check = item.attribute_values.find(element => element.id === id);
-                                            if (check) {
-                                                variationDataInFormat.push({
-                                                    category: item.name,
-                                                    name: check.value
-                                                });
+                                            if (check && !variationDataInFormat.includes(id)) {
+                                                variationDataInFormat.push(id);
                                             }
                                         }
                                     });
                                 });
-                            
-                                // Check if this variation already exists
-                                const isDuplicate = values.variations.some(variation => {
-                                    const variationAttributes = variation.attribute.map(attr => `${attr.category}:${attr.name}`).join('|');
-                                    const newVariationAttributes = variationDataInFormat.map(attr => `${attr.category}:${attr.name}`).join('|');
-                                    return variationAttributes === newVariationAttributes;
+                                const isDul = values.variations.find(element => {
+                                    // Convert the current variation attribute to a Set and compare with variationDataInFormat
+                                    const existingAttributeSet = new Set(element.attribute);
+                                    const newAttributeSet = new Set(variationDataInFormat);
+                                
+                                    // Check if they have the same size and all values are the same
+                                    if (existingAttributeSet.size !== newAttributeSet.size) {
+                                        return false;
+                                    }
+                                
+                                    // Check if every element in the new attribute set exists in the existing one
+                                    return [...newAttributeSet].every(value => existingAttributeSet.has(value));
                                 });
-                            
-                                if (isDuplicate) {
-                                    toast.error('This variation has already been added.');
+                                
+                                if (isDul) {
+                                    toast.error('Variation already exists');
                                     return;
                                 }
                                 
+
                                 setFieldValue('variations', [
                                     ...values.variations,
                                     {
@@ -216,10 +191,9 @@ function Create(props) {
 
 
                             const [searchAttribute, setSearchAttribute] = useState('');
-                            const [searchedAttributes, setSearchedAttributes] = useState([]);
-
+                           
                             return (
-                                <Form >
+                                <Form>
                                     <h2 className="text-lg font-bold mb-4 text-center">Create Product</h2>
 
                                     {/* Name Field */}
@@ -432,17 +406,16 @@ function Create(props) {
                                         </label>
                                         <ErrorMessage name="stock_count" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
-
+{/* Variation */}
                                     {values.variation === "variation" && (
                                     <>
                                     <div className="relative z-0 w-full mb-5 group bg-gray-100 p-3 rounded-lg">
-                                        <InputLabel value={"Select Attribute"} />
+                                        <div className='font-bold'>Select Terms</div>
 
-                                        <input type='text' value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)} placeholder='Search attribute' className=" mt-2 border border-gray-300 rounded p-0.5  w-full" />
+                                        <input type='text' value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)} placeholder='Search term' className=" mt-2 border border-gray-300 rounded p-0.5  w-full" />
 
                                         {searchAttribute !== "" && (
-                                        <>    
-                                        
+                                        <>             
                                         <ul className=" list-inside mt-2">
                                             {attribute.length > 0 && attribute.filter(element => 
                                                 element.name.toLowerCase().includes(searchAttribute.toLowerCase())
@@ -461,12 +434,32 @@ function Create(props) {
                                                 </li>
                                             ))}
                                         </ul>
-                                       
                                         </>
                                         )}
 
                                         {searchedAttributes.length > 0 && (
                                             <>
+
+
+                                            <ul className='mt-2'>
+                                                    <li className='font-bold'>Selected Attributes</li>
+                                                    {searchedAttributes.map((rec,index) => (
+                                                        
+                                                         <li key={index} className=''>
+                                                         <input type="checkbox" className='mb-1 mr-1' checked={searchedAttributes.includes(rec)} onChange={() => {
+                                                           if(searchedAttributes.includes(rec)) {
+                                                               setSearchedAttributes(searchedAttributes.filter(item => item !== rec))
+                                                           }
+                                                           else{
+                                                               setSearchedAttributes([...searchedAttributes, rec])
+                                                           }
+                                                        
+                                                         }} />  {rec} 
+                                                         
+                                                       </li>
+                                                    ))}
+                                            </ul>
+
                                              <ul className=" list-inside mt-2">
                                             {attribute.length > 0 && attribute.filter(element=>searchedAttributes.includes(element.name) ).map((attributes) => (
                                                 <li key={attributes.id}>
@@ -480,19 +473,27 @@ function Create(props) {
                                                                     value={item.id}
                                                                     checked={values.attribute_id && values.attribute_id.includes(item.id)}
                                                                     onChange={(e) => {
-                                                                        const { checked } = e.target; // corrected to get the checked status directly
-                                                                        const currentValues = values.attribute_id || []; // Get current values from Formik
-
-                                                                        let newValues;
-                                                                        if (checked) {
-                                                                            // Add the ID if the checkbox is checked
-                                                                            newValues = [...currentValues, item.id];
-                                                                        } else {
-                                                                            // Remove the ID if the checkbox is unchecked
-                                                                            newValues = currentValues.filter(id => id !== item.id);
+                                                                        const { checked } = e.target; 
+                                                                        const currentValues = values.attribute_id || [];
+                                                                    
+                                                                    
+                                                                        // Check if the same attribute already exists
+                                                                        const existingCount = attributes.attribute_values.filter(item => currentValues.includes(item.id)).length;
+                                                                        if (existingCount > 0) {
+                                                                            //remove that category previous all record
+                                                                            const newData = currentValues.filter(id => !attributes.attribute_values.some(item => item.id === id));
+                                                                            setFieldValue("attribute_id", [...newData, item.id]);
+                                                                            return;
                                                                         }
+                                                                    
+                                                                        // Update values based on whether the checkbox is checked or unchecked
+                                                                        const newValues = checked 
+                                                                            ? [...currentValues, item.id] 
+                                                                            : currentValues.filter(id => id !== item.id);
+                                                                            
                                                                         setFieldValue("attribute_id", newValues);
                                                                     }}
+                                                                    
                                                                 />
                                                                 {item.value}
                                                                 
@@ -534,8 +535,18 @@ function Create(props) {
                                                     <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
                                                         <td className="py-1 px-2">
                                                             <ul className='list-disc list-inside'>
-                                                            {item.attribute.map((attribute,index) => (
-                                                                <li key={index}><span className='font-bold'>{attribute.category}</span>:{attribute.name}</li>
+                                                            {item.attribute.map((id,index) => (
+                                                                console.log(attribute),
+                                                                <li key={index}>
+                                                                <span className='font-bold'> {attribute
+                                                                    .find(att => att.attribute_values.some(value => value.id === id))
+                                                                    ?.name} :
+                                                                </span>
+                                                                {attribute
+                                                                    .find(att => att.attribute_values.some(value => value.id === id))
+                                                                    ?.attribute_values.find(value => value.id === id)
+                                                                    ?.value}
+                                                            </li>
                                                             ))}
                                                             </ul>
                                                             </td>
@@ -603,7 +614,7 @@ function Create(props) {
                                     </div>
                                     </>
                                     )}
-
+{/*  end Variation */}
 
 
                                     {/* Categories Field */}
@@ -774,7 +785,7 @@ function Create(props) {
                                     <div className="flex justify-end space-x-2 mt-4">
                                         <button
                                             type="submit"
-                                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                            className="text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                                         >
                                             Submit
                                         </button>

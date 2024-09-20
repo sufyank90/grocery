@@ -25,9 +25,9 @@ class Product extends Model implements HasMedia
         return $this->belongsToMany(ShippingRate::class, 'product_shipping_rate', 'product_id', 'shipping_rate_id');
     }
 
-    public function attributeValues()
+    public function attributes()
     {
-        return $this->belongsToMany(Attributevalue::class, 'attributevalue_product', 'product_id', 'attributevalue_id');
+        return $this->belongsToMany(Attributevalue::class, 'attribute_product', 'product_id', 'attribute_id');
     }
 
     public function variations()

@@ -170,7 +170,7 @@ export default function Product(props) {
 
                                     <th className="py-2 px-4 border-b text-left">Areas</th>
 
-                                    <th className="py-2 px-4 border-b text-left">Attributes</th>
+                                    {/* <th className="py-2 px-4 border-b text-left">Attributes</th> */}
 
                                     <th className="py-2 px-4 border-b text-left">Image</th>
                                     <th className="py-2 px-4 border-b text-left">Stock Count</th>
@@ -214,7 +214,7 @@ export default function Product(props) {
   </ul>
 </td> */}
 
-                                                <td className="py-2 px-4 border-b text-left">
+                                                {/* <td className="py-2 px-4 border-b text-left">
                                                     <ul className={product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'}>
                                                         {product.attribute_values.length > 0 ? (
                                                             // Group attributes by name
@@ -235,7 +235,7 @@ export default function Product(props) {
                                                             <li>N/A</li>
                                                         )}
                                                     </ul>
-                                                </td>
+                                                </td> */}
 
 
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
