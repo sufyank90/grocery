@@ -10,9 +10,9 @@ import { useEffect } from 'react';
 
 
 function Edit(props) {
-    const { product, categories, shippingRates, defaultshippingrate ,attribute,} = props;
+    const { product, categories, shippingRates, defaultshippingrate ,attribute,attributeNames} = props;
 
-    const [searchedAttributes, setSearchedAttributes] = useState([]);
+    const [searchedAttributes, setSearchedAttributes] = useState(attributeNames || []);
 
 
 console.log(attribute)
@@ -64,7 +64,7 @@ console.log(attribute)
                                 attribute_id: [],
                                 variation : product ? product.variation :  "single",
                                 variations : [],
-                                attributesdata : [],
+                                attributesdata :attributeNames || [],
 
                             }}
                             validationSchema={Yup.object({

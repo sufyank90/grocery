@@ -242,7 +242,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-    
+        $attributeNames = $product->attributes->pluck('name');
+    // Dump the attributes
+    // dd($attributeNames);
         $shippingRates = ShippingRate::all(['id', 'area_name']);
 
 
@@ -263,24 +265,19 @@ class ProductController extends Controller
 
         $categories = Category::all();
 
-        //$attribute = Attributevalue::with('attribute')->get();
+        
         $attribute = Attribute::with('attributeValues')->get();
 
-        //dd($attributeValues);
+        
         $product->load(['categories', 'media']);
-        // dd([
-        //     'categories' => $categories,
-        //     'product' => $product,
-        //     'shippingRates' => $formattedShippingRates,
-        //     'defaultshippingrate' => $defaultshippingrate
-        // ]);
+       
         return Inertia::render('product/Edit', [
         'categories' => $categories,
         'product' => $product,
         'shippingRates' => $formattedShippingRates,
         'defaultshippingrate' => $defaultshippingrate,
         'attribute' => $attribute,
-        
+        'attributeNames' =>$attributeNames
     ]);
     }
 
