@@ -10,7 +10,7 @@ Route::middleware('auth:sanctum')->prefix('item')->group(function () {
 
     // Get items for a specific order
     Route::get('{order}/items', function (Request $request, $order) {
-        $order = Order::with('items')->findOrFail($order);
+        $order = Order::with('items','items.variation')->findOrFail($order);
         
         // Ensure the authenticated user owns the order
         if ($order->user_id !== $request->user()->id) {

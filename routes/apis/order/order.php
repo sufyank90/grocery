@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         $user = $request->user();
     
  
-        $orders = Order::where('user_id', $user->id)->with('items')
+        $orders = Order::where('user_id', $user->id)->with('items','items.variation')
             ->orderBy('id', 'desc')
             ->get();
         
