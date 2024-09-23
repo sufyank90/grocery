@@ -244,10 +244,19 @@ export default function Product(props) {
                                                     ) : (
                                                         <p>No image</p>
                                                     )} */}
-                                                    {product.media && product.media.length > 0 && product.media.map((media) => (
+                                                    {/* {product.media && product.media.length > 0 && product.media.map((media) => (
                                                         console.log(media),
                                                         <img src={media.original_url} height={100} width={100} className='rounded-lg' />
-                                                    ))}
+                                                    ))} */}
+                                                    {product.media && product.media.length > 0 &&  (
+                                                        <img
+                                                            src={product.media[0].original_url}
+                                                            height={100}
+                                                            width={100}
+                                                            className='rounded-lg'
+                                                            alt="Product Image" // Add alt text for accessibility
+                                                        />
+                                                    )}
                                                 </td>
                                                 <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
                                                 <td className="py-2 px-4 border-b text-left">
