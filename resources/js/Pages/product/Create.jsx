@@ -9,7 +9,7 @@ import { IoMdRemoveCircleOutline } from 'react-icons/io';
 import Select from 'react-select';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { FaMinus, FaRemoveFormat, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 
 
 const FormObserver = () => {
@@ -244,10 +244,9 @@ function Create(props) {
                                             <option value="variation">Variation</option>
                                         </Field>
                                         <label
-                                            htmlFor="tax_class"
                                             className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                         >
-                                            Tax Class
+                                            Product Type
                                         </label>
                                         <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>

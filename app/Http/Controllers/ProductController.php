@@ -243,32 +243,38 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $attributeNames = $product->attributes->pluck('name');
-    // Dump the attributes
-    // dd($attributeNames);
+
+        $variations = $product->variations->map(function ($variation) {
+            $attributes = json_decode($variation->attributes, true);
+            if (is_array($attributes)) {
+                $attributes = array_map(function ($value) {
+                    return is_numeric($value) ? (int)$value : $value; 
+                }, $attributes);
+            }
+            return [
+                'attribute' => $attributes,
+                'sale_price' => $variation->sale_price ?? 0,
+                'regular_price' => $variation->regular_price ?? 0,
+                'sku' => $variation->sku ?? '',
+                'status' => $variation->status ?? 'instock',
+                'stock_count' => $variation->stock_count ?? 0,
+            ];
+        });
         $shippingRates = ShippingRate::all(['id', 'area_name']);
-
-
         $formattedShippingRates = $shippingRates->map(function ($item) {
             return [
                 'value' => $item->id,
                 'label' => $item->area_name ,
             ];
         });
-
-
         $defaultshippingrate = $product->shipping_rates->map(function ($item) {
             return [
                 'value' => $item->id,
                 'label' => $item->area_name,
             ];
         });
-
         $categories = Category::all();
-
-        
         $attribute = Attribute::with('attributeValues')->get();
-
-        
         $product->load(['categories', 'media']);
        
         return Inertia::render('product/Edit', [
@@ -277,7 +283,8 @@ class ProductController extends Controller
         'shippingRates' => $formattedShippingRates,
         'defaultshippingrate' => $defaultshippingrate,
         'attribute' => $attribute,
-        'attributeNames' =>$attributeNames
+        'attributeNames' =>$attributeNames,
+        'variations' => $variations 
     ]);
     }
 
@@ -324,7 +331,10 @@ class ProductController extends Controller
 
         $attributes = explode(',', $request->attribute_id);
         $attributes = array_map('intval', $attributes);
-        // $product->attributeValues()->sync($attributes);
+
+        $product->attributes()->sync($request->attributesdata);
+
+        
         
         if(!empty($request->shipping_rates)){
             $shipping_rates = explode(',', $request->shipping_rates);
