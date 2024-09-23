@@ -8,7 +8,7 @@ use App\Models\Attributevalue;
 Route::middleware('auth:sanctum')->prefix('product')->group(function () {
 
     Route::get('/variation/{id}', function (Request $request, $id) {
-        $product = Product::with('variations')->find($id);
+        $product = Product::with('variations','categories', 'media', 'shipping_rates')->find($id);
 
         $attributeNames = $product->attributes;
 
