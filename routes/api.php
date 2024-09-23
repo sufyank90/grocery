@@ -31,3 +31,4 @@ include __DIR__ . '/apis/wishlist/wishlist.php';
 include __DIR__ . '/apis/feedback/feedback.php';
 include __DIR__ . '/apis/notification/notification.php';
 include __DIR__ . '/apis/redeemCoins/redeemCoins.php';
+include __DIR__ . '/apis/variation/variation.php';
