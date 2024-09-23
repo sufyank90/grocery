@@ -11,6 +11,6 @@ class Variation extends Model
 
 
     protected $fillable = [
-        'product_id', 'attributes', 'sale_price', 'regular_price', 'sku', 'status', 'stock_count'
+        'product_id', 'attributes', 'sale_price', 'regular_price', 'sku', 'status', 'stock_count','variation_id'
     ];
 }
