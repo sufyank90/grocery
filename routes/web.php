@@ -104,3 +104,4 @@ require __DIR__.'/dashboard/coupon.php';
 require __DIR__.'/dashboard/setting.php';
 require __DIR__.'/dashboard/adminManagement.php';
 require __DIR__.'/dashboard/shipment.php';
+require __DIR__.'/dashboard/variation.php';

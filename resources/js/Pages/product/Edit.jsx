@@ -7,10 +7,13 @@ import { Head, router } from '@inertiajs/react';
 import { IoIosAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import Select from 'react-select';
 import { useEffect } from 'react';
-import {  FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
+import { MdEdit } from "react-icons/md";
 import { toast } from 'react-toastify';
+import { IoAddCircle } from 'react-icons/io5';
+import { FaFloppyDisk } from 'react-icons/fa6';
 function Edit(props) {
-    const { product, categories, shippingRates, defaultshippingrate ,attribute,attributeNames,variations} = props;
+    const { product, categories, shippingRates, defaultshippingrate, attribute, attributeNames, variations } = props;
 
     const [searchedAttributes, setSearchedAttributes] = useState(attributeNames || []);
 
@@ -61,9 +64,9 @@ function Edit(props) {
                                 file: initialFiles,
                                 stock_count: product ? product.stock_count : '',
                                 attribute_id: [],
-                                variation : product ? product.variation :  "single",
-                                variations : variations || [],
-                                attributesdata :attributeNames || [],
+                                variation: product ? product.variation : "single",
+                                variations: variations || [],
+                                attributesdata: attributeNames || [],
 
                             }}
                             validationSchema={Yup.object({
@@ -100,11 +103,11 @@ function Edit(props) {
                                         }
                                     ),
 
-                                    variations: Yup.array().when('variation', {
-                                        is: 'variation',
-                                        then: scheme=>scheme.required().min(1, 'At least one variation is required'),
-                                        otherwise: scheme=>scheme.optional()
-                                    }),
+                                variations: Yup.array().when('variation', {
+                                    is: 'variation',
+                                    then: scheme => scheme.required().min(1, 'At least one variation is required'),
+                                    otherwise: scheme => scheme.optional()
+                                }),
                             })}
                             onSubmit={(values, { resetForm }) => {
                                 console.log(values.attribute_id);
@@ -148,71 +151,71 @@ function Edit(props) {
                                 }, [values.sale_price, values.regular_price, setFieldValue]);
 
 
-                                
-                            const addVariation = (items) => {
-                                if (items.length !== searchedAttributes.length) {
-                                    toast.error('Please select relevant terms for all attributes');
-                                    return;
-                                }
-                            
-                                let variationDataInFormat = [];
 
-                                // Build the variation data from the selected items
-                                items.forEach((id) => {
-                                    attribute.forEach((item) => {
-                                        if (item.attribute_values.length > 0) {
-                                            const check = item.attribute_values.find(element => element.id === id);
-                                            if (check && !variationDataInFormat.includes(id)) {
-                                                variationDataInFormat.push(id);
+                                const addVariation = (items) => {
+                                    if (items.length !== searchedAttributes.length) {
+                                        toast.error('Please select relevant terms for all attributes');
+                                        return;
+                                    }
+
+                                    let variationDataInFormat = [];
+
+                                    // Build the variation data from the selected items
+                                    items.forEach((id) => {
+                                        attribute.forEach((item) => {
+                                            if (item.attribute_values.length > 0) {
+                                                const check = item.attribute_values.find(element => element.id === id);
+                                                if (check && !variationDataInFormat.includes(id)) {
+                                                    variationDataInFormat.push(id);
+                                                }
                                             }
-                                        }
+                                        });
                                     });
-                                });
-                                const isDul = values.variations.find(element => {
-                                    // Convert the current variation attribute to a Set and compare with variationDataInFormat
-                                    const existingAttributeSet = new Set(element.attribute);
-                                    const newAttributeSet = new Set(variationDataInFormat);
-                                
-                                    // Check if they have the same size and all values are the same
-                                    if (existingAttributeSet.size !== newAttributeSet.size) {
-                                        return false;
+                                    const isDul = values.variations.find(element => {
+                                        // Convert the current variation attribute to a Set and compare with variationDataInFormat
+                                        const existingAttributeSet = new Set(element.attribute);
+                                        const newAttributeSet = new Set(variationDataInFormat);
+
+                                        // Check if they have the same size and all values are the same
+                                        if (existingAttributeSet.size !== newAttributeSet.size) {
+                                            return false;
+                                        }
+
+                                        // Check if every element in the new attribute set exists in the existing one
+                                        return [...newAttributeSet].every(value => existingAttributeSet.has(value));
+                                    });
+
+                                    if (isDul) {
+                                        toast.error('Variation already exists');
+                                        return;
                                     }
-                                
-                                    // Check if every element in the new attribute set exists in the existing one
-                                    return [...newAttributeSet].every(value => existingAttributeSet.has(value));
-                                });
-                                
-                                if (isDul) {
-                                    toast.error('Variation already exists');
-                                    return;
-                                }
-                                
-
-                                setFieldValue('variations', [
-                                    ...values.variations,
-                                    {
-                                        attribute: variationDataInFormat,
-                                        sale_price: 0,
-                                        regular_price: 0,
-                                        sku: '',
-                                        status: 'instock',
-                                        stock_count: 0
-                                    }
-                                ]);
-                            
-                               
-                                setFieldValue('attribute_id', []);
-                            };
-                            
-
-                            const removeVariation = (index) => {
-                                const newVariations = [...values.variations];
-                                newVariations.splice(index, 1);
-                                setFieldValue('variations', newVariations);
-                            };
 
 
-                            const [searchAttribute, setSearchAttribute] = useState('');
+                                    setFieldValue('variations', [
+                                        ...values.variations,
+                                        {
+                                            attribute: variationDataInFormat,
+                                            sale_price: 0,
+                                            regular_price: 0,
+                                            sku: '',
+                                            status: 'instock',
+                                            stock_count: 0
+                                        }
+                                    ]);
+
+
+                                    setFieldValue('attribute_id', []);
+                                };
+
+
+                                const removeVariation = (index) => {
+                                    const newVariations = [...values.variations];
+                                    newVariations.splice(index, 1);
+                                    setFieldValue('variations', newVariations);
+                                };
+
+
+                                const [searchAttribute, setSearchAttribute] = useState('');
 
 
 
@@ -254,22 +257,22 @@ function Edit(props) {
                                             <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
                                         </div>
                                         <div className="relative z-0 w-full mb-5 group">
-                                        <Field
-                                            as="select"
-                                            name="variation"
-                                            id="variation"
-                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        >
-                                            <option value="single">Single</option>
-                                            <option value="variation">Variation</option>
-                                        </Field>
-                                        <label
-                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                        >
-                                             Product Type
-                                        </label>
-                                        <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
-                                    </div>
+                                            <Field
+                                                as="select"
+                                                name="variation"
+                                                id="variation"
+                                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            >
+                                                <option value="single">Single</option>
+                                                <option value="variation">Variation</option>
+                                            </Field>
+                                            <label
+                                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                            >
+                                                Product Type
+                                            </label>
+                                            <ErrorMessage name="tax_class" component="div" className="text-red-600 text-sm mt-1" />
+                                        </div>
 
                                         {/* <div className="relative z-0 w-full mb-5 group">
                                             <Field
@@ -422,220 +425,264 @@ function Edit(props) {
 
 
 
-                                 {/* Variation */}
-                                 {values.variation === "variation" && (
-                                    <>
-                                    <div className="relative z-0 w-full mb-5 group bg-gray-100 p-3 rounded-lg">
-                                        <div className='font-bold'>Select Terms</div>
-
-                                        <input type='text' value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)} placeholder='Search term' className=" mt-2 border border-gray-300 rounded p-0.5  w-full" />
-
-                                        {searchAttribute !== "" && (
-                                        <>             
-                                        <ul className=" list-inside mt-2">
-                                            {attribute.length > 0 && attribute.filter(element => 
-                                                element.name.toLowerCase().includes(searchAttribute.toLowerCase())
-                                            ).map((attributes) => (
-                                                <li key={attributes.id} className=''>
-                                                  <input type="checkbox" className='mb-1 mr-1' checked={searchedAttributes.includes(attributes.name)} onChange={() => {
-                                                    if(searchedAttributes.includes(attributes.name)) {
-                                                        setSearchedAttributes(searchedAttributes.filter(item => item !== attributes.name))
-                                                    }
-                                                    else{
-                                                        setSearchedAttributes([...searchedAttributes, attributes.name])
-                                                    }
-                                                 
-                                                  }} />  {attributes.name} 
-                                                  
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        </>
-                                        )}
-
-                                        {searchedAttributes.length > 0 && (
+                                        {/* Variation */}
+                                        {values.variation === "variation" && (
                                             <>
+                                                <div className="relative z-0 w-full mb-5 group bg-gray-100 p-3 rounded-lg">
+                                                    <div className='font-bold'>Select Terms</div>
 
+                                                    <input type='text' value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)} placeholder='Search term' className=" mt-2 border border-gray-300 rounded p-0.5  w-full" />
 
-                                            <ul className='mt-2'>
-                                                    <li className='font-bold'>Selected Attributes</li>
-                                                    {searchedAttributes.map((rec,index) => (
-                                                        
-                                                         <li key={index} className=''>
-                                                         <input type="checkbox" className='mb-1 mr-1' checked={searchedAttributes.includes(rec)} onChange={() => {
-                                                           if(searchedAttributes.includes(rec)) {
-                                                               setSearchedAttributes(searchedAttributes.filter(item => item !== rec))
-                                                           }
-                                                           else{
-                                                               setSearchedAttributes([...searchedAttributes, rec])
-                                                           }
-                                                        
-                                                         }} />  {rec} 
-                                                         
-                                                       </li>
-                                                    ))}
-                                            </ul>
+                                                    {searchAttribute !== "" && (
+                                                        <>
+                                                            <ul className=" list-inside mt-2">
+                                                                {attribute.length > 0 && attribute.filter(element =>
+                                                                    element.name.toLowerCase().includes(searchAttribute.toLowerCase())
+                                                                ).map((attributes) => (
+                                                                    <li key={attributes.id} className=''>
+                                                                        <input type="checkbox" className='mb-1 mr-1' checked={searchedAttributes.includes(attributes.name)} onChange={() => {
+                                                                            if (searchedAttributes.includes(attributes.name)) {
+                                                                                setSearchedAttributes(searchedAttributes.filter(item => item !== attributes.name))
+                                                                            }
+                                                                            else {
+                                                                                setSearchedAttributes([...searchedAttributes, attributes.name])
+                                                                            }
 
-                                             <ul className=" list-inside mt-2">
-                                            {attribute.length > 0 && attribute.filter(element=>searchedAttributes.includes(element.name) ).map((attributes) => (
-                                                <li key={attributes.id}>
-                                                    {attributes.name} :
-                                                    <ul className='ml-8'>
-                                                        {attributes.attribute_values && attributes.attribute_values.map((item) => (
-                                                            <li key={item.id} className="flex items-center gap-2 my-1">
-                                                                <Field
-                                                                    type="checkbox"
-                                                                    name="attribute_id"
-                                                                    value={item.id}
-                                                                    checked={values.attribute_id && values.attribute_id.includes(item.id)}
-                                                                    onChange={(e) => {
-                                                                        const { checked } = e.target; 
-                                                                        const currentValues = values.attribute_id || [];
-                                                                    
-                                                                    
-                                                                        // Check if the same attribute already exists
-                                                                        const existingCount = attributes.attribute_values.filter(item => currentValues.includes(item.id)).length;
-                                                                        if (existingCount > 0) {
-                                                                            //remove that category previous all record
-                                                                            const newData = currentValues.filter(id => !attributes.attribute_values.some(item => item.id === id));
-                                                                            setFieldValue("attribute_id", [...newData, item.id]);
-                                                                            return;
-                                                                        }
-                                                                    
-                                                                        // Update values based on whether the checkbox is checked or unchecked
-                                                                        const newValues = checked 
-                                                                            ? [...currentValues, item.id] 
-                                                                            : currentValues.filter(id => id !== item.id);
-                                                                            
-                                                                        setFieldValue("attribute_id", newValues);
-                                                                    }}
-                                                                    
-                                                                />
-                                                                {item.value}
-                                                                
+                                                                        }} />  {attributes.name}
 
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                            <button type="button" className='bg-[#fcb609] text-white px-3 py-1 rounded mt-3' 
-                                            onClick={() => addVariation(values.attribute_id)}
-                                        >Create Variation</button>
-                                        </>
-                                        )}
-
-                                    <ErrorMessage name="variations" component="div" className="text-red-600 text-sm mt-1" />
-                                    </div>
-
-                                    <div className="overflow-x-auto mt-5 mb-10">
-                                        <InputLabel value={"Product Variants"} />
-                                        <table className="bg-white w-full border border-gray-200 rounded-lg shadow-sm">
-                                            <thead>
-                                                <tr className="w-full bg-gray-200 text-gray-600 uppercase text-xs leading-normal">
-                                                    <th className="py-1 px-2 text-left">Attribute</th>
-                                                 
-                                                    <th className="py-1 px-2 text-left">Sale</th>
-                                                    <th className="py-1 px-2 text-left">Regular</th>
-                                                    <th className="py-1 px-2 text-left">SKU</th>
-                                                    <th className="py-1 px-2 text-left">Stock</th>
-                                                    <th className="py-1 px-2 text-left">Status</th>
-                                                    <th className="py-1 px-2 text-left">
-                                                    
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="text-gray-600 text-xs font-light">
-                                                {values.variations.map((item, index) => (
-                                                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                                                        <td className="py-1 px-2">
-                                                            <ul className='list-disc list-inside'>
-                                                            {item.attribute.map((id,index) => (
-                                                                console.log(attribute),
-                                                                <li key={index}>
-                                                                <span className='font-bold'> {attribute
-                                                                    .find(att => att.attribute_values.some(value => value.id === id))
-                                                                    ?.name} :
-                                                                </span>
-                                                                {attribute
-                                                                    .find(att => att.attribute_values.some(value => value.id === id))
-                                                                    ?.attribute_values.find(value => value.id === id)
-                                                                    ?.value}
-                                                            </li>
-                                                            ))}
+                                                                    </li>
+                                                                ))}
                                                             </ul>
-                                                            </td>
-                                                      
-                                                        <td className="py-1 px-2">
-                                                            <input
-                                                                type="number"
-                                                                value={item.sale_price}
-                                                                 onChange={(e) => setFieldValue(`variations.${index}.sale_price`, e.target.value)}
-                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
-                                                            />
-                                                        </td>
-                                                        <td className="py-1 px-2">
-                                                            <input
-                                                                type="number"
-                                                                value={item.regular_price}
-                                                                onChange={(e) => setFieldValue(`variations.${index}.regular_price`, e.target.value)}
-                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
-                                                            />
-                                                        </td>
-                                                        <td className="py-1 px-2">
-                                                            <input
-                                                                type="text"
-                                                                value={item.sku}
-                                                                onChange={(e) => setFieldValue(`variations.${index}.sku`, e.target.value)}
-                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
-                                                            />
-                                                        </td>
-                                                        <td className="py-1 px-2">
-                                                            <input
-                                                                type="number"
-                                                                value={item.stock_count}
-                                                                onChange={(e) => setFieldValue(`variations.${index}.stock_count`, e.target.value)}
-                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
-                                                            />
-                                                        </td>
-                                                        <td className="py-1 px-2">
-                                                            <select
-                                                                value={item.status}
-                                                                onChange={(e) => setFieldValue(`variations.${index}.status`, e.target.value)}
-                                                                className="border border-gray-300 rounded p-0.5 text-xs w-full"
-                                                            >
-                                                                <option value="instock">InStock</option>
-                                                                <option value="outofstock">Out of Stock</option>
-                                                            </select>
-                                                        </td>
-                                                        <td className="py-1 px-2">
-                                                           <FaTrash color='red' className='cursor-pointer'
-                                                           onClick={() => removeVariation(index)}
-                                                           />
-                                                        </td>
-                                                       
-                                                    </tr>
-                                                ))}
+                                                        </>
+                                                    )}
 
-                                                {values.variations.length === 0 && (
-                                                    <tr>
-                                                        <td colSpan="6" className="py-1 px-2">
-                                                            No Variations
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    </>
-                                    )}
-{/*  end Variation */}
+                                                    {searchedAttributes.length > 0 && (
+                                                        <>
 
 
+                                                            <ul className='mt-2'>
+                                                                <li className='font-bold'>Selected Attributes</li>
+                                                                {searchedAttributes.map((rec, index) => (
+
+                                                                    <li key={index} className=''>
+                                                                        <input type="checkbox" className='mb-1 mr-1' checked={searchedAttributes.includes(rec)} onChange={() => {
+                                                                            if (searchedAttributes.includes(rec)) {
+                                                                                setSearchedAttributes(searchedAttributes.filter(item => item !== rec))
+                                                                            }
+                                                                            else {
+                                                                                setSearchedAttributes([...searchedAttributes, rec])
+                                                                            }
+
+                                                                        }} />  {rec}
+
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+
+                                                            <ul className=" list-inside mt-2">
+                                                                {attribute.length > 0 && attribute.filter(element => searchedAttributes.includes(element.name)).map((attributes) => (
+                                                                    <li key={attributes.id}>
+                                                                        {attributes.name} :
+                                                                        <ul className='ml-8'>
+                                                                            {attributes.attribute_values && attributes.attribute_values.map((item) => (
+                                                                                <li key={item.id} className="flex items-center gap-2 my-1">
+                                                                                    <Field
+                                                                                        type="checkbox"
+                                                                                        name="attribute_id"
+                                                                                        value={item.id}
+                                                                                        checked={values.attribute_id && values.attribute_id.includes(item.id)}
+                                                                                        onChange={(e) => {
+                                                                                            const { checked } = e.target;
+                                                                                            const currentValues = values.attribute_id || [];
 
 
-                                        
+                                                                                            // Check if the same attribute already exists
+                                                                                            const existingCount = attributes.attribute_values.filter(item => currentValues.includes(item.id)).length;
+                                                                                            if (existingCount > 0) {
+                                                                                                //remove that category previous all record
+                                                                                                const newData = currentValues.filter(id => !attributes.attribute_values.some(item => item.id === id));
+                                                                                                setFieldValue("attribute_id", [...newData, item.id]);
+                                                                                                return;
+                                                                                            }
+
+                                                                                            // Update values based on whether the checkbox is checked or unchecked
+                                                                                            const newValues = checked
+                                                                                                ? [...currentValues, item.id]
+                                                                                                : currentValues.filter(id => id !== item.id);
+
+                                                                                            setFieldValue("attribute_id", newValues);
+                                                                                        }}
+
+                                                                                    />
+                                                                                    {item.value}
+
+
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                            <button type="button" className='bg-[#fcb609] text-white px-3 py-1 rounded mt-3'
+                                                                onClick={() => addVariation(values.attribute_id)}
+                                                            >Create Variation</button>
+                                                        </>
+                                                    )}
+
+                                                    <ErrorMessage name="variations" component="div" className="text-red-600 text-sm mt-1" />
+                                                </div>
+
+                                                <div className="overflow-x-auto mt-5 mb-10">
+                                                    <InputLabel value={"Product Variants"} />
+                                                    <table className="bg-white w-full border border-gray-200 rounded-lg shadow-sm">
+                                                        <thead>
+                                                            <tr className="w-full bg-gray-200 text-gray-600 uppercase text-xs leading-normal">
+                                                                <th className="py-1 px-2 text-left">Attribute</th>
+
+                                                                <th className="py-1 px-2 text-left">Sale</th>
+                                                                <th className="py-1 px-2 text-left">Regular</th>
+                                                                <th className="py-1 px-2 text-left">SKU</th>
+                                                                <th className="py-1 px-2 text-left">Stock</th>
+                                                                <th className="py-1 px-2 text-left">Status</th>
+                                                                <th className="py-1 px-2 text-left">
+
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="text-gray-600 text-xs font-light">
+                                                            {values.variations.map((item, index) => (
+                                                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                                                                    <td className="py-1 px-2">
+                                                                        <ul className='list-disc list-inside'>
+                                                                            {item.attribute.map((id, index) => (
+                                                                                console.log(attribute),
+                                                                                <li key={index}>
+                                                                                    <span className='font-bold'> {attribute
+                                                                                        .find(att => att.attribute_values.some(value => value.id === id))
+                                                                                        ?.name} :
+                                                                                    </span>
+                                                                                    {attribute
+                                                                                        .find(att => att.attribute_values.some(value => value.id === id))
+                                                                                        ?.attribute_values.find(value => value.id === id)
+                                                                                        ?.value}
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    </td>
+
+                                                                    <td className="py-1 px-2">
+                                                                        <input
+                                                                            type="number"
+                                                                            value={item.sale_price}
+                                                                            onChange={(e) => setFieldValue(`variations.${index}.sale_price`, e.target.value)}
+                                                                            className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="py-1 px-2">
+                                                                        <input
+                                                                            type="number"
+                                                                            value={item.regular_price}
+                                                                            onChange={(e) => setFieldValue(`variations.${index}.regular_price`, e.target.value)}
+                                                                            className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="py-1 px-2">
+                                                                        <input
+                                                                            type="text"
+                                                                            value={item.sku}
+                                                                            onChange={(e) => setFieldValue(`variations.${index}.sku`, e.target.value)}
+                                                                            className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="py-1 px-2">
+                                                                        <input
+                                                                            type="number"
+                                                                            value={item.stock_count}
+                                                                            onChange={(e) => setFieldValue(`variations.${index}.stock_count`, e.target.value)}
+                                                                            className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="py-1 px-2">
+                                                                        <select
+                                                                            value={item.status}
+                                                                            onChange={(e) => setFieldValue(`variations.${index}.status`, e.target.value)}
+                                                                            className="border border-gray-300 rounded p-0.5 text-xs w-full"
+                                                                        >
+                                                                            <option value="instock">InStock</option>
+                                                                            <option value="outofstock">Out of Stock</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td className="py-1 px-2 flex justify-between items-center">
+                                                                        <div className="flex items-center mt-3">
+                                                                          
+                                                                            <FaTrash
+                                                                                color='red'
+                                                                                className='cursor-pointer text-xl'
+                                                                                onClick={() => {
+                                                                                    const confirmDelete = window.confirm('Are you sure you want to delete?');
+                                                                                    if (item.id && confirmDelete) {
+                                                                                        router.delete(route('variation.destroy', item.id),
+                                                                                        {
+                                                                                            preserveState:true,
+                                                                                            preserveScroll:true
+                                                                                        }
+                                                                                    );
+                                                                                       
+                                                                                    }
+                                                                                    confirmDelete && removeVariation(index);
+                                                                                }}
+                                                                            />
+                                                                         
+                                                                            <FaFloppyDisk 
+                                                                                className='cursor-pointer ml-2 text-2xl'
+                                                                                onClick={() => {
+                                                                                    // Open the edit modal or handle the edit action
+                                                                                    if(item.id){
+                                                                                    router.put(route('variation.update', item.id),item,
+                                                                                    {
+                                                                                        preserveState:true,
+                                                                                        preserveScroll:true
+                                                                                    });
+                                                                                }
+                                                                                else{
+                                                                                    item.product_id = product.id
+                                                                                    router.post(route('variation.store'),item,
+                                                                                    {
+                                                                                        preserveState:true,
+                                                                                        preserveScroll:true
+                                                                                    });
+                                                                                }
+                                                                                }}
+                                                                            />
+                                                                      
+                                                                           
+                                                                    
+                                                                        </div>
+                                                                    </td>
+
+
+
+                                                                </tr>
+                                                            ))}
+
+                                                            {values.variations.length === 0 && (
+                                                                <tr>
+                                                                    <td colSpan="6" className="py-1 px-2">
+                                                                        No Variations
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </>
+                                        )}
+                                        {/*  end Variation */}
+
+
+
+
+
 
                                         <div className="relative z-0 w-full mb-5 group">
                                             <InputLabel className="" value={"Select Category"} />

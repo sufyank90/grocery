@@ -37,7 +37,15 @@ class VariationController extends Controller
      */
     public function store(StoreVariationRequest $request)
     {
-        //
+       Variation::create([
+        'attributes'=> json_encode($request->attribute),
+        "sale_price" => $request->sale_price,
+        "regular_price" => $request->regular_price,
+        "sku" => $request->sku,
+        "status" =>$request->status,
+        "stock_count" => $request->stock_count,
+        "product_id" => $request->product_id
+       ]);
     }
 
     /**
@@ -71,7 +79,14 @@ class VariationController extends Controller
      */
     public function update(UpdateVariationRequest $request, Variation $variation)
     {
-        //
+        $variation->update([
+            'attributes'=>$request->attribute,
+            "sale_price" => $request->sale_price,
+            "regular_price" => $request->regular_price,
+            "sku" => $request->sku,
+            "status" =>$request->status,
+            "stock_count" => $request->stock_count,
+        ]);
     }
 
     /**
@@ -82,6 +97,7 @@ class VariationController extends Controller
      */
     public function destroy(Variation $variation)
     {
-        //
+        $variation->delete();
+        
     }
 }

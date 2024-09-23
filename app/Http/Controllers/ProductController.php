@@ -252,6 +252,7 @@ class ProductController extends Controller
                 }, $attributes);
             }
             return [
+                'id'=> $variation->id,
                 'attribute' => $attributes,
                 'sale_price' => $variation->sale_price ?? 0,
                 'regular_price' => $variation->regular_price ?? 0,
@@ -260,6 +261,8 @@ class ProductController extends Controller
                 'stock_count' => $variation->stock_count ?? 0,
             ];
         });
+
+     
         $shippingRates = ShippingRate::all(['id', 'area_name']);
         $formattedShippingRates = $shippingRates->map(function ($item) {
             return [
