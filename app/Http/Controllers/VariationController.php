@@ -37,6 +37,8 @@ class VariationController extends Controller
      */
     public function store(StoreVariationRequest $request)
     {
+        // 
+
        Variation::create([
         'attributes'=> json_encode($request->attribute),
         "sale_price" => $request->sale_price,
@@ -46,6 +48,8 @@ class VariationController extends Controller
         "stock_count" => $request->stock_count,
         "product_id" => $request->product_id
        ]);
+
+ 
     }
 
     /**

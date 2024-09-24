@@ -203,7 +203,7 @@ function Edit(props) {
                                         }
                                     ]);
 
-
+                                    toast.success('Variation added successfully');
                                     setFieldValue('attribute_id', []);
                                 };
 
@@ -624,33 +624,53 @@ function Edit(props) {
                                                                                         router.delete(route('variation.destroy', item.id),
                                                                                         {
                                                                                             preserveState:true,
-                                                                                            preserveScroll:true
+                                                                                            preserveScroll:true,
+
+                                                                                            onSuccess: () => {
+                                                                                                toast.error('Variation Deleted');
+                                                                                            }
                                                                                         }
                                                                                     );
                                                                                        
                                                                                     }
                                                                                     confirmDelete && removeVariation(index);
+                                                                                 
                                                                                 }}
                                                                             />
                                                                          
                                                                             <FaFloppyDisk 
                                                                                 className='cursor-pointer ml-2 text-2xl'
+                                                                                    
                                                                                 onClick={() => {
                                                                                     // Open the edit modal or handle the edit action
                                                                                     if(item.id){
                                                                                     router.put(route('variation.update', item.id),item,
                                                                                     {
+                                                                                        
                                                                                         preserveState:true,
-                                                                                        preserveScroll:true
+                                                                                        preserveScroll:true,
+
+                                                                                        onSuccess: () => {
+                                                                                            toast.success('Variation Updated');
+                                                                                        }
                                                                                     });
+                                                                                
                                                                                 }
                                                                                 else{
                                                                                     item.product_id = product.id
                                                                                     router.post(route('variation.store'),item,
                                                                                     {
                                                                                         preserveState:true,
-                                                                                        preserveScroll:true
+                                                                                        preserveScroll:true,
+
+                                                                                        onSuccess: () => {
+                                                                                            toast.success('Variation Added');
+                                                                                            //reload Data
+                                                                                            window.location.reload();
+                                                                                        }
+                                                                                        
                                                                                     });
+                                                                                   
                                                                                 }
                                                                                 }}
                                                                             />

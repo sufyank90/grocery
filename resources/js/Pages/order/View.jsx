@@ -104,6 +104,7 @@ const View = (props) => {
                             <thead className="bg-gray-100">
                                 <tr>
                                     <th className="px-4 py-3 border-b">Product Name</th>
+                                    <th className="px-4 py-3 border-b">Variation_id</th>
                                     <th className="px-4 py-3 border-b">Category</th>
                                     <th className="px-4 py-3 border-b">Price</th>
                                     <th className="px-4 py-3 border-b">Qty</th>
@@ -112,8 +113,10 @@ const View = (props) => {
                             </thead>
                             <tbody>
                                 {order.items.map((item, index) => (
+                                    console.log(item),
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="px-4 py-4">{item.name}</td>
+                                        <td className="px-4 py-4">{item.variation_id || "N/A"}</td>
                                         <td className="px-4 py-4">{item.category}</td>
                                         <td className="px-4 py-4">Rs. {item.price}</td>
                                         <td className="px-4 py-4">{item.qty}</td>

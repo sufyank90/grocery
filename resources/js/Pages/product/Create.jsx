@@ -156,8 +156,10 @@ function Create(props) {
                                         return false;
                                     }
                                 
+                                    
                                     // Check if every element in the new attribute set exists in the existing one
                                     return [...newAttributeSet].every(value => existingAttributeSet.has(value));
+                                  
                                 });
                                 
                                 if (isDul) {
@@ -177,7 +179,7 @@ function Create(props) {
                                         stock_count: 0
                                     }
                                 ]);
-                            
+                                toast.success('Variation added successfully');
                                
                                 setFieldValue('attribute_id', []);
                             };
