@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->prefix('item')->group(function () {
             'items.*.price' => 'required|numeric',
             'items.*.qty' => 'required|integer|min:1',
             'items.*.status' => 'required|in:instock,outofstock,active',
-            'items.*.variation_id' => 'nullable|integer',
+            'items.*.variation_id' => 'nullable',
         ]);
     
         if ($validator->fails()) {

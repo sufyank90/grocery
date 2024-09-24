@@ -17,6 +17,7 @@ class Item extends Model
         'qty',
         'status',
         'order_id',
+        'variation_id'
     ];
 
     /**
