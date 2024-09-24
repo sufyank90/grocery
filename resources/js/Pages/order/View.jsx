@@ -116,7 +116,7 @@ const View = (props) => {
                                     console.log(item),
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="px-4 py-4">{item.name}</td>
-                                        <td className="px-4 py-4">{item.variation_id || "N/A"}</td>
+                                        <td className="px-4 py-4">{item.variation ? item.variation.id : "N/A"}</td>
                                         <td className="px-4 py-4">{item.category}</td>
                                         <td className="px-4 py-4">Rs. {item.price}</td>
                                         <td className="px-4 py-4">{item.qty}</td>

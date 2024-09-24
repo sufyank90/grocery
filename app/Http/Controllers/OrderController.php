@@ -187,8 +187,9 @@ class OrderController extends Controller
     {
         
       // Load the order with its items and feedbacks
-      $orderWithDetails = $order->load(['items', 'feedbacks']);
+      $orderWithDetails = $order->load(['items','items.variation', 'feedbacks']);
 
+      
       return Inertia::render('order/View', [
           'order' => $orderWithDetails, // Pass the order with its items and feedbacks
       ]);
