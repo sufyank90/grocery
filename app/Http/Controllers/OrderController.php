@@ -10,6 +10,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Models\Attribute;
 use App\Models\ShippingRate;
 
 
@@ -189,9 +190,11 @@ class OrderController extends Controller
       // Load the order with its items and feedbacks
       $orderWithDetails = $order->load(['items','items.variation', 'feedbacks']);
 
-      
+      $attribute = Attribute::with('attributeValues')->get();
+
       return Inertia::render('order/View', [
           'order' => $orderWithDetails, // Pass the order with its items and feedbacks
+          'attribute' => $attribute
       ]);
 
     }

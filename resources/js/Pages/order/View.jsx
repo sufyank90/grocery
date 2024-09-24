@@ -4,7 +4,7 @@ import React from 'react';
 import jsPDF from 'jspdf';
 
 const View = (props) => {
-    const { order } = props;
+    const { order, attribute } = props;
 
     const downloadPDF = () => {
         const doc = new jsPDF();
@@ -76,7 +76,7 @@ const View = (props) => {
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">Order Information</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="text-lg"><strong>Order ID:</strong> {order.id}</div>
-                        <div className="text-lg"><strong>Order Date:</strong> {order.created_at_formatted }</div>
+                        <div className="text-lg"><strong>Order Date:</strong> {order.created_at_formatted}</div>
                         <div className="text-lg"><strong>Status:</strong> {order.status}</div>
                         <div className="text-lg"><strong>Total:</strong> Rs. {order.total}</div>
                     </div>
@@ -105,6 +105,7 @@ const View = (props) => {
                                 <tr>
                                     <th className="px-4 py-3 border-b">Product Name</th>
                                     <th className="px-4 py-3 border-b">Variation_id</th>
+                                    <th className="px-4 py-3 border-b">Attribute</th>
                                     <th className="px-4 py-3 border-b">Category</th>
                                     <th className="px-4 py-3 border-b">Price</th>
                                     <th className="px-4 py-3 border-b">Qty</th>
@@ -117,6 +118,24 @@ const View = (props) => {
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="px-4 py-4">{item.name}</td>
                                         <td className="px-4 py-4">{item.variation ? item.variation.id : "N/A"}</td>
+                                        <td className="py-1 px-2">
+                                           
+                                                                        <ul className='list-disc list-inside'>
+                                                                            { JSON.parse(item.variation.attributes).map((id, index) => (
+                                                                                console.log(attribute),
+                                                                                <li key={index}>
+                                                                                    <span className='font-bold'> {attribute
+                                                                                        .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
+                                                                                        ?.name} :
+                                                                                    </span>
+                                                                                    {attribute
+                                                                                        .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
+                                                                                        ?.attribute_values.find(value => value.id === parseInt(id))
+                                                                                        ?.value}
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    </td>
                                         <td className="px-4 py-4">{item.category}</td>
                                         <td className="px-4 py-4">Rs. {item.price}</td>
                                         <td className="px-4 py-4">{item.qty}</td>
