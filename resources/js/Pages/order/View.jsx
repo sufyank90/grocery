@@ -119,7 +119,7 @@ const View = (props) => {
                                         <td className="px-4 py-4">{item.name}</td>
                                         <td className="px-4 py-4">{item.variation ? item.variation.id : "N/A"}</td>
                                         <td className="py-1 px-2">
-                                           
+                                        {item.variation ?
                                                                         <ul className='list-disc list-inside'>
                                                                             { JSON.parse(item.variation.attributes).map((id, index) => (
                                                                                 console.log(attribute),
@@ -135,6 +135,7 @@ const View = (props) => {
                                                                                 </li>
                                                                             ))}
                                                                         </ul>
+                                                                        : "N/A"}
                                                                     </td>
                                         <td className="px-4 py-4">{item.category}</td>
                                         <td className="px-4 py-4">Rs. {item.price}</td>
