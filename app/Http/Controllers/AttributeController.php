@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Attribute;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AttributeController extends Controller
 {
@@ -13,19 +15,12 @@ class AttributeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        
+        $attributes = Attribute::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Inertia::render('setting/Attribute', compact('attributes'));
     }
 
     /**
@@ -35,9 +30,15 @@ class AttributeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreAttributeRequest $request)
-    {
-        //
-    }
+{
+
+    // Create the attribute with validated data
+    $attribute = Attribute::create($request->all());
+
+    // Optionally, you can return a response
+    return redirect()->route('attribute.index')->with('success', 'Attribute created successfully.');
+}
+
 
     /**
      * Display the specified resource.
@@ -47,18 +48,7 @@ class AttributeController extends Controller
      */
     public function show(Attribute $attribute)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Attribute  $attribute
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Attribute $attribute)
-    {
-        //
+        return response()->json($attribute);
     }
 
     /**
@@ -70,7 +60,8 @@ class AttributeController extends Controller
      */
     public function update(UpdateAttributeRequest $request, Attribute $attribute)
     {
-        //
+        $attribute->update($request->all());
+        
     }
 
     /**
@@ -81,6 +72,7 @@ class AttributeController extends Controller
      */
     public function destroy(Attribute $attribute)
     {
-        //
+        $attribute->delete();
+ 
     }
 }

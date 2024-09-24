@@ -105,3 +105,5 @@ require __DIR__.'/dashboard/setting.php';
 require __DIR__.'/dashboard/adminManagement.php';
 require __DIR__.'/dashboard/shipment.php';
 require __DIR__.'/dashboard/variation.php';
+require __DIR__.'/dashboard/attribute.php';
+require __DIR__.'/dashboard/attributeValue.php';

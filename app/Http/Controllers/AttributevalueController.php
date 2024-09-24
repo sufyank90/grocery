@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Attributevalue;
 use App\Http\Requests\StoreAttributevalueRequest;
 use App\Http\Requests\UpdateAttributevalueRequest;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AttributevalueController extends Controller
 {
@@ -15,7 +17,7 @@ class AttributevalueController extends Controller
      */
     public function index()
     {
-        //
+   
     }
 
     /**
@@ -36,7 +38,8 @@ class AttributevalueController extends Controller
      */
     public function store(StoreAttributevalueRequest $request)
     {
-        //
+        Attributevalue::create($request->all());
+
     }
 
     /**
@@ -45,9 +48,11 @@ class AttributevalueController extends Controller
      * @param  \App\Models\Attributevalue  $attributevalue
      * @return \Illuminate\Http\Response
      */
-    public function show(Attributevalue $attributevalue)
+    public function show($id )
     {
-        //
+             $attributevalues = Attributevalue::where('attribute_id', $id)->get();
+
+        return Inertia::render('setting/AttributeValue', compact(['attributevalues', 'id']));
     }
 
     /**
@@ -81,6 +86,6 @@ class AttributevalueController extends Controller
      */
     public function destroy(Attributevalue $attributevalue)
     {
-        //
+        Attributevalue::destroy($attributevalue->id);
     }
 }
