@@ -61,7 +61,7 @@ export default function Authenticated({ auth, header, children }) {
                             </div> */}
                             {auth.superadmin &&  (
                             <div className="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex">
-                                <NavLink href={route('settings.update')} active={route().current('settings.update')}>
+                                <NavLink href={route('settings.update')} active={route().current('settings.all')}>
                                   Site Setting
                                 </NavLink>
                             </div>
