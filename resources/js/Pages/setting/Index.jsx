@@ -51,7 +51,6 @@ export default function Index( props ) {
                             </div>
                         ))}
                         
-
                         <div className="mt-6">
                             <button
                                 type="submit"
