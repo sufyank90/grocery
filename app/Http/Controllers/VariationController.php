@@ -38,8 +38,8 @@ class VariationController extends Controller
     public function store(StoreVariationRequest $request)
     {
         // 
-
-       Variation::create([
+       
+        $variation =   Variation::create([
         'attributes'=> json_encode($request->attribute),
         "sale_price" => $request->sale_price,
         "regular_price" => $request->regular_price,
@@ -48,6 +48,14 @@ class VariationController extends Controller
         "stock_count" => $request->stock_count,
         "product_id" => $request->product_id
        ]);
+
+
+       $attributes = json_decode($request->attributesdata);
+
+       $product = $variation->product;
+       
+
+       $product->attributes()->sync($attributes);
 
  
     }
@@ -91,6 +99,13 @@ class VariationController extends Controller
             "status" =>$request->status,
             "stock_count" => $request->stock_count,
         ]);
+
+        $attributes = json_decode($request->attributesdata);
+
+        $product = $variation->product;
+
+
+        $product->attributes()->sync($attributes);
     }
 
     /**

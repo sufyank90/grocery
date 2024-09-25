@@ -38,7 +38,24 @@ class AttributevalueController extends Controller
      */
     public function store(StoreAttributevalueRequest $request)
     {
-        Attributevalue::create($request->all());
+        // Validate that the combination of value and attribute_id is unique
+    $request->validate([
+        'value' => 'required|string',
+        'attribute_id' => 'required|integer',
+        // Ensure value is unique for the given attribute_id
+        'value' => 'unique:attributevalues,value,NULL,id,attribute_id,' . $request->attribute_id,
+    ], [
+        'value.unique' => 'The attribute value name has already been taken for this attribute.',
+        'value.required' => 'Attribute value is required.',
+        'attribute_id.required' => 'Attribute ID is required.',
+        'attribute_id.integer' => 'Attribute ID must be an integer.',
+    ]);
+
+    // If validation passes, create the new attribute value
+    Attributevalue::create($request->all());
+
+    // Optionally return a response or redirect
+    return redirect()->back()->with('success', 'Attribute value created successfully.');
 
     }
 

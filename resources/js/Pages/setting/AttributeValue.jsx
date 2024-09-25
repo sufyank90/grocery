@@ -6,11 +6,13 @@ import { toast } from 'react-toastify';
 import { router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import React, { useState } from 'react';
+import * as Yup from 'yup';
 
 export default function AttributeValue(props) {
     const { attributevalues, id } = props;
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState(null);
+    const [formError, setFormError] = useState(null); // State for form errors
 
     const openDeleteModal = (id) => {
         setDeleteItemId(id);
@@ -39,20 +41,25 @@ export default function AttributeValue(props) {
         >
             <Head title="AttributeValue" />
 
-            <div className="pl-32 pr-32 mt-10">
+            <div className="pl-32 pr-32 mt-10 ">
                 <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
                     <h1 className="text-2xl font-semibold mb-6">Attribute Value</h1>
 
                     <Formik
                         initialValues={{ value: '', attribute_id: id }}
-                        onSubmit={(values) => {
+                        validationSchema={Yup.object({
+                            value: Yup.string().required('Attribute value is required'),
+                        })}
+                        onSubmit={(values, { setSubmitting }) => {
+                            setFormError(null); // Reset form error on new submission
                             router.post(route('attributevalue.store'), values, {
                                 onSuccess: () => {
                                     toast.success("Attribute value created successfully");
                                 },
-                                onError: () => {
-                                    console.error("Error creating attribute value");
+                                onError: (errors) => {
+                                        toast.error("The attribute value name has already been taken for this attribute.");  
                                 },
+                                onFinally: () => setSubmitting(false), // Stop submitting state
                             });
                         }}
                     >
@@ -73,6 +80,7 @@ export default function AttributeValue(props) {
                                     component="div"
                                     className="text-red-500 mt-2"
                                 />
+                                {formError && <div className="text-red-500 mt-2">{formError}</div>} {/* Display custom error */}
                             </div>
                             <div className="flex justify-start mb-4">
                                 <button

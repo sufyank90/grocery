@@ -31,11 +31,16 @@ class AttributeController extends Controller
      */
     public function store(StoreAttributeRequest $request)
 {
+    
 
-    // Create the attribute with validated data
+    // Validate request
+    $request->validate([
+        'name' => 'required|string|max:255|unique:attributes,name',
+    ]);
+
+    // Create the attribute
     $attribute = Attribute::create($request->all());
 
-    // Optionally, you can return a response
     return redirect()->route('attribute.index')->with('success', 'Attribute created successfully.');
 }
 
@@ -58,9 +63,19 @@ class AttributeController extends Controller
      * @param  \App\Models\Attribute  $attribute
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAttributeRequest $request, Attribute $attribute)
+    public function update(UpdateAttributeRequest $request, $id)
     {
-        $attribute->update($request->all());
+        $attribute = Attribute::findOrFail($id);
+
+    // Validate request
+    $request->validate([
+        'name' => 'required|string|max:255|unique:attributes,name,' . $id,
+    ]);
+
+    // Update the attribute
+    $attribute->update($request->all());
+
+    return redirect()->route('attribute.index')->with('success', 'Attribute updated successfully.');
         
     }
 

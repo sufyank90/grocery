@@ -6,6 +6,8 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import Modal from '@/Components/Modal';
 import { AiOutlineAppstoreAdd } from "react-icons/ai";
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 
 
 export default function Home(props) {
@@ -112,6 +114,12 @@ export default function Home(props) {
                     initialValues={{
                         name: selectedAttribute ? selectedAttribute.name : '',
                     }}
+                    validationSchema={
+                        Yup.object({
+                            name: Yup.string().required('Name is required'),
+                        })
+                    }
+                    
                     onSubmit={async(values)  => {
              
                         const action = selectedAttribute
@@ -123,10 +131,10 @@ export default function Home(props) {
 
                      await   router[method](action, values, {
                             onSuccess: () => {
-                                setIsModalOpen(false);
+                               toast.success("Attribute saved successfully");
                             },
                             onError: () => {
-                                console.error("Error saving attribute");
+                                toast.error("The attribute name has already been taken for this attribute.");
                             }
                         });
                     }}
@@ -140,6 +148,7 @@ export default function Home(props) {
                                 id="name"
                                 name="name"
                                 type="text"
+                                placeholder="Enter attribute name"
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                             <ErrorMessage
@@ -151,7 +160,7 @@ export default function Home(props) {
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             >
                                 {selectedAttribute ? 'Update' : 'Create'}
                             </button>

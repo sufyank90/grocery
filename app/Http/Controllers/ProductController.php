@@ -332,10 +332,10 @@ class ProductController extends Controller
         $categories = array_map('intval', $categories);
         $product->categories()->sync($categories);
 
-        $attributes = explode(',', $request->attribute_id);
-        $attributes = array_map('intval', $attributes);
+        $attributes = json_decode($request->attributesdata);
 
-        $product->attributes()->sync($request->attributesdata);
+
+        $product->attributes()->sync($attributes);
 
         
         

@@ -124,6 +124,14 @@ function Edit(props) {
                                 formData.append('stock_count', values.stock_count);
                                 formData.append('shipping_rates', values.shipping_rates);
                                 formData.append('attribute_id', values.attribute_id);
+                                formData.append('variation', values.variation);
+                                //attributesdata
+                                let aids = []
+                                searchedAttributes.forEach(element => {
+                                    aids.push( parseInt(attribute.find(item => item.name === element).id) )
+                                })
+                                values.attributesdata = aids;
+                                formData.append('attributesdata', JSON.stringify(values.attributesdata));
                                 formData.append('categories', values.categories.join(',')); // Join category IDs into a string
                                 if (values.file) {
                                     values.file.forEach((file) => {
@@ -642,6 +650,12 @@ function Edit(props) {
                                                                                 className='cursor-pointer ml-2 text-2xl'
                                                                                     
                                                                                 onClick={() => {
+                                                                                    let aids = []
+                                                                                    searchedAttributes.forEach(element => {
+                                                                                        aids.push( parseInt(attribute.find(item => item.name === element).id) )
+                                                                                    })
+                                                                                    item.attributesdata = JSON.stringify(aids);
+                                                                                    
                                                                                     // Open the edit modal or handle the edit action
                                                                                     if(item.id){
                                                                                     router.put(route('variation.update', item.id),item,
@@ -655,7 +669,7 @@ function Edit(props) {
                                                                                         }
                                                                                     });
                                                                                 
-                                                                                }
+                                                                                     }
                                                                                 else{
                                                                                     item.product_id = product.id
                                                                                     router.post(route('variation.store'),item,
