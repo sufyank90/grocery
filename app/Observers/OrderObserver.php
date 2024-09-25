@@ -51,7 +51,7 @@ class OrderObserver
         }
 
         // Check if the status has been updated and if it is now 'cancelled'
-        if ($order->isDirty('status') && $order->status == 'cancelled') {
+        if ($order->isDirty('status') && $order->status == 'cancelled'|| $order->status == 'pending') {
             $user = User::find($order->user_id);
 
             // Check if the user exists and has enough earn_rewards

@@ -8,6 +8,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FaWallet } from "react-icons/fa";
 import { GiTwoCoins } from "react-icons/gi";
+import { toast } from 'react-toastify';
 
 
 function User(props) {
@@ -27,6 +28,7 @@ function User(props) {
     if (deleteItem) {
       router.delete(route('customer.destroy', deleteItem));
       setIsDeleteModalOpen(false);
+      toast.error("Customer deleted successfully");
     }
   };
 
@@ -47,8 +49,9 @@ function User(props) {
   const handleUpdate = (values) => {
     router.put(route('customer.update', selectedUser.id), values, {
       onSuccess: () => {
-        console.log(values)
+        // console.log(values)
         setIsEditModalOpen(false);
+        toast.success("User updated successfully");
       },
     });
   };
@@ -197,6 +200,7 @@ function User(props) {
                   onSuccess: () => {
                     resetForm();
                     setIsWalletModalOpen(false);
+                    toast.success("Wallet updated successfully");
                   },
                 });
               }}
@@ -259,9 +263,11 @@ function User(props) {
         onSuccess: () => {
           resetForm();
           setIsModalOpen(false);
+          toast.success('User created successfully');
         },
         onError: (errors) => {
           setErrors(errors);
+          toast.error('Failed to create user');
         },
       });
     }}

@@ -37,30 +37,30 @@ class CouponController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-    
-        $request->validate([
-            'code' => 'required|string|unique:coupons,code',
-            'type' => 'required|string|in:fixed,percentage',
-            'value' => 'required|numeric|min:0',
-            'usage_type' => 'required|string|in:single,multiple',
-            'usage_limit' => 'required_if:usage_type,multiple|nullable|integer|min:1',
-            'min_amount' => 'required|numeric',
-            'expiry_date' => 'required|date|after:today',
-        ]);
-    
-        $coupon = new Coupon();
-        $coupon->code = $request->input('code');
-        $coupon->type = $request->input('type');
-        $coupon->value = $request->input('value');
-        $coupon->usage_type = $request->input('usage_type');
-        $coupon->usage_limit = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
-        $coupon->min_amount = $request->input('min_amount');
-        $coupon->expiry_date = $request->input('expiry_date');
-        $coupon->save();
-    
-        return redirect()->back()->with('success', 'Coupon created successfully.');
-    }
+{
+    $request->validate([
+        'code' => 'required|string|unique:coupons,code',
+        'type' => 'required|string|in:fixed,percentage',
+        'value' => 'required|numeric|min:0',
+        'usage_type' => 'required|string|in:single,multiple',
+        'usage_limit' => 'required_if:usage_type,multiple|nullable|integer|min:1',
+        'min_amount' => 'required|numeric',
+        'expiry_date' => 'required|date|after:today',
+    ]);
+
+    $coupon = new Coupon();
+    $coupon->code = $request->input('code');
+    $coupon->type = $request->input('type');
+    $coupon->value = $request->input('value');
+    $coupon->usage_type = $request->input('usage_type');
+    $coupon->usage_limit = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
+    $coupon->min_amount = $request->input('min_amount');
+    $coupon->expiry_date = $request->input('expiry_date');
+    $coupon->save();
+
+    return redirect()->back()->with('success', 'Coupon created successfully.');
+}
+
     
 
     /**
@@ -93,32 +93,30 @@ class CouponController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Coupon $coupon)
-{
+    {
+        
+        $request->validate([
+            'code' => 'required|string|unique:coupons,code,' . $coupon->id,
+            'type' => 'required|string|in:fixed,percentage',
+            'value' => 'required|numeric|min:0',
+            'usage_type' => 'required|string|in:single,multiple',
+            'usage_limit' => 'required|numeric|min:1',
+            'min_amount' => 'required|numeric|min:0',
+            'expiry_date' => 'required|date|after:today',
+        ]);
     
-    $request->validate([
-        'code' => 'required|string|unique:coupons,code,' . $coupon->id,
-        'type' => 'required|string|in:fixed,percentage',
-        'value' => 'required|numeric|min:0',
-        'usage_type' => 'required|string|in:single,multiple',
-        'usage_limit' => 'required',
-        'minimum_amount' => 'required|numeric|min:0',
-        'expiry_date' => 'required|date|after:today',
-    ]);
-  
-    $request->usage_type = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
-
-
-    $coupon->code = $request->input('code');
-    $coupon->type = $request->input('type');
-    $coupon->value = $request->input('value');
-    $coupon->usage_type = $request->input('usage_type');
-    $coupon->usage_limit = $request->input('usage_type') === 'multiple' ? $request->input('usage_limit') : 1;
-    $coupon->minimum_amount = $request->input('minimum_amount');
-    $coupon->expiry_date = $request->input('expiry_date');
-    $coupon->save();
-
-    return redirect()->back()->with('success', 'Coupon updated successfully.');
-}
+        $coupon->code = $request->input('code');
+        $coupon->type = $request->input('type');
+        $coupon->value = $request->input('value');
+        $coupon->usage_type = $request->input('usage_type');
+        $coupon->usage_limit = $request->usage_type === 'multiple' ? $request->input('usage_limit') : 1;
+        $coupon->min_amount = $request->input('min_amount');
+        $coupon->expiry_date = $request->input('expiry_date');
+        $coupon->save();
+    
+        return redirect()->back()->with('success', 'Coupon updated successfully.');
+    }
+    
 
     /**
      * Remove the specified resource from storage.

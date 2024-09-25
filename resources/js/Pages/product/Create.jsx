@@ -115,6 +115,7 @@ function Create(props) {
                             router.post(route('product.store'), formData, {
                                 onSuccess: () => {
                                     resetForm();
+                                    toast.success('Product created successfully');
                                 },
                             });
                         }}className="bg-white  mt-2 mb-2 w-full max-w-lg mx-auto "

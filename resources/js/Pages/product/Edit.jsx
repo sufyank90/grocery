@@ -145,11 +145,15 @@ function Edit(props) {
                                     });
                                 }
 
-                                router.post(route('product.updatewithfile', product.id), formData, {
+                                router.post(route('product.updatewithfile', product.id), formData,  {
                                     onSuccess: () => {
+                                       
                                         resetForm();
                                     },
-                                });
+                                }
+                            
+                            );
+                                
                             }}
                         >
                             {({ values, setFieldValue }) => {

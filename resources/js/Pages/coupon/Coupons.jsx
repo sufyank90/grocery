@@ -6,6 +6,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { toast } from 'react-toastify';
 
 
 function Coupons(props) {
@@ -164,25 +165,27 @@ function Coupons(props) {
                             value: '',
                             usage_type: '',
                             usage_limit: '',
-                            min_amount:'',
+                            min_amount: '',
                             expiry_date: '',
                         }}
                         validationSchema={Yup.object({
                             code: Yup.string().required('Code is required'),
                             type: Yup.string().required('Type is required'),
                             value: Yup.number().required('Value is required'),
+                            min_amount: Yup.number().required('Minimum Amount is required'),
                             usage_type: Yup.string().required('Usage Type is required'),
                             usage_limit: Yup.number().required('Usage Limit is required'),
 
                             expiry_date: Yup.date().required('Expiry Date is required'),
                         })}
                         onSubmit={(values, { resetForm }) => {
-                           
+
                             router.post(route('coupon.store'), values, {
-                                
+
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpen(false);
+                                    toast.success('Coupon created successfully');
                                 },
                             });
                         }}
@@ -333,6 +336,7 @@ function Coupons(props) {
                             type: selectedProduct ? selectedProduct.type : '',
                             value: selectedProduct ? selectedProduct.value : '',
                             usage_type: selectedProduct ? selectedProduct.usage_type : '',
+                            min_amount: selectedProduct ? selectedProduct.min_amount : '',
                             usage_limit: selectedProduct ? selectedProduct.usage_limit : '',
                             expiry_date: selectedProduct ? selectedProduct.expiry_date : '',
                         }}
@@ -340,6 +344,7 @@ function Coupons(props) {
                             code: Yup.string().required('Code is required'),
                             type: Yup.string().required('Type is required'),
                             value: Yup.number().required('Value is required'),
+                            min_amount: Yup.number().required('Minimum Amount is required'),
                             usage_type: Yup.string().required('Usage Type is required'),
                             usage_limit: Yup.number().required('Usage Limit is required'),
                             expiry_date: Yup.date().required('Expiry Date is required'),
@@ -349,6 +354,7 @@ function Coupons(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsEditModalOpen(false);
+                                    toast.success('Coupon updated successfully');
                                 },
                             });
                         }}
@@ -396,6 +402,16 @@ function Coupons(props) {
                                     className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                 />
                                 <ErrorMessage name="value" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+                            {/* Min Amount Field */}
+                            <div>
+                                <Field
+                                    name="min_amount"
+                                    type="number"
+                                    placeholder="Min Amount"
+                                    className="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                                <ErrorMessage name="min_amount" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
 
                             {/* Usage Type Field */}
@@ -474,6 +490,7 @@ function Coupons(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsDeleteModalOpen(false);
+                                    toast.success('Coupon deleted successfully');
                                 },
                             });
                         }}

@@ -306,6 +306,7 @@ class ProductController extends Controller
 
     public function updatewithfile(Request $request, Product $product)
     {
+      
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',

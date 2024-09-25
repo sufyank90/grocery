@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { toast } from 'react-toastify';
 
 
 function Category(props) {
@@ -43,29 +44,29 @@ function Category(props) {
                                 >
                                     Create
                                 </button>
-                                <Formik  enableReinitialize initialValues={{ search: '' }}
-                                onSubmit={(values) => {
-                                    router.visit(route('category.index', { search: values.search }), {
-                                        method: 'get', // or 'post' depending on your needs
-                                        preserveState: true,
-                                      });
-                                }}
+                                <Formik enableReinitialize initialValues={{ search: '' }}
+                                    onSubmit={(values) => {
+                                        router.visit(route('category.index', { search: values.search }), {
+                                            method: 'get', // or 'post' depending on your needs
+                                            preserveState: true,
+                                        });
+                                    }}
                                 >
                                     <Form className="flex space-x-2">
                                         <div >
-                                <Field name="search"
-                                    type="text"
-                                    placeholder="Search..."
-                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                />
-                              
-                                </div>
-                                <button  type="submit"
-                                    style={{ background: '#fcb609' }}
-                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
-                                    Search
-                                </button>
-                                </Form>
+                                            <Field name="search"
+                                                type="text"
+                                                placeholder="Search..."
+                                                className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            />
+
+                                        </div>
+                                        <button type="submit"
+                                            style={{ background: '#fcb609' }}
+                                            className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
+                                            Search
+                                        </button>
+                                    </Form>
                                 </Formik>
                             </div>
                         </div>
@@ -150,8 +151,8 @@ function Category(props) {
                         </div>
                     </div>
                 </div>
- 
-             
+
+
                 {/* Create Product Modal */}
                 <Modal
                     show={isModalOpen}
@@ -183,13 +184,15 @@ function Category(props) {
                             const formData = new FormData();
                             formData.append('file', values.file);
                             formData.append('name', values.name);
-
+                            toast.success('Category created successfully');
                             await router.post(route('category.store'), formData, {
                                 preserveScroll: true,
                                 preserveState: true,
+                                toast: toast,
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpen(false);
+                                    
                                 },
                             });
                         }}
@@ -316,6 +319,7 @@ function Category(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsEditModalOpen(false);
+                                    toast.success('Category updated successfully');
                                 },
                             });
                         }}
@@ -417,6 +421,7 @@ function Category(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsDeleteModalOpen(false);
+                                    toast.success('Category deleted successfully');
                                 },
                             });
                         }}

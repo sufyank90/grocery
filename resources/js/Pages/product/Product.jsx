@@ -10,6 +10,7 @@ import { MdDelete } from "react-icons/md";
 
 import { FaFileDownload } from "react-icons/fa";
 import { SiMicrosoftexcel } from "react-icons/si";
+import { toast } from 'react-toastify';
 
 export default function Product(props) {
     const { products, categories } = props;
@@ -364,6 +365,7 @@ export default function Product(props) {
                                     onSuccess: () => {
                                         setIsStatusModalOpen(false);
                                         setSelectedProduct(null);
+                                        toast.success("Product status updated successfully");
                                     },
                                 });
                             }}
@@ -449,6 +451,7 @@ export default function Product(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpen(false);
+                                    toast.success("Product created successfully");
                                 },
                             });
                         }}
@@ -581,7 +584,7 @@ export default function Product(props) {
 
 
                 {/* Edit Product Modal */}
-                <Modal
+                {/* <Modal
                     show={isEditModalOpen}
                     onClose={() => setIsEditModalOpen(false)}
                     maxWidth="2xl"
@@ -604,6 +607,7 @@ export default function Product(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsEditModalOpen(false);
+                                    toast.success('Product updated successfully');
                                 },
                             });
                         }}
@@ -700,7 +704,7 @@ export default function Product(props) {
                             </div>
                         </Form>
                     </Formik>
-                </Modal>
+                </Modal> */}
 
 
 
@@ -720,6 +724,7 @@ export default function Product(props) {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsDeleteModalOpen(false);
+                                    toast.success('Product deleted successfully');
                                 },
                             });
                         }}
