@@ -175,7 +175,6 @@ function Coupons(props) {
                             min_amount: Yup.number().required('Minimum Amount is required'),
                             usage_type: Yup.string().required('Usage Type is required'),
                             usage_limit: Yup.number().required('Usage Limit is required'),
-
                             expiry_date: Yup.date().required('Expiry Date is required'),
                         })}
                         onSubmit={(values, { resetForm }) => {
