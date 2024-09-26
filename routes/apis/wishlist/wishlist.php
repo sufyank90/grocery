@@ -48,4 +48,11 @@ Route::middleware('auth:sanctum')->prefix('wishlist')->group(function () {
         return response()->json(["data" => $wishlist, "message" => "Added to Wishlist successfully"], 201);
     });
 
+    // Delete all wishlist
+    Route::delete('', function (Request $request) {
+        $user = $request->user();
+        $wishlist = Wishlist::where('user_id', $user->id)->delete();
+        return response()->json(["data" => $wishlist, "message" => "Cleared all wishlist successfully"], 200);
+    });
+
 });
