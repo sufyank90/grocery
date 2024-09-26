@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 Route::middleware(['guest'])->prefix('auth')->group(function () {
-
+    
+    
 
     Route::post('/login',function(Request $request){
         $validator = Validator::make($request->all(), [
@@ -63,16 +64,29 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
 
     });
-
+    
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+
+    
+    
+    
+    Route::delete('/deleteaccount', function(Request $request) {
+        $user = $request->user();
+       $user->delete();
+        return response()->json(['message' => 'User deleted successfully'], 200); 
+    });
    
     Route::post('/changepassword', function(Request $request) {
         $validator = Validator::make($request->all(), [
             'oldpassword' => ['required', 'string'],
             'newpassword' => ['required', 'string', 'min:8'],
         ]);
+
+
+        
     
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -89,6 +103,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
         return response()->json(['message' => 'Password changed successfully'], 200); 
     });
+
+    //soft delete api 
+
+   
 
 
     Route::put('/profile', function(Request $request) {
