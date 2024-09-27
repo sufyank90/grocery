@@ -5,19 +5,19 @@ import { GrView } from 'react-icons/gr';
 import { Field, Form, Formik } from 'formik';
 
 export default function AdminPanel(props) {
-    const { countuser,
-            countpendingorder,
-            countcompletedorder,
-            countorders, 
-            cancelledorder,
-            orders,
-            salesToday, 
-            salesThisWeek, 
-            salesThisMonth,  } = props;
+    const { 
+        countuser,
+        countpendingorder,
+        countcompletedorder,
+        countorders, 
+        salesToday, 
+        salesThisWeek, 
+        salesThisMonth,  
+        orders 
+    } = props;
+    
     const [dateFilter, setDateFilter] = useState('');
 
-    
-    console.log(orders);
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -26,27 +26,26 @@ export default function AdminPanel(props) {
         >
             <Head title="Admin Dashboard" />
 
-            <div className="flex">
-
+            <div className="flex flex-col">
 
                 {/* Main Content */}
                 <div className="max-w-7xl mt-10 mx-auto w-full">
-                <div className="py-4">
-                        <div className="flex space-x-4">
+                    <div className="py-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {/* Cards */}
-                            <div className="w-1/4 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Customers</h3>
                                 <p className="mt-2 text-xl">{countuser}</p>
                             </div>
-                            <div className="w-1/4 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Pending Orders</h3>
                                 <p className="mt-2 text-xl">{countpendingorder}</p>
                             </div>
-                            <div className="w-1/4 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Completed Orders</h3>
                                 <p className="mt-2 text-xl">{countcompletedorder}</p>
                             </div>
-                            <div className="w-1/4 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Sales Today</h3>
                                 <p className="mt-2 text-xl">Rs. {salesToday}</p>
                             </div>
@@ -54,87 +53,83 @@ export default function AdminPanel(props) {
                     </div>
 
                     <div className="py-4">
-                        <div className="flex space-x-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {/* Cards */}
-                            <div className="w-1/3 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Sales This Week</h3>
                                 <p className="mt-2 text-xl">Rs. {salesThisWeek}</p>
                             </div>
-                            <div className="w-1/3 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Sales This Month</h3>
                                 <p className="mt-2 text-xl">Rs. {salesThisMonth}</p>
                             </div>
-                            <div className="w-1/3 bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
+                            <div className="bg-white border text-black p-4 rounded-lg shadow border-[#fcb609]">
                                 <h3 className="text-lg font-bold">Total Orders</h3>
                                 <p className="mt-2 text-xl">{countorders}</p>
                             </div>
                         </div>
                     </div>
-
-
+ {/* Table (Hidden on mobile) */}
+ <div className="hidden md:block">
                     <div className="w-full mt-10">
-                            <div className="flex justify-between items-center mt-6 mb-4">
-                                <h3 className="text-lg font-bold">Total Sales</h3>
-                                <div className="flex space-x-2">
-                                    <Formik
-                                        initialValues={{ status: '', search: '' }}
-                                        onSubmit={(values) => {
-                                            router.visit(route('dashboard', {
-                                                status: values.status,
-                                                search: values.search,
-                                            }), {
-                                                method: 'get',
-                                                preserveState: true,
-                                            });
-                                        }}
-                                    >
-                                        {({ submitForm, setFieldValue }) => (
-                                            <Form className="flex space-x-2">
-                                                <div>
-                                                    <Field
-                                                        as="select"
-                                                        name="status"
-                                                        className="py-2 pr-7 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                        onChange={(e) => {
-                                                            setFieldValue('status', e.target.value);
-                                                            submitForm();  // Automatically submit the form on change
-                                                        }}
-                                                    >
-                                                        <option value="">All</option>
-                                                        <option value="pending">Pending</option>
-                                                        <option value="completed">Completed</option>
-                                                        <option value="cancelled">Cancelled</option>
-                                                    </Field>
-                                                </div>
-                                                <div>
-                                                    <Field
-                                                        name="search"
-                                                        type="text"
-                                                        placeholder="Search By Order Id"
-                                                        className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                    />
-                                                </div>
-                                                <button
-                                                    type="submit"
-                                                    style={{ background: '#fcb609' }}
-                                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
+                        <div className="flex justify-between items-center mt-6 mb-4">
+                            <h3 className="text-lg font-bold">Total Sales</h3>
+                            <div className="flex space-x-2">
+                                <Formik
+                                    initialValues={{ status: '', search: '' }}
+                                    onSubmit={(values) => {
+                                        router.visit(route('dashboard', {
+                                            status: values.status,
+                                            search: values.search,
+                                        }), {
+                                            method: 'get',
+                                            preserveState: true,
+                                        });
+                                    }}
+                                >
+                                    {({ submitForm, setFieldValue }) => (
+                                        <Form className="flex space-x-2">
+                                            <div>
+                                                <Field
+                                                    as="select"
+                                                    name="status"
+                                                    className="py-2 pr-7 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                    onChange={(e) => {
+                                                        setFieldValue('status', e.target.value);
+                                                        submitForm();  // Automatically submit the form on change
+                                                    }}
                                                 >
-                                                    Search
-                                                </button>
-                                            </Form>
-                                        )}
-                                    </Formik>
-
-
-
-
-                                </div>
+                                                    <option value="">All</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="cancelled">Cancelled</option>
+                                                </Field>
+                                            </div>
+                                            <div>
+                                                <Field
+                                                    name="search"
+                                                    type="text"
+                                                    placeholder="Search By Order Id"
+                                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                />
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                style={{ background: '#fcb609' }}
+                                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
+                                            >
+                                                Search
+                                            </button>
+                                        </Form>
+                                    )}
+                                </Formik>
                             </div>
+                        </div>
 
+                       
                             <table className="min-w-full bg-white rounded-lg shadow-lg">
                                 <thead>
                                     <tr>
-                                        {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
                                         <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
                                         <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
                                         <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
@@ -150,74 +145,38 @@ export default function AdminPanel(props) {
                                 <tbody>
                                     {orders.data.length === 0 ? (
                                         <tr>
-                                            <td colSpan="8" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
+                                            <td colSpan="10" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
                                                 No orders found
                                             </td>
                                         </tr>
-                                    ) : (<>
-                                        {orders.data.map((order, index) => (
-                                            <tr key={order.id} className="hover:bg-gray-100">
-                                                {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
-                                                <td className="py-2 px-4 border-b text-left">
-                                                    {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
-                                                </td>
-
-                                                {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                    {order.status === 'pending' && (
-                                                        <span
-                                                            onClick={() => {
-                                                                setSelectedOrder(order);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-                                                            className="bg-yellow-100 cursor-pointer text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                    ) : (
+                                        <>
+                                            {orders.data.map((order, index) => (
+                                                <tr key={order.id} className="hover:bg-gray-100">
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.name}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.email}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                        <span className={`bg-${order.status === 'pending' ? 'yellow' : order.status === 'completed' ? 'green' : 'red'}-100 cursor-pointer text-${order.status === 'pending' ? 'yellow' : order.status === 'completed' ? 'green' : 'red'}-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded`}>
                                                             {order.status}
                                                         </span>
-                                                    )}
-                                                    {order.status === 'completed' && (
-                                                        <span
-                                                            onClick={() => {
-                                                                setSelectedOrder(order);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-                                                            className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                                            {order.status}
-                                                        </span>
-                                                    )}
-                                                    {order.status === 'cancelled' && (
-                                                        <span
-                                                            onClick={() => {
-                                                                setSelectedOrder(order);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-                                                            className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                                            {order.status}
-                                                        </span>
-                                                    )}
-                                                </td>
-
-                                                <td className="py-2 mb-5 px-4 border-b border-gray-200 text-right">
-                                                    <div className="text-right space-x-2">
-
-                                                        <Link href={route('order.show', order.id)}>
-                                                            <GrView className="w-7 h-7" style={{ color: '#fcb609' }} />
-                                                        </Link>
-
-
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-
-                                    </>)}
-
+                                                    </td>
+                                                    <td className="py-2 mb-5 px-4 border-b border-gray-200 text-right">
+                                                        <div className="text-right space-x-2">
+                                                            <Link href={route('order.show', order.id)}>
+                                                                <GrView className="w-7 h-7" style={{ color: '#fcb609' }} />
+                                                            </Link>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </>
+                                    )}
                                 </tbody>
                             </table>
 
@@ -232,11 +191,8 @@ export default function AdminPanel(props) {
                                     />
                                 ))}
                             </div>
-
                         </div>
-
-
-
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>

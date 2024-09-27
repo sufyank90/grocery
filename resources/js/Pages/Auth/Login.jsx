@@ -26,7 +26,6 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('login'));
     };
 
@@ -38,7 +37,7 @@ export default function Login({ status, canResetPassword }) {
 
             {errors.status && <div className="mb-4 font-medium text-sm text-red-600">{errors.status}</div>}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="max-w-md mx-auto">
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -47,7 +46,7 @@ export default function Login({ status, canResetPassword }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full sm:w-3/1 lg:w-1/1"
                         autoComplete="username"
                         isFocused={true}
                         onChange={handleOnChange}
@@ -64,7 +63,7 @@ export default function Login({ status, canResetPassword }) {
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full sm:w-3/1 lg:w-1/1"
                         autoComplete="current-password"
                         onChange={handleOnChange}
                     />
