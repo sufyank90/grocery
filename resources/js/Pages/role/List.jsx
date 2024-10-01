@@ -94,8 +94,10 @@ function List(props) {
                                                         <button
                                                            
                                                         >
+                                                            <Link href={route('role.show', item.id)}>
                                                             <CiSettings 
                                                                 className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                                </Link>
                                                         </button>
                                                     </div>
                                                 </td>

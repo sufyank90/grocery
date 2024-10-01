@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AssignPermissionSeeder extends Seeder
 {
@@ -16,7 +17,9 @@ class AssignPermissionSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::role('super admin')->first();
+        //assign permission to super admin role role_has_permissions
+
+
 
         $assignPermissionToSuperAdmin = [
             'view products',
@@ -42,7 +45,16 @@ class AssignPermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
         
-        // Assign permissions to the user
-        $user->syncPermissions($assignPermissionToSuperAdmin);
+         // Fetch the existing super admin role
+        $superAdminRole = Role::where('name', 'super admin')->first();
+
+        // Check if the super admin role exists before syncing permissions
+        if ($superAdminRole) {
+            // Assign permissions to the super admin role
+            $superAdminRole->syncPermissions($assignPermissionToSuperAdmin);
+        } else {
+            // Optionally, handle the case where the role does not exist
+            \Log::warning('Super admin role not found.');
+        }
     }
 }

@@ -19,7 +19,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::where('name','!=','super admin')->latest()->paginate(10);
+        $roles = Role::latest()->paginate(10);
         return Inertia::render('role/List',compact('roles'));
     }
 
@@ -62,7 +62,14 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $role = Role::findOrFail($id);
+
+        $permissions = $role->permissions->pluck('name')->toArray();
+
+        $permissionsList = Permission::pluck('name')->toArray();
+
+        return Inertia::render('role/View', compact('role', 'permissions','permissionsList'));
+        
     }
 
     /**
