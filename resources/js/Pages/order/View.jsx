@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 
 const View = (props) => {
     const { order, attribute } = props;
-
+console.log(order)
     const downloadPDF = () => {
         const doc = new jsPDF();
         doc.text("Order Details", 10, 10);
@@ -78,6 +78,7 @@ const View = (props) => {
                         <div className="text-lg"><strong>Order ID:</strong> {order.id}</div>
                         <div className="text-lg"><strong>Order Date:</strong> {order.created_at_formatted}</div>
                         <div className="text-lg"><strong>Status:</strong> {order.status}</div>
+                        <div className="text-lg"><strong>Payment Method:</strong> {order.method}</div>
                         <div className="text-lg"><strong>Total:</strong> Rs. {order.total}</div>
                     </div>
                 </div>
