@@ -3,12 +3,27 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const { flash } = usePage().props;
+
+
+
+    useEffect(() => {
+        if (flash.message) {
+            toast.success(flash.message);
+            console.log(flash.message);
+        }
+        if (flash.error) {
+            toast.error(flash.error);
+            console.log(flash.error);
+        }
+    }, [flash]);
 
     return (
         <div className="min-h-screen bg-gray-100">

@@ -5,17 +5,17 @@ import { GrView } from 'react-icons/gr';
 import { Field, Form, Formik } from 'formik';
 
 export default function AdminPanel(props) {
-    const { 
+    const {
         countuser,
         countpendingorder,
         countcompletedorder,
-        countorders, 
-        salesToday, 
-        salesThisWeek, 
-        salesThisMonth,  
-        orders 
+        countorders,
+        salesToday,
+        salesThisWeek,
+        salesThisMonth,
+        orders
     } = props;
-    
+
     const [dateFilter, setDateFilter] = useState('');
 
     return (
@@ -69,64 +69,64 @@ export default function AdminPanel(props) {
                             </div>
                         </div>
                     </div>
- {/* Table (Hidden on mobile) */}
- <div className="hidden md:block">
-                    <div className="w-full mt-10">
-                        <div className="flex justify-between items-center mt-6 mb-4">
-                            <h3 className="text-lg font-bold">Total Sales</h3>
-                            <div className="flex space-x-2">
-                                <Formik
-                                    initialValues={{ status: '', search: '' }}
-                                    onSubmit={(values) => {
-                                        router.visit(route('dashboard', {
-                                            status: values.status,
-                                            search: values.search,
-                                        }), {
-                                            method: 'get',
-                                            preserveState: true,
-                                        });
-                                    }}
-                                >
-                                    {({ submitForm, setFieldValue }) => (
-                                        <Form className="flex space-x-2">
-                                            <div>
-                                                <Field
-                                                    as="select"
-                                                    name="status"
-                                                    className="py-2 pr-7 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                    onChange={(e) => {
-                                                        setFieldValue('status', e.target.value);
-                                                        submitForm();  // Automatically submit the form on change
-                                                    }}
+                    {/* Table (Hidden on mobile) */}
+                    <div className="hidden md:block">
+                        <div className="w-full mt-10">
+                            <div className="flex justify-between items-center mt-6 mb-4">
+                                <h3 className="text-lg font-bold">Total Sales</h3>
+                                <div className="flex space-x-2">
+                                    <Formik
+                                        initialValues={{ status: '', search: '' }}
+                                        onSubmit={(values) => {
+                                            router.visit(route('dashboard', {
+                                                status: values.status,
+                                                search: values.search,
+                                            }), {
+                                                method: 'get',
+                                                preserveState: true,
+                                            });
+                                        }}
+                                    >
+                                        {({ submitForm, setFieldValue }) => (
+                                            <Form className="flex space-x-2">
+                                                <div>
+                                                    <Field
+                                                        as="select"
+                                                        name="status"
+                                                        className="py-2 pr-7 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                        onChange={(e) => {
+                                                            setFieldValue('status', e.target.value);
+                                                            submitForm();  // Automatically submit the form on change
+                                                        }}
+                                                    >
+                                                        <option value="">All</option>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="completed">Completed</option>
+                                                        <option value="cancelled">Cancelled</option>
+                                                    </Field>
+                                                </div>
+                                                <div>
+                                                    <Field
+                                                        name="search"
+                                                        type="text"
+                                                        placeholder="Search By Order Id"
+                                                        className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                    />
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    style={{ background: '#fcb609' }}
+                                                    className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
                                                 >
-                                                    <option value="">All</option>
-                                                    <option value="pending">Pending</option>
-                                                    <option value="completed">Completed</option>
-                                                    <option value="cancelled">Cancelled</option>
-                                                </Field>
-                                            </div>
-                                            <div>
-                                                <Field
-                                                    name="search"
-                                                    type="text"
-                                                    placeholder="Search By Order Id"
-                                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                />
-                                            </div>
-                                            <button
-                                                type="submit"
-                                                style={{ background: '#fcb609' }}
-                                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
-                                            >
-                                                Search
-                                            </button>
-                                        </Form>
-                                    )}
-                                </Formik>
+                                                    Search
+                                                </button>
+                                            </Form>
+                                        )}
+                                    </Formik>
+                                </div>
                             </div>
-                        </div>
 
-                       
+
                             <table className="min-w-full bg-white rounded-lg shadow-lg">
                                 <thead>
                                     <tr>

@@ -100,7 +100,7 @@ export default function Product(props) {
                                 >
                                     Create
                                 </button> */}
-                                <a href='productexample.csv' className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg' download={'productexample.csv'}>
+                                <a href='/productexample.csv' className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg' download={'productexample.csv'}>
                                     <span class="flex items-stretch transition-all duration-200 rounded-md px-4 py-2 text-sm"> <FaFileDownload className="mr-2 h-5 w-5" />
                                         Download CSV Template
                                     </span>

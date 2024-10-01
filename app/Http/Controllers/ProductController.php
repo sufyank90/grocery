@@ -47,7 +47,9 @@ class ProductController extends Controller
                 'regular_price' => intVal($data['regular_price']) ? intVal($data['regular_price']) : 0, 
                 'tax_class' => $data['tax_class'], 
                 'tax' => intVal($data['tax']) ? intVal($data['tax']) : 0,
-                'stock_count' => intVal($data['stock_count']) ? intVal($data['stock_count']) : 0 
+                'stock_count' => intVal($data['stock_count']) ? intVal($data['stock_count']) : 0 ,
+                
+
                 ]);
         }
 
@@ -58,12 +60,62 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    // public function csvExport(Request $request)
+    // {
+        
+  
+    //     // Fetch all products from the database
+    //     $products = Product::all();
+        
+    //     // Define the headers for the CSV file
+    //     $headers = [
+    //         "Content-type"        => "text/csv",
+    //         "Content-Disposition" => "attachment; filename=products.csv",
+    //         "Pragma"              => "no-cache",
+    //         "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+    //         "Expires"             => "0"
+    //     ];
+    
+    //     // Define the columns for the CSV file
+    //     $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax','stock_count'];
+    
+    //     // Create a callback to stream the CSV content
+    //     $callback = function() use ($products, $columns) {
+    //         $file = fopen('php://output', 'w');
+            
+    //         // Write the column headers
+    //         fputcsv($file, $columns);
+    
+    //         // Write product data to the CSV
+    //         foreach ($products as $product) {
+    //             fputcsv($file, [
+    //                 $product->name,
+    //                 $product->description,
+    //                 $product->price,
+    //                 $product->status,
+    //                 $product->sku,
+    //                 $product->sale_price,
+    //                 $product->regular_price,
+    //                 $product->tax_class,
+    //                 $product->tax,
+    //                 $product->stock_count
+    //             ]);
+    //         }
+    
+    //         fclose($file);
+    //     };
+    
+    //     // Return the streamed CSV file as a download
+       
+    //     return response()->stream($callback, 200, $headers);
+
+    // }
+
     public function csvExport(Request $request)
     {
-  
-        // Fetch all products from the database
-        $products = Product::all();
-    
+        // Fetch all products from the database with their attributes
+        $products = Product::with('attributes')->get();
+        
         // Define the headers for the CSV file
         $headers = [
             "Content-type"        => "text/csv",
@@ -72,19 +124,26 @@ class ProductController extends Controller
             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
             "Expires"             => "0"
         ];
-    
+        
         // Define the columns for the CSV file
-        $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax','stock_count'];
-    
+        $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count', 'attributes'];
+        
         // Create a callback to stream the CSV content
         $callback = function() use ($products, $columns) {
             $file = fopen('php://output', 'w');
             
             // Write the column headers
             fputcsv($file, $columns);
-    
+            
             // Write product data to the CSV
             foreach ($products as $product) {
+                // Prepare attributes and their values
+                $attributes = $product->attributes->map(function ($attribute) {
+                    
+                    return $attribute->name . ': ' . $attribute->value; // Adjust field names as needed
+                });
+                $attributesString = implode('; ', $attributes->toArray()); // Convert array to string
+                
                 fputcsv($file, [
                     $product->name,
                     $product->description,
@@ -95,18 +154,19 @@ class ProductController extends Controller
                     $product->regular_price,
                     $product->tax_class,
                     $product->tax,
-                    $product->stock_count
+                    $product->stock_count,
+                    $attributesString // Add attributes and their values to the CSV
                 ]);
             }
-    
+            
             fclose($file);
         };
-    
+        
         // Return the streamed CSV file as a download
-       
         return response()->stream($callback, 200, $headers);
-
     }
+    
+
     
 
     public function index(Request $request)

@@ -1,7 +1,14 @@
 <?php
 
 namespace App\Providers;
-
+use App\Models\Product;
+use App\Models\Order;
+use App\Models\Category;
+use App\Models\ShippingRate;
+use App\Policies\ProductPolicy;
+use App\Policies\OrderPolicy;
+use App\Policies\CategoryPolicy;
+use App\Policies\ShippingRatePolicy;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -14,6 +21,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Product::class => ProductPolicy::class,
+        Order::class => OrderPolicy::class,
+        Category::class => CategoryPolicy::class,
+        ShippingRate::class => ShippingRatePolicy::class,
     ];
 
     /**

@@ -18,7 +18,8 @@ class ShippingRatePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->hasPermissionTo('view shipping rates');
+
     }
 
     /**
@@ -41,7 +42,7 @@ class ShippingRatePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasPermissionTo('create shipping rates');
     }
 
     /**
@@ -53,7 +54,7 @@ class ShippingRatePolicy
      */
     public function update(User $user, ShippingRate $shippingRate)
     {
-        //
+        return $user->hasPermissionTo('update shipping rates');
     }
 
     /**
@@ -65,7 +66,7 @@ class ShippingRatePolicy
      */
     public function delete(User $user, ShippingRate $shippingRate)
     {
-        //
+        return $user->hasPermissionTo('delete shipping rates');
     }
 
     /**

@@ -14,6 +14,7 @@ import { IoAddCircle } from 'react-icons/io5';
 import { FaFloppyDisk } from 'react-icons/fa6';
 function Edit(props) {
     const { product, categories, shippingRates, defaultshippingrate, attribute, attributeNames, variations } = props;
+  
 
     const [searchedAttributes, setSearchedAttributes] = useState(attributeNames || []);
 
