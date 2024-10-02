@@ -7,7 +7,37 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
+
 Route::middleware(['guest'])->prefix('auth')->group(function () {
+
+
+
+
+    Route::post('/forget-password',function(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422); // 422 Unprocessable Entity
+        }
+
+
+         $status = Password::sendResetLink(
+           $request->only('email')
+         );
+
+         if ($status == Password::RESET_LINK_SENT) {
+            $message = "Reset password link sent to your email";
+            return response()->json([ "message"=>$message ,"status"=>$status], 200);
+        }else{
+            $message = "Invalid credentials";
+            return response()->json([ "message"=>$message ,"status"=>$status], 401);
+        }
+
+    });
     
     
 
