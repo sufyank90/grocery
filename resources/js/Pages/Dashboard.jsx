@@ -70,7 +70,7 @@ export default function AdminPanel(props) {
                         </div>
                     </div>
                     {/* Table (Hidden on mobile) */}
-                    <div className="hidden md:block">
+                    <div className="hidden md:block ">
                         <div className="w-full mt-10">
                             <div className="flex justify-between items-center mt-6 mb-4">
                                 <h3 className="text-lg font-bold">Total Sales</h3>
@@ -181,7 +181,7 @@ export default function AdminPanel(props) {
                             </table>
 
                             {/* Pagination */}
-                            <div className="flex justify-end mt-4 space-x-1">
+                            <div className="flex justify-end mt-4 space-x-1 mb-10">
                                 {orders.links.map((link, index) => (
                                     <Link
                                         key={index}

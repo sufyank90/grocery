@@ -45,12 +45,8 @@ class ShippingRateController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeCreate(Request $request)
-{
-   
- 
-
-    // Create new shipping rate
-   ShippingRate::create($request->all());
+{   // Create new shipping rate
+    ShippingRate::create($request->all());
 
     return redirect()->back()->with('success', 'Shipping rate created successfully.');
 }

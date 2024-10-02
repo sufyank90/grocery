@@ -168,28 +168,60 @@ export default function Authenticated({ auth, header, children }) {
                 </div>
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
-                    <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
+    <div className="pt-2 pb-3 space-y-1">
+        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+            Dashboard
+        </ResponsiveNavLink>
+        <ResponsiveNavLink href={route('customer.index')} active={route().current('customer.index')}>
+            Customers
+        </ResponsiveNavLink>
+        <ResponsiveNavLink href={route('order.index')} active={route().current('order.index')}>
+            Order
+        </ResponsiveNavLink>
+        <ResponsiveNavLink href={route('product.index')} active={route().current('product.index')}>
+            Product
+        </ResponsiveNavLink>
+        <ResponsiveNavLink href={route('category.index')} active={route().current('category.index')}>
+            Category
+        </ResponsiveNavLink>
+        <ResponsiveNavLink href={route('coupon.index')} active={route().current('coupon.index')}>
+            Coupon
+        </ResponsiveNavLink>
+        {auth.superadmin && (
+            <>
+                <ResponsiveNavLink href={route('settings.update')} active={route().current('settings.all')}>
+                    Site Setting
+                </ResponsiveNavLink>
+                <ResponsiveNavLink href={route('banner.index')} active={route().current('banner.index')}>
+                    Banner
+                </ResponsiveNavLink>
+                <ResponsiveNavLink href={route('admin.index')} active={route().current('admin.index')}>
+                    Admin Management
+                </ResponsiveNavLink>
+            </>
+        )}
+        <ResponsiveNavLink href={route('shipment.index')} active={route().current('shipment.index')}>
+            Shipment
+        </ResponsiveNavLink>
+    </div>
 
-                    <div className="pt-4 pb-1 border-t border-gray-200">
-                        <div className="px-4">
-                            <div className="font-medium text-base text-gray-800">
-                                {auth.user.name}
-                            </div>
-                            <div className="font-medium text-sm text-gray-500">{auth.user.email}</div>
-                        </div>
+    <div className="pt-4 pb-1 border-t border-gray-200">
+        <div className="px-4">
+            <div className="font-medium text-base text-gray-800">
+                {auth.user.name}
+            </div>
+            <div className="font-medium text-sm text-gray-500">{auth.user.email}</div>
+        </div>
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
-                            <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
+        <div className="mt-3 space-y-1">
+            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+            <ResponsiveNavLink method="post" href={route('logout')} as="button">
+                Log Out
+            </ResponsiveNavLink>
+        </div>
+    </div>
+</div>
+
             </nav>
 
             {header && (

@@ -34,15 +34,16 @@ function Orders(props) {
             >
                 <Head title="Admin Dashboard" />
 
-                <div className="flex">
-                    <div className="max-w-7xl mt-10 mx-auto w-full">
-                        <div className="flex justify-between items-center mt-6 mb-4">
+                {/* max-w-7xl mt-10 mx-auto w-full */}
+                    <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                        <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Orders</h3>
-                            <div className="flex space-x-2">
-
-                                <Link href={route('order.create')}
+                            <div className="flex flex-col md:flex-row space-x-0 md:space-x-2 mt-2 md:mt-0">
+                                <Link
+                                    href={route('order.create')}
                                     style={{ background: '#fcb609' }}
-                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600">
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
+                                >
                                     Create
                                 </Link>
                                 <Formik
@@ -56,7 +57,7 @@ function Orders(props) {
                                     }}
                                 >
                                     {({ submitForm, setFieldValue }) => (
-                                        <Form className="flex space-x-2">
+                                        <Form className="flex flex-col md:flex-row space-x-0 md:space-x-2 mt-2 md:mt-0">
                                             <div>
                                                 <Field
                                                     as="select"
@@ -78,117 +79,116 @@ function Orders(props) {
                                                     name="search"
                                                     type="text"
                                                     placeholder="Search By Order Id"
-                                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                    className="py-2 px-4 mt-2 md:mt-0 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                                                 />
                                             </div>
                                             <button
                                                 type="submit"
                                                 style={{ background: '#fcb609' }}
-                                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600"
+                                                className="text-black mt-2 md:mt-0 py-2 px-4 rounded-lg hover:bg-blue-600"
                                             >
                                                 Search
                                             </button>
                                         </Form>
                                     )}
                                 </Formik>
-
-
-
                             </div>
                         </div>
 
-                        <table className="min-w-full bg-white rounded-lg shadow-lg">
-                            <thead>
-                                <tr>
-                                    {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {orders.data.length === 0 ? (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white rounded-lg shadow-lg">
+                                <thead>
                                     <tr>
-                                        <td colSpan="8" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
-                                            No orders found
-                                        </td>
+                                        {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
                                     </tr>
-                                ) : (<>
-                                    {orders.data.map((order, index) => (
-                                        <tr key={order.id} className="hover:bg-gray-100">
-                                            {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.name}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.email}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
-                                            <td className="py-2 px-4 border-b text-left">
-                                            {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
-                                            </td>
-
-                                            {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                {order.status === 'pending' && (
-                                                    <span
-                                                        onClick={() => {
-                                                            setSelectedOrder(order);
-                                                            setIsDeleteModalOpen(true);
-                                                        }}
-                                                        className="bg-yellow-100 cursor-pointer text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
-                                                        {order.status}
-                                                    </span>
-                                                )}
-                                                {order.status === 'completed' && (
-                                                    <span
-                                                        onClick={() => {
-                                                            setSelectedOrder(order);
-                                                            setIsDeleteModalOpen(true);
-                                                        }}
-                                                        className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                                        {order.status}
-                                                    </span>
-                                                )}
-                                                {order.status === 'cancelled' && (
-                                                    <span
-                                                        onClick={() => {
-                                                            setSelectedOrder(order);
-                                                            setIsDeleteModalOpen(true);
-                                                        }}
-                                                        className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                                        {order.status}
-                                                    </span>
-                                                )}
-                                            </td>
-
-                                            <td className="py-2 mb-5 px-4 border-b border-gray-200 text-right">
-                                                <div className="text-right space-x-2">
-
-                                                    <Link href={route('order.show', order.id)}>
-                                                        <GrView className="w-7 h-7" style={{ color: '#fcb609' }} />
-                                                    </Link>
-
-
-                                                </div>
+                                </thead>
+                                <tbody>
+                                    {orders.data.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="8" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
+                                                No orders found
                                             </td>
                                         </tr>
-                                    ))}
+                                    ) : (<>
+                                        {orders.data.map((order, index) => (
+                                            <tr key={order.id} className="hover:bg-gray-100">
+                                                {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.name}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.email}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
+                                                </td>
 
-                                </>)}
+                                                {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                    {order.status === 'pending' && (
+                                                        <span
+                                                            onClick={() => {
+                                                                setSelectedOrder(order);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
+                                                            className="bg-yellow-100 cursor-pointer text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                                            {order.status}
+                                                        </span>
+                                                    )}
+                                                    {order.status === 'completed' && (
+                                                        <span
+                                                            onClick={() => {
+                                                                setSelectedOrder(order);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
+                                                            className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                                            {order.status}
+                                                        </span>
+                                                    )}
+                                                    {order.status === 'cancelled' && (
+                                                        <span
+                                                            onClick={() => {
+                                                                setSelectedOrder(order);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
+                                                            className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                                            {order.status}
+                                                        </span>
+                                                    )}
+                                                </td>
 
-                            </tbody>
-                        </table>
+                                                <td className="py-2 mb-5 px-4 border-b border-gray-200 text-right">
+                                                    <div className="text-right space-x-2">
+
+                                                        <Link href={route('order.show', order.id)}>
+                                                            <GrView className="w-7 h-7" style={{ color: '#fcb609' }} />
+                                                        </Link>
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+
+                                    </>)}
+
+                                </tbody>
+                            </table>
+                        </div>
 
                         {/* Pagination */}
-                        <div className="flex justify-end mt-4 space-x-1">
+                        <div className="flex justify-end mt-4 space-x-1 mb-10 md:mb-0">
                             {orders.links.map((link, index) => (
                                 <Link
                                     key={index}
@@ -200,7 +200,7 @@ function Orders(props) {
                             ))}
                         </div>
                     </div>
-                </div>
+                
 
 
                 {/* change status Modal */}
