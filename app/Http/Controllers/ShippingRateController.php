@@ -44,10 +44,50 @@ class ShippingRateController extends Controller
      * @param  \App\Http\Requests\StoreShippingRateRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreShippingRateRequest $request)
-    {
-        //
-    }
+    public function storeCreate(Request $request)
+{
+   
+    // Validate incoming request
+    $request->validate([
+        'country_name' => 'required|string',
+        'state_name' => 'required|string',
+        'city_name' => 'required|string',
+        'area_name' => 'required|string',
+        'fees' => 'required|numeric',
+        'postal_code' => 'nullable|string',
+        'minimum' => 'nullable|numeric',
+        'min_for_free_delivery' => 'nullable|numeric',
+        // Add other validation rules as needed
+    ]);
+
+    // Create new shipping rate
+    $shippingRate = new ShippingRate();
+    $shippingRate->country_id = $request->country_id;
+    $shippingRate->country_name = $request->country_name;
+    $shippingRate->state_id = $request->state_id;
+    $shippingRate->state_name = $request->state_name;
+    $shippingRate->city_id = $request->city_id;
+    $shippingRate->city_name = $request->city_name;
+    $shippingRate->area_id = $request->area_id;
+    $shippingRate->area_name = $request->area_name;
+    $shippingRate->postal_code = $request->postal_code;
+    $shippingRate->fee = $request->fees;
+    $shippingRate->minimum = $request->minimum;
+    $shippingRate->min_for_free_delivery = $request->min_for_free_delivery;
+    $shippingRate->weight_charges = $request->weight_charges;
+    $shippingRate->additional_weight_charges = $request->additional_weight_charges;
+    $shippingRate->delivery_estimation = $request->delivery_estimation;
+    $shippingRate->sequence = $request->sequence;
+    $shippingRate->date_created = now();
+    $shippingRate->date_modified = now();
+    $shippingRate->ip_address = $request->ip(); // Get the user's IP address
+
+    // Save the shipping rate
+    $shippingRate->save();
+
+    return redirect()->back()->with('success', 'Shipping rate created successfully.');
+}
+
 
     /**
      * Display the specified resource.
