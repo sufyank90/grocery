@@ -5,13 +5,14 @@ import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { FaEdit } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 export default function Index(props) {
     const { shipments } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenCreate, setIsModalOpenCreate] = useState(false);
     const [selectedShipment, setSelectedShipment] = useState({});
-    console.log(shipments)
+console.log(shipments)
     const openShipmentModal = (shipment) => {
         setSelectedShipment(shipment);
         setIsModalOpen(true);
@@ -176,39 +177,50 @@ export default function Index(props) {
                 <Modal show={isModalOpenCreate} onClose={() => setIsModalOpenCreate(false)} maxWidth="2xl">
                     <Formik
                         initialValues={{
-                            country_id: '166', // Default country ID
                             country_name: 'Pakistan',
-                            state_id: '2', // Default state ID
                             state_name: 'Sindh',
-                            city_id: '1', // Default city ID
                             city_name: 'Karachi',
-                            area_id: '', // Should be selected by the user
-                            area_name: '', // User input
-                            fees: '', // Example default fee
-                            postal_code: '75050', // Example postal code
-                            minimum: '499.00', // Example default minimum
-                            min_for_free_delivery: '0.00', // Default value
-                            weight_charges: '0.00',
-                            additional_weight_charges: '0.00',
-                            delivery_estimation: 0,
-                            sequence: 0,
-                            date_created: new Date().toISOString(), // Set current date
-                            date_modified: new Date().toISOString(),
-                            ip_address: '', // Optional
-
+                            area_name: '',
+                            fee: '',
+                            rate_id: 'null',
+                            zone_id: 'null',
+                            weight_status: 'null',
+                            merchant_id: 'null',
+                            country_id: 'null',
+                            state_id: 'null',
+                            city_id: 'null',
+                            postal_code: 'null',
+                            area_id: 'null',
+                            branch_id: 'null',
+                            latitude: 'null',
+                            longitude: 'null',
+                            minimum: '1',
+                            min_for_free_delivery: '1',
+                            delivery_estimation: '1',
+                            sequence: '1',
+                            date_created: '2023-05-01',
+                            date_modified: '2023-05-01',
+                            ip_address: '1',
+                            weight_charges: '1',
+                            additional_weight_charges: '1',
+                            end_weight_range: '1',
+                            
+                        
                         }}
                         validationSchema={Yup.object({
-                            area: Yup.string().required('Area is required'),
-                            fees: Yup.number().required('Fees is required').positive('Fees must be a positive number'),
+                            area_name: Yup.string().required('Area is required'),
+                            fee: Yup.number().required('Fees is required').positive('Fees must be a positive number'),
                         })}
                         onSubmit={(values, { resetForm, setErrors }) => {
                             router.post(route('shipment.store'), values, {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpenCreate(false);
+                                    toast.success("Shipment created successfully");
                                 },
                                 onError: (errors) => {
                                     setErrors(errors);
+                                    toast.error("Failed to create shipment");
                                 },
                             });
                         }}
@@ -271,35 +283,35 @@ export default function Index(props) {
                                 <div className="relative z-0 w-full mb-5 group">
                                     <Field
                                         type="text"
-                                        name="area"
-                                        id="area"
+                                        name="area_name"
+                                        id="area_name"
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
                                     />
                                     <label
-                                        htmlFor="area"
+                                        htmlFor="area_name"
                                         className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                     >
                                         Area
                                     </label>
-                                    <ErrorMessage name="area" component="div" className="text-red-600 text-sm mt-1" />
+                                    <ErrorMessage name="area_name" component="div" className="text-red-600 text-sm mt-1" />
                                 </div>
 
                                 <div className="relative z-0 w-full mb-5 group">
                                     <Field
                                         type="number"
-                                        name="fees"
-                                        id="fees"
+                                        name="fee"
+                                        id="fee"
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
                                     />
                                     <label
-                                        htmlFor="fees"
+                                        htmlFor="fee"
                                         className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                     >
                                         Fees
                                     </label>
-                                    <ErrorMessage name="fees" component="div" className="text-red-600 text-sm mt-1" />
+                                    <ErrorMessage name="fee" component="div" className="text-red-600 text-sm mt-1" />
                                 </div>
 
                                 <div className="flex justify-end">
