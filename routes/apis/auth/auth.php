@@ -15,7 +15,7 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
 
 
-    Route::post('/forget-password',function(Request $request){
+    Route::post('/forgetpassword',function(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'string', 'email', 'max:255'],
         ]);
