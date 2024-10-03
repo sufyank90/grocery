@@ -58,8 +58,8 @@ class OrderNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'Order Successfully Placed',
-            'description' => 'Order number ' . $this->order->id . ' has been placed',
+            'title' => 'Your Order is All Set!',
+            'description' => 'Woohoo! Order #' . $this->order->id . ' is officially in the works—stay tuned!',
         ];
     }
 }
