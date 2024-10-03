@@ -55,7 +55,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: #00000096;
+    background: #000000d1;
     z-index: 4;
 }
 .blood-image img {
