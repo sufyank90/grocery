@@ -105,6 +105,30 @@
     font-family: cursive;
     font-size: 18px;
 }
+
+/*for-mobile view-375*/
+@media only screen and (min-width: 100px) and (max-width: 575px) {
+
+    .error-content p {
+    font-size: 15px;
+    text-align: center;
+}
+.error-content h3 {
+
+    font-size: 15px;
+    margin-top: -6px;
+}
+.error-content h1 {
+    font-size: 40px;
+}
+.lock-image {
+    top: 24%;
+    width: 50px;
+    left: 40%;
+}
+
+
+}
     
     </style>
 </head>
