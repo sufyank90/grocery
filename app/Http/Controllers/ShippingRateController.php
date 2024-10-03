@@ -7,6 +7,7 @@ use App\Http\Requests\StoreShippingRateRequest;
 use App\Http\Requests\UpdateShippingRateRequest;
 use Illuminate\Http\Request; // Correct import statement
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate; 
 
 class ShippingRateController extends Controller
 {
@@ -17,6 +18,7 @@ class ShippingRateController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', ShippingRate::class);
         if($request->search)
         {
             $shipments = ShippingRate::where('area_name','like','%'.$request->search.'%')->paginate(10);
@@ -25,7 +27,10 @@ class ShippingRateController extends Controller
         {
             $shipments = ShippingRate::orderBy('id','desc')->paginate(10);
         }
-        return Inertia::render('shipment/Index', compact('shipments'));
+
+        $createPolicy = Gate::allows('create', ShippingRate::class);
+
+        return Inertia::render('shipment/Index', compact('shipments','createPolicy'));
     }
 
     /**
@@ -44,12 +49,13 @@ class ShippingRateController extends Controller
      * @param  \App\Http\Requests\StoreShippingRateRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeCreate(Request $request)
-{   // Create new shipping rate
-    ShippingRate::create($request->all());
+    public function store(Request $request)
+    {   // Create new shipping rate
+        $this->authorize('create', ShippingRate::class);
+        ShippingRate::create($request->all());
+        session()->flash('message', 'Shipping rate created successfully.');
 
-    return redirect()->back()->with('success', 'Shipping rate created successfully.');
-}
+    }
 
 
     /**
@@ -83,11 +89,14 @@ class ShippingRateController extends Controller
      */
     public function update(Request $request, $shippingRate)
     {
+       
         $shippingRate = ShippingRate::find($shippingRate);
+        $this->authorize('update', $shippingRate);
         //dd($shippingRate);
         $shippingRate->fee = $request->fees;
         $shippingRate->save();
-        return redirect()->back()->with('success', 'Shipping rate updated successfully.');
+        session()->flash('message', 'Shipping rate updated successfully.');
+
     }
 
     /**
@@ -96,8 +105,11 @@ class ShippingRateController extends Controller
      * @param  \App\Models\ShippingRate  $shippingRate
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ShippingRate $shippingRate)
-    {
-        //
+    public function destroy($id)
+    {  
+        $shippingRate = ShippingRate::find($id);
+        $this->authorize('delete', $shippingRate);
+        $shippingRate->delete();
+        session()->flash('message', 'Shipping rate deleted successfully.');
     }
 }

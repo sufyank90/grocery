@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request; // Correct import statement
+use Illuminate\Support\Facades\Gate; 
 
 class CategoryController extends Controller
 {
@@ -16,13 +17,17 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index(Request $request)
     {
-    
+        $this->authorize('viewAny', Category::class);
         $categorys = Category::where('name','like','%'.$request->search.'%')
         ->orderBy('id','desc')->with('media')->paginate(10);
-       
-        return Inertia::render('category/Category', compact('categorys'));
+
+        $createPolicy = Gate::allows('create', Category::class);
+        $updatePolicy = Gate::allows('update', Category::class);
+
+        return Inertia::render('category/Category', compact('categorys','createPolicy','updatePolicy'));
     }
 
     /**
@@ -43,6 +48,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Category::class);
         $exist = Category::where('name', $request->name)->first();
         if ($exist) {
             session()->flash('error', 'Category already exist');
@@ -57,9 +63,6 @@ class CategoryController extends Controller
         return back();
     }
     
-
-    
-
     /**
      * Display the specified resource.
      *
@@ -94,10 +97,10 @@ class CategoryController extends Controller
     
     }
 
-
-
     public function updatewithfile(Request $request, Category $category)
     {
+
+        $this->authorize('update', Category::class);
         $rules = [
             'name' => 'required|string|max:255',
         ];
@@ -131,12 +134,10 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Category $category)
-{
-    // Delete the Category
-    $category->delete();
-
-    // Redirect back with a success message
-    return redirect()->back()->with('success', 'Category deleted successfully.');
-}
+    {
+        $this->authorize('delete', $category);
+        $category->delete();
+        return redirect()->back()->with('success', 'Category deleted successfully.');
+    }
 
 }

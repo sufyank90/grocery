@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 
 
 
@@ -36,10 +36,11 @@ function View(props) {
         });
     };
 
-    const handleSave = () => {
-        // Implement the save logic (e.g., send the selectedPermissions to your backend)
-        console.log('Saved Permissions:', selectedPermissions);
+    const handleSave = async () => {
+        await router.put(route('role.updatePermission', role.id),selectedPermissions);
     };
+
+
 
     return (
         <>
@@ -53,10 +54,51 @@ function View(props) {
                 <div className="flex justify-center py-6 bg-gray-100">
                     <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
                         <h3 className="text-lg font-medium text-center">Manage Permissions</h3>
+
+
                         <div className="mt-4">
+                           {/* select all checkbox */}
+                            <label className="flex items-center mt-2">
+                                <input
+                                    type="checkbox"
+                                    checked={permissionsList.length === selectedPermissions.length}
+                                    onChange={
+                                        (e) => {
+                                            if (e.target.checked) {
+                                                setSelectedPermissions(permissionsList);
+                                            } else {
+                                                setSelectedPermissions([]);
+                                            }
+                                        }
+                                    }
+                                />
+                                <span className="ml-2">Select All</span>
+                            </label>
+                        </div>
+
+
+                        
+                        <div className="mt-4">
+                        <hr/>
                         {Object.entries(groupedPermissions).map(([item, actions]) => (
-                                <div key={item} className="mt-4">
-                                    <h4 className="font-semibold capitalize">{item}</h4>
+                            <>
+                                <div key={item} className="my-4">
+                                    <h4 className="font-semibold capitalize flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={actions.every(({ permission }) => selectedPermissions.includes(permission))}
+                                        onChange={() => {
+                                            const allPermissions = actions.map(({ permission }) => permission);
+                                            const allSelected = allPermissions.every((perm) => selectedPermissions.includes(perm));
+                                            setSelectedPermissions((prev) => 
+                                                allSelected 
+                                                ? prev.filter((perm) => !allPermissions.includes(perm)) 
+                                                : [...prev, ...allPermissions]
+                                            );
+                                        }}
+                                    />   
+                                        {item}
+                                    </h4>
                                     {actions.map(({ action, permission }) => (
                                         <label className="flex items-center mt-2" key={permission}>
                                             <input
@@ -68,6 +110,8 @@ function View(props) {
                                         </label>
                                     ))}
                                 </div>
+                                <hr/>
+                                </>
                             ))}
                         </div>
                         <div className="mt-6 flex justify-end">
@@ -78,7 +122,7 @@ function View(props) {
                                 Save
                             </button>
                             <button
-                                onClick={handleSave}
+                                onClick={()=>router.get(route('role.index'))}
                                 className="px-4 py-2 bg-gray-500 ml-2 text-white rounded hover:bg-gray-600"
                             >
                                 Cancle

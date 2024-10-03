@@ -29,7 +29,7 @@ class ProductController extends Controller
      */
     public function csvstore(Request $request)
     {
-       
+        $this->authorize('create', Product::class);
     //    name,description,price,status,sku,sale_price,regular_price,tax_class,tax
         $jsonData = json_decode($request->getContent(), true);
 
@@ -172,7 +172,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
        
-    
+        $this->authorize('viewAny', Product::class);
+        
         $products = Product::where('name','like','%'.$request->search.'%')
         ->orwhere('description','like','%'.$request->search.'%')
         ->orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
@@ -189,6 +190,8 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Product::class);
+
         $categories = Category::all();
         $attribute = Attribute::with('attributeValues')->get();
         //$attribute = Attributevalue::with('attribute')->get();
@@ -219,6 +222,7 @@ class ProductController extends Controller
         //dd($request->all()); // You might want to comment this out after testing
     
         $product = Product::find($id);
+        $this->authorize('update', $product);
     
         if ($product) {
             $product->status = $request->status;
@@ -240,6 +244,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     { 
+        $this->authorize('create', Product::class);
         //   dd($request->attributesdata);
         $product = Product::create($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count','variation']));
         $product->categories()->attach($request->categories);
@@ -302,6 +307,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
+
         $attributeNames = $product->attributes->pluck('name');
 
         $variations = $product->variations->map(function ($variation) {
@@ -366,7 +373,7 @@ class ProductController extends Controller
 
     public function updatewithfile(Request $request, Product $product)
     {
-      
+        $this->authorize('update', $product);
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -437,6 +444,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
         // Delete the product
         $product->delete();
 

@@ -28,6 +28,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
 {
+    $this->authorize('viewAny', Order::class);
     $query = Order::query();
 
     // Apply search filters
@@ -80,7 +81,7 @@ class OrderController extends Controller
 
     public function create()
     {
-        
+        $this->authorize('create', Order::class);
         // Get the next order ID
         $nextId = Order::max('id') + 1;
 
@@ -118,7 +119,7 @@ class OrderController extends Controller
 {
     // Debugging: Output all request data
     //dd($request->all()); // You might want to comment this out after testing
-   
+    $this->authorize('update', Order::find($id));
     $order = Order::find($id);
 
     if ($order) {
@@ -146,6 +147,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+        $this->authorize('create', Order::class);
         // Validate the request and create the order
         $orderData = $request->validated();
     
@@ -186,7 +188,7 @@ class OrderController extends Controller
     public function show(Order $order)
 
     {
-        
+        $this->authorize('viewAny', Order::class);
       // Load the order with its items and feedbacks
       $orderWithDetails = $order->load(['items','items.variation', 'feedbacks']);
 
@@ -207,6 +209,7 @@ class OrderController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
         $products = Category::all();
 
         $product->load(['categories', 'media']);

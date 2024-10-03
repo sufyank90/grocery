@@ -72,6 +72,15 @@ class RoleController extends Controller
         
     }
 
+    public function updatePermission(Request $request, $id)
+    {
+       $permissions = $request->all();
+
+       $role = Role::find($id)->syncPermissions($permissions);
+
+       return session()->flash('message', 'Permissions updated successfully');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

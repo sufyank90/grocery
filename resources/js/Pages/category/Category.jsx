@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 
 function Category(props) {
-    const { categorys } = props;
+    const { categorys,createPolicy,updatePolicy } = props;
     console.log(categorys)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -37,6 +37,7 @@ function Category(props) {
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Categories</h3>
                             <div className="flex space-x-2">
+                            {createPolicy &&
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     style={{ background: '#fcb609' }}
@@ -44,6 +45,7 @@ function Category(props) {
                                 >
                                     Create
                                 </button>
+                            }
                                 <Formik enableReinitialize initialValues={{ search: '' }}
                                     onSubmit={(values) => {
                                         router.visit(route('category.index', { search: values.search }), {
@@ -102,6 +104,7 @@ function Category(props) {
                                                 </td>
                                                 <td className="py-2 px-4 border-b border-gray-200 text-right">
                                                     <div className="text-right space-x-2">
+                                                        {updatePolicy &&
                                                         <button
                                                             onClick={() => openEditModal(product)}
 
@@ -111,6 +114,7 @@ function Category(props) {
 
 
                                                         </button>
+                                                        }
                                                         <button
                                                             onClick={() => {
                                                                 setSelectedProduct(product);
@@ -152,8 +156,7 @@ function Category(props) {
                     </div>
                 </div>
 
-
-                {/* Create Product Modal */}
+                {createPolicy &&
                 <Modal
                     show={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
@@ -274,6 +277,7 @@ function Category(props) {
                         )}
                     </Formik>
                 </Modal>
+                }
 
 
                 {/* Edit Product Modal */}

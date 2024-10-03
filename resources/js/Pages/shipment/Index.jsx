@@ -4,11 +4,11 @@ import { Head, Link, router } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from 'react-toastify';
 
 export default function Index(props) {
-    const { shipments } = props;
+    const { shipments,createPolicy } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenCreate, setIsModalOpenCreate] = useState(false);
     const [selectedShipment, setSelectedShipment] = useState({});
@@ -37,12 +37,14 @@ console.log(shipments)
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Shipments</h3>
                             <div className="flex space-x-2">
+                                {createPolicy &&
                                 <button
                                     onClick={openCreateModal}
                                     className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
                                 >
                                     Create
                                 </button>
+                                }
 
                                 <Formik enableReinitialize initialValues={{ search: '' }}
                                     onSubmit={(values) => {
@@ -102,6 +104,12 @@ console.log(shipments)
                                                 <td className="py-2 px-4 border-b text-left">
                                                     <div className="flex justify-center space-x-2">
                                                         <FaEdit onClick={() => openShipmentModal(shipment)} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        <FaTrash onClick={async() => {
+                                                           if (confirm('Are you sure you want to delete this shipping rate?')) {
+                                                            await router.delete(route('shipment.destroy', shipment.id));
+                                                            // Optionally refresh the page or update the state
+                                                        }
+                                                        }} className="w-7 h-7 ml-4 cursor-pointer" style={{ color: '#fcb609' }} />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -135,7 +143,7 @@ console.log(shipments)
                             fees: Yup.number().required('Fees is required').positive('Fees must be a positive number'),
                         })}
                         onSubmit={(values, { resetForm, setErrors }) => {
-                            router.post(route('shipment.feeupdate', selectedShipment.id), values, {
+                            router.put(route('shipment.update', selectedShipment.id), values, {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpen(false);
@@ -173,7 +181,7 @@ console.log(shipments)
                     </Formik>
                 </Modal>
 
-                {/* Create Shipment Modal */}
+                {createPolicy && 
                 <Modal show={isModalOpenCreate} onClose={() => setIsModalOpenCreate(false)} maxWidth="2xl">
                     <Formik
                         initialValues={{
@@ -216,11 +224,11 @@ console.log(shipments)
                                 onSuccess: () => {
                                     resetForm();
                                     setIsModalOpenCreate(false);
-                                    toast.success("Shipment created successfully");
+                                    
                                 },
                                 onError: (errors) => {
                                     setErrors(errors);
-                                    toast.error("Failed to create shipment");
+                            
                                 },
                             });
                         }}
@@ -321,6 +329,7 @@ console.log(shipments)
                         )}
                     </Formik>
                 </Modal>
+                }
             </AuthenticatedLayout>
         </>
     );
