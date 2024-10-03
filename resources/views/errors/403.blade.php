@@ -111,13 +111,13 @@
 <body>
     <div class="error">
         <div class="bg-image">
-            <img src="image/venomface.png" alt="">
+        <img src="/image/venomface.png" alt="Venom Face" />
         </div>
         <div class="blood-image">
-            <img src="image/blood.png" alt="">
+            <img src="/image/blood.png" alt="">
         </div>
         <div class="hand-image">
-            <img src="image/hand.png" alt="">
+            <img src="/image/hand.png" alt="">
         </div>
         <div class="lock-image">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" version="1.0" viewBox="0.0 0.0 368.9 500.0" zoomAndPan="magnify" style="fill: rgb(188, 24, 35);" original_string_length="898"><g id="__id23_sgfg7gnb8l"><path d="M350.5,202.7h-25.5v-62C325.1,63.1,262,0,184.4,0S43.7,63.1,43.7,140.7v62H18.3C8.2,202.7,0,210.9,0,221v260.8 C0,491.8,8.2,500,18.3,500h332.3c10.1,0,18.3-8.2,18.3-18.3V221C368.8,210.9,360.6,202.7,350.5,202.7z M80.3,140.7 c0-57.4,46.7-104.1,104.1-104.1s104.1,46.7,104.1,104.1v62H80.3V140.7z M202.7,364.5v48.1c0,10.1-8.2,18.3-18.3,18.3 s-18.3-8.2-18.3-18.3v-48.1c-12.6-6.6-21.2-19.8-21.2-34.9c0-21.8,17.7-39.4,39.4-39.4c21.8,0,39.4,17.7,39.4,39.4 C223.9,344.7,215.3,357.9,202.7,364.5z" style="fill: inherit;"/></g></svg>
