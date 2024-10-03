@@ -89,118 +89,128 @@ export default function Product(props) {
             >
                 <Head title="Admin Dashboard" />
 
-                <div className="flex">
-                    <div className="max-w-7xl mt-10 mx-auto w-full">
-                        <div className="flex justify-between items-center mt-6 mb-4">
-                            <h3 className="text-lg font-bold">Products</h3>
-                            <div className="flex space-x-2">
-                                {/* <button
-                                    onClick={() => setIsModalOpen(true)}
-                                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-                                >
-                                    Create
-                                </button> */}
-                                <a href='/productexample.csv' className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg' download={'productexample.csv'}>
-                                    <span class="flex items-stretch transition-all duration-200 rounded-md px-4 py-2 text-sm"> <FaFileDownload className="mr-2 h-5 w-5" />
-                                        Download CSV Template
-                                    </span>
-                                </a>
+                <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                    <div >
+                        <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                            <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4">
+                                <h3 className="text-lg font-bold mb-4 sm:mb-0">Products</h3>
+                                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                                    {/* Download CSV Template Button */}
+                                    <a
+                                        href='/productexample.csv'
+                                        className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
+                                        download={'productexample.csv'}
+                                    >
+                                        <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                            <FaFileDownload className="mr-2 h-5 w-5" />
+                                            Download CSV Template
+                                        </span>
+                                    </a>
 
-                                <label className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'>
-                                    <span class="flex items-stretch transition-all duration-200 rounded-md px-4 py-2 text-sm">   <SiMicrosoftexcel className="mr-2 h-5 w-5" />
-                                        Import CSV File
-                                        <input
-                                            type="file"
-                                            accept=".csv"
-                                            onChange={handleFileSelect}
-                                            className="hidden"
-                                        />  </span>
-                                </label>
-                                <a
-                                    href={route('product.csvexport')}
-                                    className='group relative flex items-stretch justify-center p-0.5 text-center font-medium transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
-                                >
-                                    <span className="flex items-stretch transition-all duration-200 rounded-md px-4 py-2 text-sm">
-                                        <SiMicrosoftexcel className="mr-2 h-5 w-5" />
-                                        Export CSV File
-                                    </span>
-                                </a>
-
-
-
-                                <Link href={route('product.create')}
-                                    style={{ background: '#fcb609' }}
-                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600">
-                                    Create
-                                </Link>
-                                <Formik enableReinitialize initialValues={{ search: '' }}
-                                    onSubmit={(values) => {
-                                        router.visit(route('product.index', { search: values.search }), {
-                                            method: 'get', // or 'post' depending on your needs
-                                            preserveState: true,
-                                        });
-                                    }}
-                                >
-                                    <Form className="flex space-x-2">
-                                        <div >
-                                            <Field name="search"
-                                                type="text"
-                                                placeholder="Search..."
-                                                className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    {/* Import CSV File Button */}
+                                    <label className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'>
+                                        <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                            <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                                            Import CSV File
+                                            <input
+                                                type="file"
+                                                accept=".csv"
+                                                onChange={handleFileSelect}
+                                                className="hidden"
                                             />
+                                        </span>
+                                    </label>
 
-                                        </div>
-                                        <button type="submit"
-                                            style={{ background: '#fcb609' }}
-                                            className="text-black py-2 px-4 rounded-lg hover:bg-blue-600">
-                                            Search
-                                        </button>
-                                    </Form>
-                                </Formik>
+                                    {/* Export CSV File Button */}
+                                    <a
+                                        href={route('product.csvexport')}
+                                        className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
+                                    >
+                                        <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                            <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                                            Export CSV File
+                                        </span>
+                                    </a>
+
+                                    {/* Create Product Link */}
+                                    <Link href={route('product.create')}
+                                        style={{ background: '#fcb609' }}
+                                        className="text-black py-2 px-4 rounded-lg hover:bg-green-600 text-center"
+                                    >
+                                        Create
+                                    </Link>
+
+                                    {/* Search Form */}
+                                    <Formik enableReinitialize initialValues={{ search: '' }}
+                                        onSubmit={(values) => {
+                                            router.visit(route('product.index', { search: values.search }), {
+                                                method: 'get', // or 'post' depending on your needs
+                                                preserveState: true,
+                                            });
+                                        }}
+                                    >
+                                        <Form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                                            <div>
+                                                <Field name="search"
+                                                    type="text"
+                                                    placeholder="Search..."
+                                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                />
+                                            </div>
+                                            <button type="submit"
+                                                style={{ background: '#fcb609' }}
+                                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600 text-center"
+                                            >
+                                                Search
+                                            </button>
+                                        </Form>
+                                    </Formik>
+                                </div>
                             </div>
-                        </div>
 
-                        <table className="min-w-full bg-white rounded-lg shadow">
-                            <thead>
-                                <tr>
-                                    {/* <th className="py-2 px-4 border-b text-left">#</th> */}
-                                    <th className="py-2 px-4 border-b text-left">ID</th>
-                                    <th className="py-2 px-4 border-b text-left">Name</th>
-                                    <th className="py-2 px-4 border-b text-left">Description</th>
-                                    <th className="py-2 px-4 border-b text-left">Price</th>
 
-                                    <th className="py-2 px-4 border-b text-left">Areas</th>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full bg-white rounded-lg shadow">
+                                    <thead>
+                                        <tr>
+                                            {/* <th className="py-2 px-4 border-b text-left">#</th> */}
+                                            <th className="py-2 px-4 border-b text-left">ID</th>
+                                            <th className="py-2 px-4 border-b text-left">Name</th>
+                                            <th className="py-2 px-4 border-b text-left">Description</th>
+                                            <th className="py-2 px-4 border-b text-left">Price</th>
 
-                                    {/* <th className="py-2 px-4 border-b text-left">Attributes</th> */}
+                                            <th className="py-2 px-4 border-b text-left">Areas</th>
 
-                                    <th className="py-2 px-4 border-b text-left">Image</th>
-                                    <th className="py-2 px-4 border-b text-left">Stock Count</th>
-                                    <th className="py-2 px-4 border-b text-left">Status</th>
-                                    <th className="py-2 px-4 border-b text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className='text-center'>
-                                {products.data.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="6" className="py-2 px-4 border-b text-center">
-                                            No products found
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    <>
-                                        {products.data.map((product, index) => (
-                                            console.log(product),
-                                            <tr key={product.id}>
-                                                {/* <td className="py-2 px-4 border-b text-left">{index + 1}</td> */}
-                                                <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
-                                                <td className="py-2 px-4 border-b text-left">{product.name}</td>
-                                                <td className="py-2 px-4 border-b text-left">{product.description}</td>
-                                                <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.price).toFixed(2)}</td>
+                                            {/* <th className="py-2 px-4 border-b text-left">Attributes</th> */}
 
-                                                <td className="py-2 px-4 border-b text-left">
-                                                    {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
+                                            <th className="py-2 px-4 border-b text-left">Image</th>
+                                            <th className="py-2 px-4 border-b text-left">Stock Count</th>
+                                            <th className="py-2 px-4 border-b text-left">Status</th>
+                                            <th className="py-2 px-4 border-b text-left">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className='text-center'>
+                                        {products.data.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="6" className="py-2 px-4 border-b text-center">
+                                                    No products found
                                                 </td>
-                                                {/* 
+                                            </tr>
+                                        ) : (
+                                            <>
+                                                {products.data.map((product, index) => (
+                                                    console.log(product),
+                                                    <tr key={product.id}>
+                                                        {/* <td className="py-2 px-4 border-b text-left">{index + 1}</td> */}
+                                                        <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
+                                                        <td className="py-2 px-4 border-b text-left">{product.name}</td>
+                                                        <td className="py-2 px-4 border-b text-left">{product.description}</td>
+                                                        <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.price).toFixed(2)}</td>
+
+                                                        <td className="py-2 px-4 border-b text-left">
+                                                            {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
+                                                        </td>
+                                                        {/* 
                                                 <td className="py-2 px-4 border-b text-left">
   <ul className={` ${product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'} `}>
     {product.attribute_values.length > 0 ? (
@@ -215,7 +225,7 @@ export default function Product(props) {
   </ul>
 </td> */}
 
-                                                {/* <td className="py-2 px-4 border-b text-left">
+                                                        {/* <td className="py-2 px-4 border-b text-left">
                                                     <ul className={product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'}>
                                                         {product.attribute_values.length > 0 ? (
                                                             // Group attributes by name
@@ -239,98 +249,102 @@ export default function Product(props) {
                                                 </td> */}
 
 
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                    {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
+                                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                            {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
                                                         <img src={product.media[1].original_url} height={100} width={100} className='rounded-lg' />
                                                     ) : (
                                                         <p>No image</p>
                                                     )} */}
-                                                    {/* {product.media && product.media.length > 0 && product.media.map((media) => (
+                                                            {/* {product.media && product.media.length > 0 && product.media.map((media) => (
                                                         console.log(media),
                                                         <img src={media.original_url} height={100} width={100} className='rounded-lg' />
                                                     ))} */}
-                                                    {product.media && product.media.length > 0 &&  (
-                                                        <img
-                                                            src={product.media[0].original_url}
-                                                            height={100}
-                                                            width={100}
-                                                            className='rounded-lg'
-                                                            alt="Product Image" // Add alt text for accessibility
-                                                        />
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
-                                                <td className="py-2 px-4 border-b text-left">
-                                                    {product.status === 'instock' && (
-                                                        <span
-                                                            onClick={() => {
+                                                            {product.media && product.media.length > 0 && (
+                                                                <img
+                                                                    src={product.media[0].original_url}
+                                                                    height={100}
+                                                                    width={100}
+                                                                    className='rounded-lg'
+                                                                    alt="Product Image" // Add alt text for accessibility
+                                                                />
+                                                            )}
+                                                        </td>
+                                                        <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
+                                                        <td className="py-2 px-4 border-b text-left">
+                                                            {product.status === 'instock' && (
+                                                                <span
+                                                                    onClick={() => {
 
-                                                                setIsStatusModalOpen(true);
-                                                                setSelectedProduct(product);
-                                                            }}
-                                                            className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                                            {product.status}
-                                                        </span>
-                                                    )}
+                                                                        setIsStatusModalOpen(true);
+                                                                        setSelectedProduct(product);
+                                                                    }}
+                                                                    className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                                                    {product.status}
+                                                                </span>
+                                                            )}
 
-                                                    {product.status === 'outofstock' && (
-                                                        <span
-                                                            onClick={() => {
+                                                            {product.status === 'outofstock' && (
+                                                                <span
+                                                                    onClick={() => {
 
-                                                                setIsStatusModalOpen(true);
-                                                                setSelectedProduct(product);
+                                                                        setIsStatusModalOpen(true);
+                                                                        setSelectedProduct(product);
 
-                                                            }}
-                                                            className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                                            {product.status}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-4 border-b text-left">
-                                                    <div className="flex justify-center space-x-2">
+                                                                    }}
+                                                                    className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                                                    {product.status}
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        <td className="py-2 px-4 border-b text-left">
+                                                            <div className="flex justify-center space-x-2">
 
-                                                        <Link
-                                                            href={route('product.edit', product.id)}
+                                                                <Link
+                                                                    href={route('product.edit', product.id)}
 
-                                                        >
-                                                            <FaEdit
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                        </Link>
-
-
-                                                        <button
-                                                            onClick={() => {
-                                                                setSelectedProduct(product);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-
-                                                        >
-                                                            <MdDelete
-
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </>
-                                )
-                                }
-
-                            </tbody>
-                        </table>
+                                                                >
+                                                                    <FaEdit
+                                                                        className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                                </Link>
 
 
-                        {/* Pagination */}
-                        <div className="flex justify-end mt-4 space-x-1 mb-8">
-                            {products.links.map((link, index) => (
-                                <Link
-                                    key={index}
-                                    href={link.url}
-                                    className={`px-3 py-1 border ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                />
-                            ))}
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setSelectedProduct(product);
+                                                                        setIsDeleteModalOpen(true);
+                                                                    }}
+
+                                                                >
+                                                                    <MdDelete
+
+                                                                        className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </>
+                                        )
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Pagination */}
+                            <div className="flex justify-center sm:justify-end mt-4 mb-8 space-x-1 flex-wrap">
+                                {products.links.map((link, index) => (
+                                    <Link
+                                        key={index}
+                                        href={link.url}
+                                        className={`px-3 py-1 border rounded-lg text-center transition-colors ${link.active
+                                            ? 'bg-yellow-500 text-white'
+                                            : 'bg-gray-200 text-black hover:bg-yellow-300'
+                                            }`}
+                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

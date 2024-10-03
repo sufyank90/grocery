@@ -32,9 +32,9 @@ function Category(props) {
             >
                 <Head title="Admin Dashboard" />
 
-                <div className="flex">
-                    <div className="max-w-7xl mt-10 mx-auto w-full">
-                        <div className="flex justify-between items-center mt-6 mb-4">
+                <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                    <div >
+                        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Categories</h3>
                             <div className="flex space-x-2">
                             {createPolicy &&
@@ -72,7 +72,7 @@ function Category(props) {
                                 </Formik>
                             </div>
                         </div>
-
+                        <div className="overflow-x-auto">
                         <table className="min-w-full bg-white rounded-lg shadow-lg">
                             <thead>
                                 <tr>
@@ -139,6 +139,7 @@ function Category(props) {
 
                             </tbody>
                         </table>
+                        </div>
 
 
 
