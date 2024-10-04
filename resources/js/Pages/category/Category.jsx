@@ -112,7 +112,7 @@ function Category(props) {
                                     {categorys.data.length === 0 ? (
 
                                         <tr>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">No category found</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-center text-gray-700"  colSpan="5">No category found</td>
                                         </tr>
                                     ) : (
                                         <>

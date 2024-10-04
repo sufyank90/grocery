@@ -132,7 +132,7 @@ function Orders(props) {
                                 <tbody>
                                     {orders.data.length === 0 ? (
                                         <tr>
-                                            <td colSpan="8" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
+                                            <td colSpan="10" className="py-3 px-4 border-b border-gray-200 text-center text-gray-700">
                                                 No orders found
                                             </td>
                                         </tr>

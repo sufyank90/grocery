@@ -210,7 +210,7 @@ export default function Product(props) {
                                     <tbody className='text-center'>
                                         {products.data.length === 0 ? (
                                             <tr>
-                                                <td colSpan="6" className="py-2 px-4 border-b text-center">
+                                                <td colSpan="9" className="py-2 px-4 border-b text-center">
                                                     No products found
                                                 </td>
                                             </tr>

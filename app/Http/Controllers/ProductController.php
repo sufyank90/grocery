@@ -18,7 +18,8 @@ use App\Models\Variation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ProductController extends Controller
 {
@@ -27,38 +28,90 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function csvstore(Request $request)
-    {
-        $this->authorize('create', Product::class);
-    //    name,description,price,status,sku,sale_price,regular_price,tax_class,tax
+    // public function csvstore(Request $request)
+    // {
+    //     $this->authorize('create', Product::class);
+        
+    //     try{
+    //         $jsonData = json_decode($request->getContent(), true);
+
+    //         if (!$jsonData) {
+    //             return response()->json(['error' => 'Invalid JSON data'], 400);
+    //         }
+    //         foreach ($jsonData as $data) {
+    //             $product = Product::create([
+    //                 'name' => $data['name'],
+    //                 'description' => $data['description'], 
+    //                 'price' => intVal($data['price']) ? intVal($data['price']) : 0, 
+    //                 'status' => $data['status'], 
+    //                 'sku' => $data['sku'], 
+    //                 'sale_price' => intVal($data['sale_price']) ? intVal($data['sale_price']) : 0, 
+    //                 'regular_price' => intVal($data['regular_price']) ? intVal($data['regular_price']) : 0, 
+    //                 'tax_class' => $data['tax_class'], 
+    //                 'tax' => intVal($data['tax']) ? intVal($data['tax']) : 0,
+    //                 'stock_count' => intVal($data['stock_count']) ? intVal($data['stock_count']) : 0 ,
+                    
+
+    //                 ]);
+    //         }
+
+    //         // Flash success message to session
+    //         session()->flash('message', 'Records created successfully!');
+
+    //         // Redirect back to previous page or any desired route
+    //         return redirect()->back();
+    //     } catch (Exception $e) {
+    //         // Handle exceptions
+    //         session()->flash('error', 'Failed to import product: ' . $e->getMessage());
+           
+    //     }
+    // }
+
+
+public function csvstore(Request $request)
+{
+    $this->authorize('create', Product::class);
+
+    try {
         $jsonData = json_decode($request->getContent(), true);
 
         if (!$jsonData) {
             return response()->json(['error' => 'Invalid JSON data'], 400);
         }
+
+        DB::beginTransaction();
         foreach ($jsonData as $data) {
-            $product = Product::create([
-                'name' => $data['name'],
-                'description' => $data['description'], 
-                'price' => intVal($data['price']) ? intVal($data['price']) : 0, 
-                'status' => $data['status'], 
-                'sku' => $data['sku'], 
-                'sale_price' => intVal($data['sale_price']) ? intVal($data['sale_price']) : 0, 
-                'regular_price' => intVal($data['regular_price']) ? intVal($data['regular_price']) : 0, 
-                'tax_class' => $data['tax_class'], 
-                'tax' => intVal($data['tax']) ? intVal($data['tax']) : 0,
-                'stock_count' => intVal($data['stock_count']) ? intVal($data['stock_count']) : 0 ,
-                
-
+            try {
+                $product = Product::create([
+                    'name' => $data['name'],
+                    'description' => $data['description'], 
+                    'price' => intval($data['price']) ?: 0, 
+                    'status' => $data['status'], 
+                    'sku' => $data['sku'], 
+                    'sale_price' => intval($data['sale_price']) ?: 0, 
+                    'regular_price' => intval($data['regular_price']) ?: 0, 
+                    'tax_class' => $data['tax_class'], 
+                    'tax' => intval($data['tax']) ?: 0,
+                    'stock_count' => intval($data['stock_count']) ?: 0,
                 ]);
+            } catch (Exception $e) {
+                session()->flash('error', 'Failed to import one or more products. Please check the log for details.');
+                DB::rollBack();
+                return redirect()->back();
+            }
         }
-
-        // Flash success message to session
+        DB::commit(); 
         session()->flash('message', 'Records created successfully!');
 
-        // Redirect back to previous page or any desired route
+        return redirect()->back();
+    } catch (Exception $e) {
+
+        DB::rollBack();
+        session()->flash('error', 'Failed to import products: ' . $e->getMessage());
         return redirect()->back();
     }
+}
+
 
     // public function csvExport(Request $request)
     // {
@@ -347,7 +400,7 @@ class ProductController extends Controller
     } catch (Exception $e) {
         // Handle exceptions
         session()->flash('error', 'Failed to create product: ' . $e->getMessage());
-        return redirect()->back()->withInput();
+       
     }
 
     // Optionally redirect or return a response
