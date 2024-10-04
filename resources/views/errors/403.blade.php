@@ -5,153 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>403 Forbidden</title>
     <style>
-       
-        /* Set body and html to full height and width */
-        .bg-image img {
-    width: 100%;
-    display:block;
-    height:100%;
-    object-fit:cover;
-}
-.error {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-.lock-image img {
-    width: 100%;
-    height: 100%;
-}
-.lock-image {
-    position: absolute;
-    top: 33%;
-    z-index: 4;
-    width: 130px;
-    left: 35%;
-}
+        body {
+            height: 100vh;
+            margin: 0;
+            background-color: #111111; /* dark grey */
+            font-family: "Roboto Condensed", sans-serif;
+            text-transform: uppercase;
+            overflow: hidden;  
+        }
 
-.error-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    z-index: 4;
-    justify-content: center;
-    flex-direction: column;
-}
+        .police-tape {
+            background-color: #e2bb2d; /* yellow */
+            background: linear-gradient(180deg, rgba(226, 187, 45, 0.8) 0%, #e2bb2d 5%, #e2bb2d 90%, rgba(226, 187, 45, 0.6) 95%, rgba(226, 187, 45, 0.5) 100%);
+            padding: 0.125em;
+            font-size: 3em;
+            text-align: center;
+            white-space: nowrap;
+            color: black; /* Set text color to black */
+            overflow: hidden;
+        }
 
-.bg-image {
-    position: relative;
-}
+        .police-tape--1 {
+            transform: rotate(10deg);
+            position: absolute;
+            top: 40%;
+            left: -5%;
+            right: -5%;
+            z-index: 2;
+        }
 
-.bg-image:before {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: #000000d1;
-    z-index: 4;
-}
-.blood-image img {
-    width: 100%;
-    object-fit: cover;
-}
+        .police-tape--2 {
+            transform: rotate(-8deg);
+            position: absolute;
+            top: 50%;
+            left: -5%;
+            right: -5%;
+        }
 
-.blood-image {
-    position: absolute;
-    width: 100%;
-    transform: rotate(102deg);
-    z-index: 2;
-    top: 0;
-    left: -580px;
-    filter: drop-shadow(2px 4px 6px black);
-}
-.error-content h1 {
-    color: #fff;
-    font-size: 120px;
-    margin: 0;
-}
-.hand-image img {
-    width: 100%;
-    height: 100%;
-}
-.hand-image {
-    position: absolute;
-    top: 70px;
-    z-index: 3;
-    right: 20px;
-}
+        .ghost {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
-.error-content h3 {
-    margin: 0;
-    color: red;
-    text-transform: uppercase;
-    font-size: 22px;
-    letter-spacing: 6px;
-    margin-top: -16px;
-    font-family: cursive;
-}
-.error-content p {
-    margin: 0;
-    color: #fff;
-    margin-top: 10px;
-    text-transform: capitalize;
-    font-family: cursive;
-    font-size: 18px;
-}
+        .ghost--navbar {
+            flex: 0 0 60px;
+            background: linear-gradient(0deg, #27292d 0px, #27292d 10px, transparent 10px);
+            border-bottom: 2px solid #111111;
+        }
 
-/*for-mobile view-375*/
-@media only screen and (min-width: 100px) and (max-width: 575px) {
+        .ghost--columns {
+            display: flex;
+            flex-grow: 1;
+            flex-wrap: wrap; /* Allow columns to wrap */
+        }
 
-    .error-content p {
-    font-size: 15px;
-    text-align: center;
-}
-.error-content h3 {
+        .ghost--column {
+            flex: 1 0 30%;
+            border-left: 10px solid #27292d;
+            background-color: #1c1f23; /* darkened lighter grey */
+            box-sizing: border-box;
+        }
 
-    font-size: 15px;
-    margin-top: -6px;
-}
-.error-content h1 {
-    font-size: 40px;
-}
-.lock-image {
-    top: 24%;
-    width: 50px;
-    left: 40%;
-}
+        .ghost--main {
+            background-color: #111111;
+            border-top: 15px solid rgba(39, 41, 45, 0.5);
+            flex: 1 0 100px;
+        }
 
+        .code {
+            display: block;
+            background-color: #27292d;
+            height: 1em;
+            margin: 1em;
+        }
 
-}
-    
+        .ghost--main .code {
+            height: 2em;
+            width: 200px;
+        }
+
+        h1, h3 {
+            color: #e2bb2d; /* yellow */
+            text-align: center;
+            margin: 0;
+        }
+        
+        p {
+            color: white;
+            text-align: center;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .police-tape {
+                font-size: 2em; /* Decrease font size for mobile */
+            }
+
+            .ghost--column {
+                flex: 1 0 100%; /* Full width for columns */
+                border-left: none; /* Remove left border */
+                margin-bottom: 1em; /* Add some space between columns */
+            }
+
+            .ghost--main .code {
+                width: 100%; /* Make code blocks full width */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .police-tape {
+                font-size: 1.5em; /* Further decrease font size for smaller screens */
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="error">
-        <div class="bg-image">
-        <img src="/image/venomface.png" alt="Venom Face" />
+    <div class="ghost">
+        <div class="ghost--navbar"></div>
+        <div class="ghost--columns">
+            <div class="ghost--column">
+                <div class="code"></div>
+                <div class="code"></div>
+                <div class="code"></div>
+                <div class="code"></div>
+            </div>
+            <div class="ghost--column">
+                <div class="code"></div>
+                <div class="code"></div>
+                <div class="code"></div>
+                <div class="code"></div>
+            </div>
+            <div class="ghost--column">
+                <div class="code"></div>
+                <div class="code"></div>
+                <div class="code"></div>
+                <div class="code"></div>
+            </div>
         </div>
-        <div class="blood-image">
-            <img src="/image/blood.png" alt="">
-        </div>
-        <div class="hand-image">
-            <img src="/image/hand.png" alt="">
-        </div>
-        <div class="lock-image">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" version="1.0" viewBox="0.0 0.0 368.9 500.0" zoomAndPan="magnify" style="fill: rgb(188, 24, 35);" original_string_length="898"><g id="__id23_sgfg7gnb8l"><path d="M350.5,202.7h-25.5v-62C325.1,63.1,262,0,184.4,0S43.7,63.1,43.7,140.7v62H18.3C8.2,202.7,0,210.9,0,221v260.8 C0,491.8,8.2,500,18.3,500h332.3c10.1,0,18.3-8.2,18.3-18.3V221C368.8,210.9,360.6,202.7,350.5,202.7z M80.3,140.7 c0-57.4,46.7-104.1,104.1-104.1s104.1,46.7,104.1,104.1v62H80.3V140.7z M202.7,364.5v48.1c0,10.1-8.2,18.3-18.3,18.3 s-18.3-8.2-18.3-18.3v-48.1c-12.6-6.6-21.2-19.8-21.2-34.9c0-21.8,17.7-39.4,39.4-39.4c21.8,0,39.4,17.7,39.4,39.4 C223.9,344.7,215.3,357.9,202.7,364.5z" style="fill: inherit;"/></g></svg>
-        </div>
-
-        <div class="error-content">
-            <h1>403</h1>
-            <h3>Forbidden</h3>
-            <p>You don’t have permission to access this resource.</p>
+        <div class="ghost--main">
+            <div class="code"></div>
+            <div class="code"></div>
         </div>
     </div>
+
+    <h1 class="police-tape police-tape--1">
+        &nbsp;&nbsp;&nbsp;&nbsp;Error: 403&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: 403&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: 403&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: 403
+    </h1>
+    <h1 class="police-tape police-tape--2">
+        Forbidden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forbidden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forbidden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forbidden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forbidden
+    </h1>
 </body>
 </html>
