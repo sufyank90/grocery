@@ -14,19 +14,21 @@ import { toast } from 'react-toastify';
 
 export default function Product(props) {
     const { products, categories } = props;
-    console.log(products)
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+    const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+    const [selectId, setSelectId] = useState([]);
 
 
     const openEditModal = (product) => {
         setSelectedProduct(product);
         setIsEditModalOpen(true);
     };
-    console.log(products)
+
     // Function to handle file selection
     const handleFileSelect = (event) => {
         const file = event.target.files[0]; // Selecting the first file from the FileList object
@@ -95,7 +97,14 @@ export default function Product(props) {
                             <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4">
                                 <h3 className="text-lg font-bold mb-4 sm:mb-0">Products</h3>
                                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                                    {/* Download CSV Template Button */}
+                                        {selectId.length > 0 &&
+                                        <button
+                                            onClick={() => setIsBulkDeleteModalOpen(true)}
+                                            className="text-white py-2 px-4 bg-red-500 rounded-lg hover:bg-green-600"
+                                        >
+                                            Bulk Delete
+                                        </button>
+                                    }
                                     <a
                                         href='/productexample.csv'
                                         className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
@@ -166,14 +175,23 @@ export default function Product(props) {
                                         </Form>
                                     </Formik>
                                 </div>
+                                
                             </div>
 
+                            
 
                             <div className="overflow-x-auto">
                                 <table className="min-w-full bg-white rounded-lg shadow">
                                     <thead>
                                         <tr>
-                                            {/* <th className="py-2 px-4 border-b text-left">#</th> */}
+                                            <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-5 w-5 text-gray-600"
+                                                    onChange={(e) => setSelectId(e.target.checked ? products.data.map((product) => product.id) : [])}
+                                                    checked={selectId.length === products.data.length}
+                                                />
+                                            </th>
                                             <th className="py-2 px-4 border-b text-left">ID</th>
                                             <th className="py-2 px-4 border-b text-left">Name</th>
                                             <th className="py-2 px-4 border-b text-left">Description</th>
@@ -201,7 +219,21 @@ export default function Product(props) {
                                                 {products.data.map((product, index) => (
                                                     console.log(product),
                                                     <tr key={product.id}>
-                                                        {/* <td className="py-2 px-4 border-b text-left">{index + 1}</td> */}
+                                                           <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-checkbox h-5 w-5 text-gray-600"
+                                                                value={product.id}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setSelectId([...selectId, product.id]);
+                                                                    } else {
+                                                                        setSelectId(selectId.filter((id) => id !== product.id));
+                                                                    }
+                                                                }}
+                                                                checked={selectId.includes(product.id)}
+                                                            />
+                                                        </td>
                                                         <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
                                                         <td className="py-2 px-4 border-b text-left">{product.name}</td>
                                                         <td className="py-2 px-4 border-b text-left">{product.description}</td>
@@ -767,6 +799,64 @@ export default function Product(props) {
                                 <button
                                     type="button"
                                     onClick={() => setIsDeleteModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </Form>
+                    </Formik>
+                </Modal>
+
+                {/*Bulk Delete Confirmation Modal */}
+                <Modal
+                    show={isBulkDeleteModalOpen}
+                    onClose={() => setIsBulkDeleteModalOpen(false)}
+                    maxWidth="sm"
+                >
+                    <Formik
+                        initialValues={{ confirmation: '' }}
+                        validationSchema={Yup.object({
+                            confirmation: Yup.string().required('Type "DELETE" to confirm').oneOf(['DELETE'], 'Type "DELETE" to confirm'),
+                        })}
+                        onSubmit={(values, { resetForm }) => {
+                            console.log(selectId); // Ensure selectId is an array of IDs
+                            router.post(route('product.bulkdestroy'),{ ids: selectId.join(',') }, {
+                                onSuccess: () => {
+                                    resetForm();
+                                    setIsBulkDeleteModalOpen(false);
+                                    setSelectId([]);
+                                },
+                            });
+                        }}
+                        
+                    >
+                        <Form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+                            <p className="mb-4 text-gray-700">Are you sure you want to delete this product?</p>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="confirmation"
+                                    type="text"
+                                    id="delete_confirmation"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-600 peer"
+                                    placeholder="Type DELETE to confirm"
+                                />
+                                <ErrorMessage name="confirmation" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+
+
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsBulkDeleteModalOpen(false)}
                                     className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
                                 >
                                     Cancel

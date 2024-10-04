@@ -451,4 +451,15 @@ class ProductController extends Controller
         // Return a response or redirect back with a success message
         return redirect()->back()->with('success', 'Product deleted successfully.');
     }
+
+
+    //bulkdestroy
+    public function bulkdestroy(Request $request)
+    {
+
+        $this->authorize('bulkdelete',Product::class);
+        $ids = explode(',', $request->ids);
+        Product::whereIn('id', $ids)->delete();
+        session()->flash('message', 'Product deleted successfully.');
+    }
 }

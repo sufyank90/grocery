@@ -140,4 +140,14 @@ class CategoryController extends Controller
         return redirect()->back()->with('success', 'Category deleted successfully.');
     }
 
+    //bulkdestroy
+    public function bulkdestroy(Request $request)
+    {
+
+        $this->authorize('bulkdelete', Category::class);
+        $ids = explode(',', $request->ids);
+        Category::whereIn('id', $ids)->delete();
+       session()->flash('message', 'Category deleted successfully.');
+    }
+
 }

@@ -68,6 +68,11 @@ class ProductPolicy
         return $user->hasPermissionTo('delete products');
     }
 
+    public function bulkdelete(User $user)
+    {
+        return $user->hasPermissionTo('delete products');
+    }
+
     /**
      * Determine whether the user can restore the model.
      *

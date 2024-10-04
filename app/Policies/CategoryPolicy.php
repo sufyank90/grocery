@@ -68,6 +68,11 @@ class CategoryPolicy
         return $user->hasPermissionTo('delete categories');
     }
 
+    public function bulkdelete(User $user)
+    {
+        return $user->hasPermissionTo('delete categories');
+    }
+
     /**
      * Determine whether the user can restore the model.
      *
