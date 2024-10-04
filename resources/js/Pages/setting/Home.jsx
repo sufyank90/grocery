@@ -11,7 +11,7 @@ export default function Home(props) {
         >
             <Head title="Setting" />
 
-            <div className="pl-32 pr-32 mt-10"> {/* Reduced padding on the main container */}
+            <div className="pl-32 pr-32 "> {/* Reduced padding on the main container */}
 
                 {/* Main Content */}
                 <div className="space-y-4 m-4"> {/* Using space-y to manage vertical spacing */}
