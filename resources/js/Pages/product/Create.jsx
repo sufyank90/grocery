@@ -44,7 +44,7 @@ function Create(props) {
                         initialValues={{
                             name: '',
                             description: '',
-                            price: '',
+                            price: '0',
                             status: 'instock',
                             categories: [],
                             shipping_rates: [],
@@ -52,7 +52,7 @@ function Create(props) {
                             attribute_id: [],
                             thumbnail: null, // Separate thumbnail field
                             regular_price: '',
-                            sale_price: '',
+                            sale_price: '0',
                             stock: '',
                             sku: '',
                             tax_class: 'fixed',
@@ -65,7 +65,7 @@ function Create(props) {
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
                             description: Yup.string().required('Required'),
-                            price: Yup.number().required('Required').positive(),
+                            // price: Yup.number().required('Required').positive(),
                             status: Yup.string().required('Required'),
                             categories: Yup.array().min(1, 'At least one category is required').required('Required'),
                             file: Yup.array()
@@ -81,7 +81,7 @@ function Create(props) {
                                 .required('Regular price is required')
                                 .positive('Regular price must be a positive number'),
                             sale_price: Yup.number()
-                                .positive('Sale price must be a positive number')
+                                
                                 .test(
                                     'is-less-than-or-equal-to-regular-price',
                                     'Sale price must be less than or equal to regular price',
@@ -298,6 +298,7 @@ function Create(props) {
                                             name="sale_price"
                                             type="number"
                                             id="sale_price"
+                                            defaultValue="0"
                                             min="0"
                                             step="0.01"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"

@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 
 export default function Product(props) {
     const { products, categories } = props;
-
+console.log(products) 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -459,7 +459,7 @@ export default function Product(props) {
 
 
                 {/* Create Product Modal */}
-                <Modal
+                {/* <Modal
                     show={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     maxWidth="2xl"
@@ -476,7 +476,7 @@ export default function Product(props) {
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
                             description: Yup.string().required('Required'),
-                            price: Yup.number().required('Required').positive(),
+                            // price: Yup.number().required('Required').positive(),
                             status: Yup.string().required('Required'),
                             categories: Yup.array().min(1, 'At least one category is required').required('Required'),
                             file: Yup.mixed()
@@ -626,7 +626,7 @@ export default function Product(props) {
                             </Form>
                         )}
                     </Formik>
-                </Modal>
+                </Modal> */}
 
 
                 {/* Edit Product Modal */}

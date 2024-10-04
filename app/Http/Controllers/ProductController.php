@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
+
+
 class ProductController extends Controller
 {
     /**
@@ -164,63 +166,137 @@ public function csvstore(Request $request)
 
     // }
 
-    public function csvExport(Request $request)
-    {
-        // Fetch all products from the database with their attributes
-        $products = Product::with('attributes')->get();
+    // public function csvExport(Request $request)
+    // {
+    //     // Fetch all products from the database with their attributes
+    //     $products = Product::with('attributes','categories')->get();
+    //     $categories = Category::all();
         
-        // Define the headers for the CSV file
-        $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=products.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
         
-        // Define the columns for the CSV file
-        $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count', 'attributes'];
+    //     // Define the headers for the CSV file
+    //     $headers = [
+    //         "Content-type"        => "text/csv",
+    //         "Content-Disposition" => "attachment; filename=products.csv",
+    //         "Pragma"              => "no-cache",
+    //         "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+    //         "Expires"             => "0"
+    //     ];
         
-        // Create a callback to stream the CSV content
-        $callback = function() use ($products, $columns) {
-            $file = fopen('php://output', 'w');
+    //     // Define the columns for the CSV file
+    //     $columns = ['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count', 'attributes','categories'];
+        
+    //     // Create a callback to stream the CSV content
+    //     $callback = function() use ($products, $columns) {
+    //         $file = fopen('php://output', 'w');
             
-            // Write the column headers
-            fputcsv($file, $columns);
+    //         // Write the column headers
+    //         fputcsv($file, $columns);
             
-            // Write product data to the CSV
-            foreach ($products as $product) {
-                // Prepare attributes and their values
-                $attributes = $product->attributes->map(function ($attribute) {
+    //         // Write product data to the CSV
+    //         foreach ($products as $product) {
+    //             // Prepare attributes and their values
+    //             $attributes = $product->attributes->map(function ($attribute) {
                     
-                    return $attribute->name . ': ' . $attribute->value; // Adjust field names as needed
-                });
-                $attributesString = implode('; ', $attributes->toArray()); // Convert array to string
+    //                 return $attribute->name . ': ' . $attribute->value; // Adjust field names as needed
+    //             });
+    //             $attributesString = implode('; ', $attributes->toArray()); // Convert array to string
                 
-                fputcsv($file, [
-                    $product->name,
-                    $product->description,
-                    $product->price,
-                    $product->status,
-                    $product->sku,
-                    $product->sale_price,
-                    $product->regular_price,
-                    $product->tax_class,
-                    $product->tax,
-                    $product->stock_count,
-                    $attributesString // Add attributes and their values to the CSV
-                ]);
-            }
+    //             fputcsv($file, [
+    //                 $product->name,
+    //                 $product->description,
+    //                 $product->price,
+    //                 $product->status,
+    //                 $product->sku,
+    //                 $product->sale_price,
+    //                 $product->regular_price,
+    //                 $product->tax_class,
+    //                 $product->tax,
+    //                 $product->stock_count,
+    //                 $attributesString, // Add attributes and their values to the CSV
+    //                 $categories
+    //             ]);
+    //         }
             
-            fclose($file);
-        };
+    //         fclose($file);
+    //     };
         
-        // Return the streamed CSV file as a download
-        return response()->stream($callback, 200, $headers);
-    }
-    
+    //     // Return the streamed CSV file as a download
+    //     return response()->stream($callback, 200, $headers);
+    // }
 
+    public function csvExport(Request $request)
+{
+    // Fetch all products from the database with their attributes and categories
+    $products = Product::with(['attributes', 'categories'])->get();
     
+    // Define the headers for the CSV file
+    $headers = [
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=products.csv",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+    
+    // Define the columns for the CSV file
+    $columns = [
+        'name',
+        'description',
+        'price',
+        'status',
+        'sku',
+        'sale_price',
+        'regular_price',
+        'tax_class',
+        'tax',
+        'stock_count',
+        'attributes',
+        'categories'
+    ];
+    
+    // Create a callback to stream the CSV content
+    $callback = function() use ($products, $columns) {
+        $file = fopen('php://output', 'w');
+        
+        // Write the column headers
+        fputcsv($file, $columns);
+        
+        // Write product data to the CSV
+        foreach ($products as $product) {
+            // Prepare attributes and their values
+            $attributes = $product->attributes->map(function ($attribute) {
+                return $attribute->name . ': ' . $attribute->value; // Adjust field names as needed
+            });
+            $attributesString = implode('; ', $attributes->toArray()); // Convert array to string
+            
+            // Prepare categories
+            $categories = $product->categories->map(function ($category) {
+                return $category->name; // Adjust field names as needed
+            });
+            $categoriesString = implode('; ', $categories->toArray()); // Convert array to string
+            
+            fputcsv($file, [
+                $product->name,
+                $product->description,
+                $product->price,
+                $product->status,
+                $product->sku,
+                $product->sale_price,
+                $product->regular_price,
+                $product->tax_class,
+                $product->tax,
+                $product->stock_count,
+                $attributesString, // Add attributes and their values to the CSV
+                $categoriesString // Add categories to the CSV
+            ]);
+        }
+        
+        fclose($file);
+    };
+    
+    // Return the streamed CSV file as a download
+    return response()->stream($callback, 200, $headers);
+}
 
     public function index(Request $request)
     {
@@ -344,6 +420,7 @@ public function csvstore(Request $request)
     // }
     public function store(StoreProductRequest $request)
 {
+    
     $this->authorize('create', Product::class);
     
     try {
@@ -402,9 +479,9 @@ public function csvstore(Request $request)
         session()->flash('error', 'Failed to create product: ' . $e->getMessage());
        
     }
-
+    
     // Optionally redirect or return a response
-    return redirect()->route('products.index');
+    return redirect()->back();
 }
 
 

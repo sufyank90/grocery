@@ -53,11 +53,11 @@ function Edit(props) {
                             initialValues={{
                                 name: product ? product.name : '',
                                 description: product ? product.description : '',
-                                price: product ? product.price : '',
+                                price: product ? product.price : '0',
                                 status: product ? product.status : 'instock',
                                 sku: product ? product.sku : '',
                                 regular_price: product ? product.regular_price : '',
-                                sale_price: product ? product.sale_price : '',
+                                sale_price: product ? product.sale_price : '0',
                                 tax: product ? product.tax : '',
                                 tax_class: product ? product.tax_class : '',
                                 categories: initialCategoryIds, // Initialize with selected categories
@@ -74,7 +74,7 @@ function Edit(props) {
                                 name: Yup.string().required('Required'),
                                 description: Yup.string().required('Required'),
                                 //price: Yup.number().required('Required').positive(),
-                                price: Yup.number().required('Required').positive(),
+                                // price: Yup.number().required('Required').positive(),
                                 status: Yup.string().required('Required'),
                                 categories: Yup.array().min(1, 'At least one category is required').required('Required'),
                                 stock_count: Yup.number().required('Required').positive(),
@@ -94,7 +94,6 @@ function Edit(props) {
                                     .required('Regular price is required')
                                     .positive('Regular price must be a positive number'),
                                 sale_price: Yup.number()
-                                    .positive('Sale price must be a positive number')
                                     .test(
                                         'is-less-than-or-equal-to-regular-price',
                                         'Sale price must be less than or equal to regular price',
