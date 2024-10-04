@@ -76,22 +76,42 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
         return response()->json(["data" => $data, "message" => "success"], 200);
     });
 
-    // Route to get products by slug with optional shipping_area filtering
+    // // Route to get products by slug with optional shipping_area filtering
+    // Route::get('/search/{slug}/{shipping_area}', function(Request $request, $slug, $shipping_area) {
+    //     //$shipping_area = $request->query('shipping_area');
+    //     $query = Product::with('categories', 'media')->where('name', 'like', '%' . $slug . '%');
+    //     if ($shipping_area) {
+    //         $query->where(function ($q) use ($shipping_area) {
+    //             $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
+    //                 $q->where('id', $shipping_area);
+    //             });
+    //         });
+    //     } else {
+    //         $query->whereDoesntHave('shipping_rates');
+    //     }
+    //     $data = $query->orderBy('id', 'desc')->get();
+    //     return response()->json(["data" => $data, "message" => "success"], 200);
+    // });
     Route::get('/search/{slug}/{shipping_area}', function(Request $request, $slug, $shipping_area) {
-        //$shipping_area = $request->query('shipping_area');
-        $query = Product::with('categories', 'media')->where('name', 'like', '%' . $slug . '%');
+        $query = Product::with('categories', 'media')
+            ->where('name', 'like', '%' . $slug . '%');
+    
         if ($shipping_area) {
             $query->where(function ($q) use ($shipping_area) {
                 $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
                     $q->where('id', $shipping_area);
-                });
+                })
+                ->orWhereDoesntHave('shipping_rates'); // Include products without shipping rates
             });
         } else {
+            // If no shipping area is provided, include products that don't have any shipping rates
             $query->whereDoesntHave('shipping_rates');
         }
+    
         $data = $query->orderBy('id', 'desc')->get();
         return response()->json(["data" => $data, "message" => "success"], 200);
     });
+    
 
     // // Route to get products by category with optional shipping_area filtering
     // Route::get('/category/{category}/{shipping_area}', function(Request $request, $category, $shipping_area) {
