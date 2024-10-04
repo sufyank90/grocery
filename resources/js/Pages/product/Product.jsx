@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 
 export default function Product(props) {
     const { products, categories } = props;
-console.log(products) 
+    console.log(products)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -91,159 +91,161 @@ console.log(products)
             >
                 <Head title="Admin Dashboard" />
 
-                <div className="flex flex-col px-4 md:pl-16 md:pr-16">
-                    
-                            <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4">
-                                <h3 className="text-lg font-bold mb-4 sm:mb-0">Products</h3>
-                                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                                        {selectId.length > 0 &&
-                                        <button
-                                            onClick={() => setIsBulkDeleteModalOpen(true)}
-                                            className="text-white py-2 px-4 bg-red-500 rounded-lg hover:bg-green-600"
-                                        >
-                                            Bulk Delete
-                                        </button>
-                                    }
-                                    <a
-                                        href='/productexample.csv'
-                                        className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
-                                        download={'productexample.csv'}
-                                    >
-                                        <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
-                                            <FaFileDownload className="mr-2 h-5 w-5" />
-                                            Download CSV Template
-                                        </span>
-                                    </a>
+                <div className="flex flex-col px-4 md:pl-32 md:pr-32">
 
-                                    {/* Import CSV File Button */}
-                                    <label className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'>
-                                        <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
-                                            <SiMicrosoftexcel className="mr-2 h-5 w-5" />
-                                            Import CSV File
-                                            <input
-                                                type="file"
-                                                accept=".csv"
-                                                onChange={handleFileSelect}
-                                                className="hidden"
-                                            />
-                                        </span>
-                                    </label>
+                    <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4">
+                        <h3 className="text-lg font-bold mb-4 sm:mb-0">Products</h3>
+                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                            {selectId.length > 0 &&
+                                <button
+                                    onClick={() => setIsBulkDeleteModalOpen(true)}
+                                    className="text-white py-2 px-4 bg-red-500 rounded-lg hover:bg-green-600"
+                                >
+                                    Bulk Delete
+                                </button>
+                            }
+                            <a
+                                href='/productexample.csv'
+                                className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
+                                download={'productexample.csv'}
+                            >
+                                <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                    <FaFileDownload className="mr-2 h-5 w-5" />
+                                    Download CSV Template
+                                </span>
+                            </a>
 
-                                    {/* Export CSV File Button */}
-                                    <a
-                                        href={route('product.csvexport')}
-                                        className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
-                                    >
-                                        <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
-                                            <SiMicrosoftexcel className="mr-2 h-5 w-5" />
-                                            Export CSV File
-                                        </span>
-                                    </a>
+                            {/* Import CSV File Button */}
+                            <label className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'>
+                                <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                    <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                                    Import CSV File
+                                    <input
+                                        type="file"
+                                        accept=".csv"
+                                        onChange={handleFileSelect}
+                                        className="hidden"
+                                    />
+                                </span>
+                            </label>
 
-                                    {/* Create Product Link */}
-                                    <Link href={route('product.create')}
+                            {/* Export CSV File Button */}
+                            <a
+                                href={route('product.csvexport')}
+                                className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
+                            >
+                                <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                    <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                                    Export CSV File
+                                </span>
+                            </a>
+
+                            {/* Create Product Link */}
+                            <Link href={route('product.create')}
+                                style={{ background: '#fcb609' }}
+                                className="text-black py-2 px-4 rounded-lg hover:bg-green-600 text-center"
+                            >
+                                Create
+                            </Link>
+
+                            {/* Search Form */}
+                            <Formik enableReinitialize initialValues={{ search: '' }}
+                                onSubmit={(values) => {
+                                    router.visit(route('product.index', { search: values.search }), {
+                                        method: 'get', // or 'post' depending on your needs
+                                        preserveState: true,
+                                    });
+                                }}
+                            >
+                                <Form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                                    <div>
+                                        <Field name="search"
+                                            type="text"
+                                            placeholder="Search..."
+                                            className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        />
+                                    </div>
+                                    <button type="submit"
                                         style={{ background: '#fcb609' }}
-                                        className="text-black py-2 px-4 rounded-lg hover:bg-green-600 text-center"
+                                        className="text-black py-2 px-4 rounded-lg hover:bg-blue-600 text-center"
                                     >
-                                        Create
-                                    </Link>
+                                        Search
+                                    </button>
+                                </Form>
+                            </Formik>
+                        </div>
 
-                                    {/* Search Form */}
-                                    <Formik enableReinitialize initialValues={{ search: '' }}
-                                        onSubmit={(values) => {
-                                            router.visit(route('product.index', { search: values.search }), {
-                                                method: 'get', // or 'post' depending on your needs
-                                                preserveState: true,
-                                            });
-                                        }}
-                                    >
-                                        <Form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                                            <div>
-                                                <Field name="search"
-                                                    type="text"
-                                                    placeholder="Search..."
-                                                    className="py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                />
-                                            </div>
-                                            <button type="submit"
-                                                style={{ background: '#fcb609' }}
-                                                className="text-black py-2 px-4 rounded-lg hover:bg-blue-600 text-center"
-                                            >
-                                                Search
-                                            </button>
-                                        </Form>
-                                    </Formik>
-                                </div>
-                                
-                            </div>
+                    </div>
 
-                            
 
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full bg-white rounded-lg shadow-lg">
-                                    <thead>
-                                        <tr>
-                                            <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
-                                                <input
-                                                    type="checkbox"
-                                                    className="form-checkbox h-5 w-5 text-gray-600"
-                                                    onChange={(e) => setSelectId(e.target.checked ? products.data.map((product) => product.id) : [])}
-                                                    checked={selectId.length === products.data.length}
-                                                />
-                                            </th>
-                                            <th className="py-2 px-4 border-b text-left">ID</th>
-                                            <th className="py-2 px-4 border-b text-left">Name</th>
-                                            <th className="py-2 px-4 border-b text-left">Description</th>
-                                            <th className="py-2 px-4 border-b text-left">Price</th>
-                                            <th className="py-2 px-4 border-b text-left">Sale Price</th>
 
-                                            <th className="py-2 px-4 border-b text-left">Areas</th>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full bg-white rounded-lg shadow-lg">
+                            <thead>
+                                <tr>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
+                                        <input
+                                            type="checkbox"
+                                            className="form-checkbox h-5 w-5 text-gray-600"
+                                            onChange={(e) => setSelectId(e.target.checked ? products.data.map((product) => product.id) : [])}
+                                            checked={selectId.length === products.data.length}
+                                        />
+                                    </th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">ID</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Name</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Description</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Price</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Sale Price</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Areas</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Image</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Stock Count</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Status</th>
+                                    <th className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">Actions</th>
+                                </tr>
+                            </thead>
 
-                                            {/* <th className="py-2 px-4 border-b text-left">Attributes</th> */}
-
-                                            <th className="py-2 px-4 border-b text-left">Image</th>
-                                            <th className="py-2 px-4 border-b text-left">Stock Count</th>
-                                            <th className="py-2 px-4 border-b text-left">Status</th>
-                                            <th className="py-2 px-4 border-b text-left">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className='text-center'>
-                                        {products.data.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="9" className="py-2 px-4 border-b text-center">
-                                                    No products found
+                            <tbody className='text-center'>
+                                {products.data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="9" className="py-2 px-4 border-b text-center">
+                                            No products found
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    <>
+                                        {products.data.map((product, index) => (
+                                            console.log(product),
+                                            <tr key={product.id}>
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="form-checkbox h-5 w-5 text-gray-600"
+                                                        value={product.id}
+                                                        onChange={(e) => {
+                                                            if (e.target.checked) {
+                                                                setSelectId([...selectId, product.id]);
+                                                            } else {
+                                                                setSelectId(selectId.filter((id) => id !== product.id));
+                                                            }
+                                                        }}
+                                                        checked={selectId.includes(product.id)}
+                                                    />
                                                 </td>
-                                            </tr>
-                                        ) : (
-                                            <>
-                                                {products.data.map((product, index) => (
-                                                    console.log(product),
-                                                    <tr key={product.id}>
-                                                           <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="form-checkbox h-5 w-5 text-gray-600"
-                                                                value={product.id}
-                                                                onChange={(e) => {
-                                                                    if (e.target.checked) {
-                                                                        setSelectId([...selectId, product.id]);
-                                                                    } else {
-                                                                        setSelectId(selectId.filter((id) => id !== product.id));
-                                                                    }
-                                                                }}
-                                                                checked={selectId.includes(product.id)}
-                                                            />
-                                                        </td>
-                                                        <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
-                                                        <td className="py-2 px-4 border-b text-left">{product.name}</td>
-                                                        <td className="py-2 px-4 border-b text-left">{product.description}</td>
-                                                        <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.regular_price).toFixed(2)}</td>
-                                                        <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.sale_price).toFixed(2)}</td>
+                                                <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
+                                                <td className="py-2 px-4 border-b text-left">{product.name}</td>
+                                                <td className="py-2 px-4 border-b text-left">{product.description}</td>
+                                                <td className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
+                                                    Rs. {parseFloat(product.regular_price).toFixed(2)}
+                                                </td>
+                                                <td className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
+                                                    Rs. {parseFloat(product.sale_price).toFixed(2)}
+                                                </td>
 
-                                                        <td className="py-2 px-4 border-b text-left">
-                                                            {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
-                                                        </td>
-                                                        {/* 
+
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
+                                                </td>
+                                                {/* 
                                                 <td className="py-2 px-4 border-b text-left">
   <ul className={` ${product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'} `}>
     {product.attribute_values.length > 0 ? (
@@ -258,7 +260,7 @@ console.log(products)
   </ul>
 </td> */}
 
-                                                        {/* <td className="py-2 px-4 border-b text-left">
+                                                {/* <td className="py-2 px-4 border-b text-left">
                                                     <ul className={product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'}>
                                                         {product.attribute_values.length > 0 ? (
                                                             // Group attributes by name
@@ -282,104 +284,104 @@ console.log(products)
                                                 </td> */}
 
 
-                                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                            {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
+                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                    {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
                                                         <img src={product.media[1].original_url} height={100} width={100} className='rounded-lg' />
                                                     ) : (
                                                         <p>No image</p>
                                                     )} */}
-                                                            {/* {product.media && product.media.length > 0 && product.media.map((media) => (
+                                                    {/* {product.media && product.media.length > 0 && product.media.map((media) => (
                                                         console.log(media),
                                                         <img src={media.original_url} height={100} width={100} className='rounded-lg' />
                                                     ))} */}
-                                                            {product.media && product.media.length > 0 && (
-                                                                <img
-                                                                    src={product.media[0].original_url}
-                                                                    height={100}
-                                                                    width={100}
-                                                                    className='rounded-lg'
-                                                                    alt="Product Image" // Add alt text for accessibility
-                                                                />
-                                                            )}
-                                                        </td>
-                                                        <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
-                                                        <td className="py-2 px-4 border-b text-left">
-                                                            {product.status === 'instock' && (
-                                                                <span
-                                                                    onClick={() => {
+                                                    {product.media && product.media.length > 0 && (
+                                                        <img
+                                                            src={product.media[0].original_url}
+                                                            height={100}
+                                                            width={100}
+                                                            className='rounded-lg'
+                                                            alt="Product Image" // Add alt text for accessibility
+                                                        />
+                                                    )}
+                                                </td>
+                                                <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    {product.status === 'instock' && (
+                                                        <span
+                                                            onClick={() => {
 
-                                                                        setIsStatusModalOpen(true);
-                                                                        setSelectedProduct(product);
-                                                                    }}
-                                                                    className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                                                    {product.status}
-                                                                </span>
-                                                            )}
+                                                                setIsStatusModalOpen(true);
+                                                                setSelectedProduct(product);
+                                                            }}
+                                                            className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                                                            {product.status}
+                                                        </span>
+                                                    )}
 
-                                                            {product.status === 'outofstock' && (
-                                                                <span
-                                                                    onClick={() => {
+                                                    {product.status === 'outofstock' && (
+                                                        <span
+                                                            onClick={() => {
 
-                                                                        setIsStatusModalOpen(true);
-                                                                        setSelectedProduct(product);
+                                                                setIsStatusModalOpen(true);
+                                                                setSelectedProduct(product);
 
-                                                                    }}
-                                                                    className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                                                    {product.status}
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                        <td className="py-2 px-4 border-b text-left">
-                                                            <div className="flex justify-center space-x-2">
+                                                            }}
+                                                            className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                                                            {product.status}
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className="py-2 px-4 border-b text-left">
+                                                    <div className="flex justify-center space-x-2">
 
-                                                                <Link
-                                                                    href={route('product.edit', product.id)}
+                                                        <Link
+                                                            href={route('product.edit', product.id)}
 
-                                                                >
-                                                                    <FaEdit
-                                                                        className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                                </Link>
+                                                        >
+                                                            <FaEdit
+                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        </Link>
 
 
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setSelectedProduct(product);
-                                                                        setIsDeleteModalOpen(true);
-                                                                    }}
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedProduct(product);
+                                                                setIsDeleteModalOpen(true);
+                                                            }}
 
-                                                                >
-                                                                    <MdDelete
+                                                        >
+                                                            <MdDelete
 
-                                                                        className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </>
-                                        )
-                                        }
+                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )
+                                }
 
-                                    </tbody>
-                                </table>
-                            </div>
+                            </tbody>
+                        </table>
+                    </div>
 
-                            {/* Pagination */}
-                            <div className="flex justify-center sm:justify-end mt-4 mb-8 space-x-1 flex-wrap">
-                                {products.links.map((link, index) => (
-                                    <Link
-                                        key={index}
-                                        href={link.url}
-                                        className={`px-3 py-1 border rounded-lg text-center transition-colors ${link.active
-                                            ? 'bg-yellow-500 text-white'
-                                            : 'bg-gray-200 text-black hover:bg-yellow-300'
-                                            }`}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
-                                    />
-                                ))}
-                            </div>
-                        
-                    
+                    {/* Pagination */}
+                    <div className="flex justify-center sm:justify-end mt-4 mb-8 space-x-1 flex-wrap">
+                        {products.links.map((link, index) => (
+                            <Link
+                                key={index}
+                                href={link.url}
+                                className={`px-3 py-1 border rounded-lg text-center transition-colors ${link.active
+                                    ? 'bg-yellow-500 text-white'
+                                    : 'bg-gray-200 text-black hover:bg-yellow-300'
+                                    }`}
+                                dangerouslySetInnerHTML={{ __html: link.label }}
+                            />
+                        ))}
+                    </div>
+
+
                 </div>
 
 
@@ -822,7 +824,7 @@ console.log(products)
                         })}
                         onSubmit={(values, { resetForm }) => {
                             console.log(selectId); // Ensure selectId is an array of IDs
-                            router.post(route('product.bulkdestroy'),{ ids: selectId.join(',') }, {
+                            router.post(route('product.bulkdestroy'), { ids: selectId.join(',') }, {
                                 onSuccess: () => {
                                     resetForm();
                                     setIsBulkDeleteModalOpen(false);
@@ -830,7 +832,7 @@ console.log(products)
                                 },
                             });
                         }}
-                        
+
                     >
                         <Form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto flex flex-col items-center">
                             <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
