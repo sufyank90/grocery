@@ -215,8 +215,8 @@ export default function Product(props) {
                                     <>
                                         {products.data.map((product, index) => (
                                             console.log(product),
-                                            <tr key={product.id}>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                            <tr key={product.id} className="hover:bg-gray-100">
+                                                <td className="py-4 px-2 border-b border-gray-200 text-left text-gray-700">
                                                     <input
                                                         type="checkbox"
                                                         className="form-checkbox h-5 w-5 text-gray-600"
@@ -231,133 +231,62 @@ export default function Product(props) {
                                                         checked={selectId.includes(product.id)}
                                                     />
                                                 </td>
-                                                <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
-                                                <td className="py-2 px-4 border-b text-left">{product.name}</td>
-                                                <td className="py-2 px-4 border-b text-left">{product.description}</td>
-                                                <td className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
+                                                <td className="py-4 px-2 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
+
+                                                {/* Wider columns with more height */}
+                                                <td className="py-4 px-2 border-b text-left max-w-[200px]">{product.name}</td>
+                                                <td className="py-4 px-2 border-b text-left max-w-[250px]">{product.description}</td>
+
+                                                <td className="py-4 px-2 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px]">
                                                     Rs. {parseFloat(product.regular_price).toFixed(2)}
                                                 </td>
-                                                <td className="py-2 px-4 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]">
+                                                <td className="py-4 px-2 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px]">
                                                     Rs. {parseFloat(product.sale_price).toFixed(2)}
                                                 </td>
 
-
-                                                <td className="py-2 px-4 border-b text-left">
+                                                {/* Adjusted area column */}
+                                                <td className="py-4 px-2 border-b text-left max-w-[200px]">
                                                     {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
                                                 </td>
-                                                {/* 
-                                                <td className="py-2 px-4 border-b text-left">
-  <ul className={` ${product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'} `}>
-    {product.attribute_values.length > 0 ? (
-      product.attribute_values.map((attribute, index) => (
-        <li key={index}>
-          {attribute.attribute.name}: {attribute.value}
-        </li>
-      ))
-    ) : (
-      <li>N/A</li>
-    )}
-  </ul>
-</td> */}
 
-                                                {/* <td className="py-2 px-4 border-b text-left">
-                                                    <ul className={product.attribute_values.length > 0 ? 'list-disc list-inside' : 'text-red-500'}>
-                                                        {product.attribute_values.length > 0 ? (
-                                                            // Group attributes by name
-                                                            Object.entries(
-                                                                product.attribute_values.reduce((acc, { attribute, value }) => {
-                                                                    if (!acc[attribute.name]) {
-                                                                        acc[attribute.name] = [];
-                                                                    }
-                                                                    acc[attribute.name].push(value);
-                                                                    return acc;
-                                                                }, {})
-                                                            ).map(([name, values], index) => (
-                                                                <li key={index}>
-                                                                    {name}: {values.join(', ')}
-                                                                </li>
-                                                            ))
-                                                        ) : (
-                                                            <li>N/A</li>
-                                                        )}
-                                                    </ul>
-                                                </td> */}
-
-
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
-                                                    {/* {product.media && product.media.length > 0 && product.media[1].original_url ? (
-                                                        <img src={product.media[1].original_url} height={100} width={100} className='rounded-lg' />
-                                                    ) : (
-                                                        <p>No image</p>
-                                                    )} */}
-                                                    {/* {product.media && product.media.length > 0 && product.media.map((media) => (
-                                                        console.log(media),
-                                                        <img src={media.original_url} height={100} width={100} className='rounded-lg' />
-                                                    ))} */}
+                                                <td className="py-4 px-2 border-b text-left">
                                                     {product.media && product.media.length > 0 && (
                                                         <img
                                                             src={product.media[0].original_url}
-                                                            height={100}
-                                                            width={100}
+                                                            height={80}
+                                                            width={80}
                                                             className='rounded-lg'
-                                                            alt="Product Image" // Add alt text for accessibility
+                                                            alt="Product Image"
                                                         />
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-4 border-b text-left">{product.stock_count}</td>
-                                                <td className="py-2 px-4 border-b text-left">
-                                                    {product.status === 'instock' && (
-                                                        <span
-                                                            onClick={() => {
-
-                                                                setIsStatusModalOpen(true);
-                                                                setSelectedProduct(product);
-                                                            }}
-                                                            className="bg-green-100 cursor-pointer text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                                                            {product.status}
-                                                        </span>
-                                                    )}
-
-                                                    {product.status === 'outofstock' && (
-                                                        <span
-                                                            onClick={() => {
-
-                                                                setIsStatusModalOpen(true);
-                                                                setSelectedProduct(product);
-
-                                                            }}
-                                                            className="bg-red-100 cursor-pointer text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                                                            {product.status}
-                                                        </span>
-                                                    )}
+                                                <td className="py-4 px-2 border-b text-left">{product.stock_count}</td>
+                                                <td className="py-4 px-2 border-b text-left">
+                                                    <span
+                                                        onClick={() => {
+                                                            setIsStatusModalOpen(true);
+                                                            setSelectedProduct(product);
+                                                        }}
+                                                        className={`cursor-pointer text-xs font-medium me-2 px-2.5 py-0.5 rounded ${product.status === 'instock' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                                        {product.status}
+                                                    </span>
                                                 </td>
-                                                <td className="py-2 px-4 border-b text-left">
+                                                <td className="py-4 px-2 border-b text-left">
                                                     <div className="flex justify-center space-x-2">
-
-                                                        <Link
-                                                            href={route('product.edit', product.id)}
-
-                                                        >
-                                                            <FaEdit
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        <Link href={route('product.edit', product.id)}>
+                                                            <FaEdit className="w-6 h-6 cursor-pointer" style={{ color: '#fcb609' }} />
                                                         </Link>
-
-
-                                                        <button
-                                                            onClick={() => {
-                                                                setSelectedProduct(product);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-
-                                                        >
-                                                            <MdDelete
-
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                        <button onClick={() => {
+                                                            setSelectedProduct(product);
+                                                            setIsDeleteModalOpen(true);
+                                                        }}>
+                                                            <MdDelete className="w-6 h-6 cursor-pointer" style={{ color: '#fcb609' }} />
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         ))}
+
                                     </>
                                 )
                                 }
