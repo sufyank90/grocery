@@ -9,4 +9,5 @@ use Inertia\Inertia;
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
      Route::resource('shipment', ShippingRateController::class); 
+     Route::post('/shipment/bulkdestroy', [ShippingRateController::class, 'bulkdestroy'])->name('shipment.bulkdestroy');
 });

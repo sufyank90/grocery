@@ -69,6 +69,12 @@ class ShippingRatePolicy
         return $user->hasPermissionTo('delete shipping rates');
     }
 
+
+    public function bulkdelete(User $user)
+    {
+        return $user->hasPermissionTo('delete shipping rates');
+    }
+
     /**
      * Determine whether the user can restore the model.
      *

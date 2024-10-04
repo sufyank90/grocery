@@ -12,7 +12,9 @@ export default function Index(props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenCreate, setIsModalOpenCreate] = useState(false);
     const [selectedShipment, setSelectedShipment] = useState({});
-console.log(shipments)
+    const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+    const [selectId, setSelectId] = useState([]);
+
     const openShipmentModal = (shipment) => {
         setSelectedShipment(shipment);
         setIsModalOpen(true);
@@ -37,6 +39,15 @@ console.log(shipments)
                         <div className="flex justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Shipments</h3>
                             <div className="flex space-x-2">
+                            {selectId.length > 0 &&
+                                        <button
+                                            onClick={() => setIsBulkDeleteModalOpen(true)}
+                                            className="text-white py-2 px-4 bg-red-500 rounded-lg hover:bg-green-600"
+                                        >
+                                            Bulk Delete
+                                        </button>
+                                    }
+
                                 {createPolicy &&
                                 <button
                                     onClick={openCreateModal}
@@ -75,6 +86,14 @@ console.log(shipments)
                         <table className="min-w-full bg-white rounded-lg shadow">
                             <thead>
                                 <tr>
+                                <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-5 w-5 text-gray-600"
+                                                    onChange={(e) => setSelectId(e.target.checked ? shipments.data.map((product) => product.id) : [])}
+                                                    checked={selectId.length === shipments.data.length}
+                                                />
+                                    </th>
                                     <th className="py-2 px-4 border-b text-left">ID</th>
                                     <th className="py-2 px-4 border-b text-left">Country</th>
                                     <th className="py-2 px-4 border-b text-left">State</th>
@@ -95,6 +114,21 @@ console.log(shipments)
                                     <>
                                         {shipments.data.map((shipment, index) => (
                                             <tr key={shipment.id}>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-checkbox h-5 w-5 text-gray-600"
+                                                                value={shipment.id}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setSelectId([...selectId, shipment.id]);
+                                                                    } else {
+                                                                        setSelectId(selectId.filter((id) => id !== shipment.id));
+                                                                    }
+                                                                }}
+                                                                checked={selectId.includes(shipment.id)}
+                                                            />
+                                                        </td>
                                                 <td className="py-2 px-4 border-b text-left">{(shipments.current_page - 1) * shipments.per_page + index + 1}</td>
                                                 <td className="py-2 px-4 border-b text-left">{shipment.country_name}</td>
                                                 <td className="py-2 px-4 border-b text-left">{shipment.state_name}</td>
@@ -330,6 +364,67 @@ console.log(shipments)
                     </Formik>
                 </Modal>
                 }
+
+
+                
+                {/*Bulk Delete Confirmation Modal */}
+                <Modal
+                    show={isBulkDeleteModalOpen}
+                    onClose={() => setIsBulkDeleteModalOpen(false)}
+                    maxWidth="sm"
+                >
+                    <Formik
+                        initialValues={{ confirmation: '' }}
+                        validationSchema={Yup.object({
+                            confirmation: Yup.string().required('Type "DELETE" to confirm').oneOf(['DELETE'], 'Type "DELETE" to confirm'),
+                        })}
+                        onSubmit={(values, { resetForm }) => {
+                            console.log(selectId); // Ensure selectId is an array of IDs
+                            router.post(route('shipment.bulkdestroy'),{ ids: selectId.join(',') }, {
+                                onSuccess: () => {
+                                    resetForm();
+                                    setIsBulkDeleteModalOpen(false);
+                                    setSelectId([]);
+                                },
+                            });
+                        }}
+                        
+                    >
+                        <Form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+                            <p className="mb-4 text-gray-700">Are you sure you want to delete this shipment?</p>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="confirmation"
+                                    type="text"
+                                    id="delete_confirmation"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-600 peer"
+                                    placeholder="Type DELETE to confirm"
+                                />
+                                <ErrorMessage name="confirmation" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+
+
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsBulkDeleteModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </Form>
+                    </Formik>
+                </Modal>
+
             </AuthenticatedLayout>
         </>
     );
