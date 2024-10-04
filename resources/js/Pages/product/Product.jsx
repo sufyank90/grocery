@@ -91,9 +91,8 @@ console.log(products)
             >
                 <Head title="Admin Dashboard" />
 
-                <div className="flex flex-col px-4 md:pl-32 md:pr-32">
-                    <div >
-                        <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                <div className="flex flex-col px-4 md:pl-16 md:pr-16">
+                    
                             <div className="flex flex-col sm:flex-row justify-between items-center mt-6 mb-4">
                                 <h3 className="text-lg font-bold mb-4 sm:mb-0">Products</h3>
                                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
@@ -181,7 +180,7 @@ console.log(products)
                             
 
                             <div className="overflow-x-auto">
-                                <table className="min-w-full bg-white rounded-lg shadow">
+                                <table className="min-w-full bg-white rounded-lg shadow-lg">
                                     <thead>
                                         <tr>
                                             <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
@@ -379,8 +378,8 @@ console.log(products)
                                     />
                                 ))}
                             </div>
-                        </div>
-                    </div>
+                        
+                    
                 </div>
 
 
