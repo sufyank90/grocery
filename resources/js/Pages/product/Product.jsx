@@ -196,6 +196,7 @@ console.log(products)
                                             <th className="py-2 px-4 border-b text-left">Name</th>
                                             <th className="py-2 px-4 border-b text-left">Description</th>
                                             <th className="py-2 px-4 border-b text-left">Price</th>
+                                            <th className="py-2 px-4 border-b text-left">Sale Price</th>
 
                                             <th className="py-2 px-4 border-b text-left">Areas</th>
 
@@ -237,7 +238,8 @@ console.log(products)
                                                         <td className="py-2 px-4 border-b text-left">{(products.current_page - 1) * products.per_page + index + 1}</td>
                                                         <td className="py-2 px-4 border-b text-left">{product.name}</td>
                                                         <td className="py-2 px-4 border-b text-left">{product.description}</td>
-                                                        <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.price).toFixed(2)}</td>
+                                                        <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.regular_price).toFixed(2)}</td>
+                                                        <td className="py-2 px-4 border-b text-left">Rs. {parseFloat(product.sale_price).toFixed(2)}</td>
 
                                                         <td className="py-2 px-4 border-b text-left">
                                                             {product.shipping_rates.length > 0 ? product.shipping_rates.map((area) => area.area_name).join(', ') : 'All'}
