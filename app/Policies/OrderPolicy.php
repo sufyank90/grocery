@@ -68,6 +68,11 @@ class OrderPolicy
         return $user->hasPermissionTo('delete orders');
     }
 
+    public function bulkdelete(User $user)
+    {
+        return $user->hasPermissionTo('delete orders');
+    }
+
     /**
      * Determine whether the user can restore the model.
      *

@@ -242,4 +242,15 @@ class OrderController extends Controller
     {
         //
     }
+
+
+      //bulkdestroy
+      public function bulkdestroy(Request $request)
+      {
+  
+          $this->authorize('bulkdelete',Order::class);
+          $ids = explode(',', $request->ids);
+          Order::whereIn('id', $ids)->delete();
+          session()->flash('message', 'Order deleted successfully.');
+      }
 }

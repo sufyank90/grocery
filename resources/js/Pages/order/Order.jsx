@@ -13,12 +13,13 @@ import { IoCreate } from "react-icons/io5";
 
 function Orders(props) {
     const { orders } = props; // Update this to use orders instead of categorys
-    console.log(orders);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+    const [selectId, setSelectId] = useState([]);
 
     const openEditModal = (order) => {
         setSelectedOrder(order);
@@ -39,6 +40,14 @@ function Orders(props) {
                         <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Orders</h3>
                             <div className="flex flex-col md:flex-row space-x-0 md:space-x-2 mt-2 md:mt-0">
+                            {selectId.length > 0 &&
+                                        <button
+                                            onClick={() => setIsBulkDeleteModalOpen(true)}
+                                            className="text-white py-2 px-4 bg-red-500 rounded-lg hover:bg-green-600"
+                                        >
+                                            Bulk Delete
+                                        </button>
+                                    }
                                 <Link
                                     href={route('order.create')}
                                     style={{ background: '#fcb609' }}
@@ -99,6 +108,14 @@ function Orders(props) {
                             <table className="min-w-full bg-white rounded-lg shadow-lg">
                                 <thead>
                                     <tr>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-5 w-5 text-gray-600"
+                                                    onChange={(e) => setSelectId(e.target.checked ? orders.data.map((product) => product.id) : [])}
+                                                    checked={selectId.length === orders.data.length}
+                                                />
+                                            </th>
                                         {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
                                         <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
                                         <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
@@ -122,6 +139,21 @@ function Orders(props) {
                                     ) : (<>
                                         {orders.data.map((order, index) => (
                                             <tr key={order.id} className="hover:bg-gray-100">
+                                                  <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-checkbox h-5 w-5 text-gray-600"
+                                                                value={order.id}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setSelectId([...selectId, order.id]);
+                                                                    } else {
+                                                                        setSelectId(selectId.filter((id) => id !== order.id));
+                                                                    }
+                                                                }}
+                                                                checked={selectId.includes(order.id)}
+                                                            />
+                                                        </td>
                                                 {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
                                                 <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.name}</td>
@@ -285,6 +317,67 @@ function Orders(props) {
                         </div>
                     </Modal>
                 )}
+
+
+                
+                {/*Bulk Delete Confirmation Modal */}
+                <Modal
+                    show={isBulkDeleteModalOpen}
+                    onClose={() => setIsBulkDeleteModalOpen(false)}
+                    maxWidth="sm"
+                >
+                    <Formik
+                        initialValues={{ confirmation: '' }}
+                        validationSchema={Yup.object({
+                            confirmation: Yup.string().required('Type "DELETE" to confirm').oneOf(['DELETE'], 'Type "DELETE" to confirm'),
+                        })}
+                        onSubmit={(values, { resetForm }) => {
+                            console.log(selectId); // Ensure selectId is an array of IDs
+                            router.post(route('order.bulkdestroy'),{ ids: selectId.join(',') }, {
+                                onSuccess: () => {
+                                    resetForm();
+                                    setIsBulkDeleteModalOpen(false);
+                                    setSelectId([]);
+                                },
+                            });
+                        }}
+                        
+                    >
+                        <Form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto flex flex-col items-center">
+                            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+                            <p className="mb-4 text-gray-700">Are you sure you want to delete this order?</p>
+                            <div className="relative z-0 w-full mb-5 group">
+                                <Field
+                                    name="confirmation"
+                                    type="text"
+                                    id="delete_confirmation"
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-red-600 peer"
+                                    placeholder="Type DELETE to confirm"
+                                />
+                                <ErrorMessage name="confirmation" component="div" className="text-red-600 text-sm mt-1" />
+                            </div>
+
+
+
+                            <div className="flex justify-end space-x-2 mt-4">
+                                <button
+                                    type="submit"
+                                    className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsBulkDeleteModalOpen(false)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </Form>
+                    </Formik>
+                </Modal>
+
             </AuthenticatedLayout>
         </>
     );
