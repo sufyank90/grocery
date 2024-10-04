@@ -5,31 +5,11 @@ import jsPDF from 'jspdf';
 
 const View = (props) => {
     const { order, attribute } = props;
-console.log(order)
-    const downloadPDF = () => {
-        const doc = new jsPDF();
-        doc.text("Order Details", 10, 10);
-        doc.text("Order ID: " + order.id, 10, 20);
-        doc.text("Order Date: " + order.created_at, 10, 30);
-        doc.text("Order Status: " + order.status, 10, 40);
-        doc.text("Order Amount: " + order.total, 10, 50);
 
-        // Add feedback details to the PDF
-        if (order.feedbacks.length > 0) {
-            doc.text("Feedbacks:", 10, 60);
-            order.feedbacks.forEach((feedback, index) => {
-                doc.text(`User ID: ${feedback.user_id}`, 10, 70 + (index * 10));
-                doc.text(`Rating: ${feedback.rating}`, 10, 80 + (index * 10));
-                doc.text(`Comment: ${feedback.comment}`, 10, 90 + (index * 10));
-            });
-        }
 
-        doc.save('order-details.pdf');
-    };
-
-    return (
+    return ( 
         <Authenticated auth={props.auth} errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">View Order # {order.id}</h2>}>
+            header={<h2 className=" font-semibold text-xl text-gray-800 leading-tight no-print">View Order # {order.id}</h2>}>
             <Head title="View Order" />
             <style>
                 {`
@@ -37,24 +17,14 @@ console.log(order)
                         .no-print {
                             display: none;
                         }
-                        .print-only {
-                            display: block;
+                        .print-gap {
+                            margin-top: 100px;
                         }
-                        .no-print, .no-print * {
-                            display: none !important;
-                        }
-                        .print-only {
-                            display: block !important;
-                        }
-                    }
-                    .order-table th, .order-table td {
-                        padding: 12px;
-                        text-align: left;
                     }
                 `}
             </style>
 
-            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 ">
                 {/* Action Buttons */}
                 <div className="flex justify-end mb-4 no-print">
                     <button
@@ -63,12 +33,7 @@ console.log(order)
                     >
                         Print
                     </button>
-                    {/* <button
-                        onClick={downloadPDF}
-                        className="bg-green-600 text-white py-2 px-4 rounded shadow hover:bg-green-700 transition duration-300 ml-2"
-                    >
-                        Download PDF
-                    </button> */}
+ 
                 </div>
 
                 {/* Order Information Box */}
@@ -98,7 +63,7 @@ console.log(order)
                 </div>
 
                 {/* Order Items Box */}
-                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
+                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200 print-gap">
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">Order Items</h2>
                     <div className="relative overflow-x-auto">
                         <table className="w-full text-sm text-gray-600 order-table">
@@ -165,7 +130,9 @@ console.log(order)
                 </div>
 
                 {/* Feedback Box */}
+                <div className='no-print'>
 
+                
                 {order.feedbacks.length > 0 && (
                     <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Customer Feedback</h2>
@@ -183,6 +150,7 @@ console.log(order)
                         </div>
                     </div>
                 )}
+                </div>
             </div>
         </Authenticated>
     );

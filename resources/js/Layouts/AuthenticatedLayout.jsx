@@ -28,7 +28,7 @@ export default function Authenticated({ auth, header, children }) {
     return (
         <div className="min-h-screen bg-gray-100">
              <ToastContainer />
-            <nav className="bg-[#fcb609] border-b border-gray-100">
+            <nav className="bg-[#fcb609] border-b border-gray-100 no-print">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex justify-between h-16">
                         <div className="flex">
