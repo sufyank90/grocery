@@ -63,6 +63,7 @@ function Edit(props) {
                                 categories: initialCategoryIds, // Initialize with selected categories
                                 shipping_rates: defaultshippingrate ? shippingRateIds : [],
                                 file: initialFiles,
+                                
                                 stock_count: product ? product.stock_count : '',
                                 attribute_id: [],
                                 variation: product ? product.variation : "single",
