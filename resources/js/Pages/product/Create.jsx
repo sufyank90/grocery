@@ -112,21 +112,20 @@ function Create(props) {
                         })}
                         onSubmit={(values, { resetForm }) => {
                              console.log(values)
-                            // let aids = []
-                            // searchedAttributes.forEach(element => {
-                            //     aids.push( parseInt(attribute.find(item => item.name === element).id) )
-                            // })
-                            // values.attributesdata = aids;
-                            // const formData = {
-                            //     ...values,
-                            //     file: [values.thumbnail, ...values.file], // Ensure thumbnail is always the first element
-                            // };
-                            // router.post(route('product.store'), formData, {
-                            //     onSuccess: () => {
-                            //         resetForm();
-                            //         toast.success('Product created successfully');
-                            //     },
-                            // });
+                            let aids = []
+                            searchedAttributes.forEach(element => {
+                                aids.push( parseInt(attribute.find(item => item.name === element).id) )
+                            })
+                            values.attributesdata = aids;
+                            const formData = {
+                                ...values,
+                                file: [values.thumbnail[0], ...values.file], // Ensure thumbnail is always the first element
+                            };
+                            router.post(route('product.store'), formData, {
+                                onSuccess: () => {
+                                    resetForm();
+                                },
+                            });
                         }}className="bg-white  mt-2 mb-2 w-full max-w-lg mx-auto "
                     >
                         {({ values, setFieldValue }) => {
@@ -659,32 +658,34 @@ function Create(props) {
                                     </div>
 
                                       {/* Thumbnail Upload */}
-            <FileUpload
-                label="SVG, PNG, JPG or GIF (MAX. 800x400px)"
-                accept="image/*"
-                setFieldValue={setFieldValue}
-                values={values}
-                fieldName="thumbnail"
-            />
-            <FilePreview
-                files={values.thumbnail}
-                setFieldValue={setFieldValue}
-                fieldName="thumbnail"
-            />
+                                      <label className="block text-sm font-medium text-gray-700 my-2">Thumbnail</label>
+                                    <FileUpload
+                                        label="SVG, PNG, JPG or GIF (MAX. 800x400px)"
+                                        accept="image/*"
+                                        setFieldValue={setFieldValue}
+                                        values={values}
+                                        fieldName="thumbnail"
+                                    />
+                                    <FilePreview
+                                        files={values.thumbnail}
+                                        setFieldValue={setFieldValue}
+                                        fieldName="thumbnail"
+                                    />
 
-            {/* File Upload */}
-            <FileUpload
-                label="Any other file types"
-                accept="*/*" // Change as needed
-                setFieldValue={setFieldValue}
-                values={values}
-                fieldName="file"
-            />
-            <FilePreview
-                files={values.file}
-                setFieldValue={setFieldValue}
-                fieldName="file"
-            />
+                                    {/* File Upload */}
+                                    <label className="block text-sm font-medium text-gray-700 my-2">Pictures</label>
+                                    <FileUpload
+                                        label="SVG, PNG, JPG or GIF (MAX. 800x400px)"
+                                        accept="*/*" // Change as needed
+                                        setFieldValue={setFieldValue}
+                                        values={values}
+                                        fieldName="file"
+                                    />
+                                    <FilePreview
+                                        files={values.file}
+                                        setFieldValue={setFieldValue}
+                                        fieldName="file"
+                                    />
 
                                     {/* Shipping Rates */}
                                     <div className="relative z-0 w-full mb-5 mt-5 group">

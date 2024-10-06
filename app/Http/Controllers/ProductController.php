@@ -460,7 +460,7 @@ public function csvstore(Request $request)
 
         // Attach attributes
         $product->attributes()->attach($request->attributesdata);
-
+     
         // Handle file uploads
         if ($request->hasFile('file')) {
             foreach ($request->file('file') as $file) {
@@ -472,16 +472,16 @@ public function csvstore(Request $request)
         $product->shipping_rates()->attach($request->shipping_rates);
 
         // Flash success message
-        session()->flash('success', 'Product created successfully.');
-
+        session()->flash('message', 'Product created successfully.');
+        return redirect()->route('product.index');
+    
     } catch (Exception $e) {
         // Handle exceptions
         session()->flash('error', 'Failed to create product: ' . $e->getMessage());
        
     }
     
-    // Optionally redirect or return a response
-    return redirect()->back();
+
 }
 
 
@@ -570,6 +570,7 @@ public function csvstore(Request $request)
 
     public function updatewithfile(Request $request, Product $product)
     {
+    
         $this->authorize('update', $product);
         $rules = [
             'name' => 'required|string|max:255',

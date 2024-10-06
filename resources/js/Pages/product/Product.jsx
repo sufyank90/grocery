@@ -250,7 +250,7 @@ export default function Product(props) {
                                                 </td>
 
                                                 <td className="py-4 px-2 border-b text-left">
-                                                    {product.media && product.media.length > 0 && (
+                                                    {product.media && product.media.length > 0 ? (
                                                         <img
                                                             src={product.media[0].original_url}
                                                             height={80}
@@ -258,6 +258,8 @@ export default function Product(props) {
                                                             className='rounded-lg'
                                                             alt="Product Image"
                                                         />
+                                                    ) : (
+                                                        'No Image'
                                                     )}
                                                 </td>
                                                 <td className="py-4 px-2 border-b text-left">{product.stock_count}</td>
