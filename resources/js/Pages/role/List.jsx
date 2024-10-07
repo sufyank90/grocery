@@ -31,105 +31,111 @@ function List(props) {
                 header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Role List</h2>}
             >
                 <Head title="Admin Dashboard" />
-
-                <div className="flex">
-                    <div className="max-w-7xl mx-auto w-full">
-                        <div className="flex justify-between items-center mt-6 mb-4">
+                <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                    <div className="w-full">
+                        <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4 px-4 sm:px-8">
                             <h3 className="text-lg font-bold">Role</h3>
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-2 mt-2 md:mt-0">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     style={{ background: '#fcb609' }}
-                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600"
+                                    className="text-black py-2 px-4 rounded-lg hover:bg-green-600 w-full md:w-auto"
                                 >
                                     Create
                                 </button>
-                               
                             </div>
                         </div>
 
-                        <table className="min-w-full bg-white rounded-lg shadow-lg">
-                            <thead>
-                                <tr>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
-                        
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {roles.data.length === 0 ? (
-
+                        <div className='overflow-x-auto'>
+                            <table className="min-w-full bg-white rounded-lg shadow-lg">
+                                <thead>
                                     <tr>
-                                        <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">No roles found</td>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
+
+                                        <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
                                     </tr>
-                                ) : (
-                                    <>
-                                        {roles.data.map((item, index) => (
-                                            <tr key={item.id} className="hover:bg-gray-100">
-                                                {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(roles.current_page - 1) * roles.per_page + index + 1}</td>
-                                                <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{item.name}</td>
-                                             
-                                                <td className="py-2 px-4 border-b border-gray-200 text-right">
-                                                    <div className="text-right space-x-2">
-                                                        <button
-                                                            onClick={() => openEditModal(item)}
+                                </thead>
+                                <tbody>
+                                    {roles.data.length === 0 ? (
 
-                                                        >
-                                                            <FaEdit
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                setSelectedProduct(item);
-                                                                setIsDeleteModalOpen(true);
-                                                            }}
-                                                        >
-                                                            <MdDelete
+                                        <tr>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">No roles found</td>
+                                        </tr>
+                                    ) : (
+                                        <>
+                                            {roles.data.map((item, index) => (
+                                                <tr key={item.id} className="hover:bg-gray-100">
+                                                    {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(roles.current_page - 1) * roles.per_page + index + 1}</td>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{item.name}</td>
 
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
-                                                        </button>
+                                                    <td className="py-2 px-4 border-b border-gray-200 text-right">
+                                                        <div className="text-right space-x-2">
+                                                            <button
+                                                                onClick={() => openEditModal(item)}
 
-                                                        <button
-                                                           
-                                                        >
-                                                            <Link href={route('role.show', item.id)}>
-                                                            <CiSettings 
-                                                                className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                            >
+                                                                <FaEdit
+                                                                    className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSelectedProduct(item);
+                                                                    setIsDeleteModalOpen(true);
+                                                                }}
+                                                            >
+                                                                <MdDelete
+
+                                                                    className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
+                                                            </button>
+
+                                                            <button
+
+                                                            >
+                                                                <Link href={route('role.show', item.id)}>
+                                                                    <CiSettings
+                                                                        className="w-7 h-7 cursor-pointer" style={{ color: '#fcb609' }} />
                                                                 </Link>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
 
-                                    </>
-                                )
-                                }
-
-
-
-                            </tbody>
-                        </table>
+                                        </>
+                                    )
+                                    }
 
 
+
+                                </tbody>
+                            </table>
+                        </div>
 
                         {/* Pagination */}
-                        <div className="flex justify-end mt-4 space-x-1 mb-8">
-                            {roles.links.map((link, index) => (
-                                <Link
-                                    key={index}
-                                    href={link.url}
-                                    className={`px-3 py-1 border ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                />
-                            ))}
+                        <div className="flex flex-col items-center md:items-end mt-4 mb-4">
+                            <div className="flex justify-center md:justify-end mt-4 space-x-1">
+                                {roles.links.map((link, index) => (
+                                    <Link
+                                        key={index}
+                                        href={link.url}
+                                        className={`px-3 py-1 mt-1 border rounded-md text-sm ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
+                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                    />
+                                ))}
+                            </div>
+                            {/* Show total pages if applicable */}
+                            <div className="text-sm mt-2">
+                                {roles.links.length > 0 && (
+                                    <span>
+                                        Page {roles.current_page} of {roles.last_page}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
                 {/* Create Product Modal */}
                 <Modal
                     show={isModalOpen}
@@ -139,20 +145,20 @@ function List(props) {
                     <Formik
                         initialValues={{
                             name: '',
-                            guard_name : '',
+                            guard_name: '',
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
-                            guard_name : Yup.string().required('Required'),
+                            guard_name: Yup.string().required('Required'),
 
                         })}
                         onSubmit={async (values, { setSubmitting, resetForm, isSubmitting }) => {
 
                             const formData = new FormData();
-                 
+
                             formData.append('name', values.name);
                             formData.append('guard_name', values.guard_name);
-                           
+
                             await router.post(route('role.store'), formData, {
                                 preserveScroll: true,
                                 preserveState: true,
@@ -195,8 +201,8 @@ function List(props) {
                                         <option value="">Select Guard</option>
                                         <option value="web">Web</option>
                                         <option value="api">Api</option>
-                                        </Field>
-                                   
+                                    </Field>
+
                                     <ErrorMessage name="guard_name" component="div" className="text-red-600 text-sm mt-1" />
                                 </div>
 
@@ -231,14 +237,14 @@ function List(props) {
                     <Formik
                         initialValues={{
                             name: selectedProduct ? selectedProduct.name : '',
-                            guard_name : selectedProduct ? selectedProduct.guard_name : '',
-                        
+                            guard_name: selectedProduct ? selectedProduct.guard_name : '',
+
 
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
-                            guard_name : Yup.string().required('Required'),
-                           
+                            guard_name: Yup.string().required('Required'),
+
 
                         })}
                         onSubmit={(values, { resetForm }) => {
@@ -283,13 +289,13 @@ function List(props) {
                                         <option value="">Select Guard</option>
                                         <option value="web">Web</option>
                                         <option value="api">Api</option>
-                                        </Field>
-                                   
+                                    </Field>
+
                                     <ErrorMessage name="guard_name" component="div" className="text-red-600 text-sm mt-1" />
                                 </div>
 
 
-                             
+
 
 
 

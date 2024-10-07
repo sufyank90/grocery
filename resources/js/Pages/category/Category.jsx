@@ -34,13 +34,19 @@ function Category(props) {
             <AuthenticatedLayout
                 auth={props.auth}
                 errors={props.errors}
-                header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Category List</h2>}
+                header={
+                    <>
+                        <div className='flex flex-col px-4'>
+                            <h2 className="font-semibold text-xl text-gray-800 leading-tight">Category List</h2>
+                        </div>
+                    </>
+                }
             >
                 <Head title="Admin Dashboard" />
 
                 <div className="flex flex-col px-4 md:pl-32 md:pr-32">
                     <div className="w-full ">
-                        
+
                         <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                             <h3 className="text-lg font-bold">Categories</h3>
                             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
@@ -112,7 +118,7 @@ function Category(props) {
                                     {categorys.data.length === 0 ? (
 
                                         <tr>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-center text-gray-700"  colSpan="5">No category found</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-center text-gray-700" colSpan="5">No category found</td>
                                         </tr>
                                     ) : (
                                         <>
@@ -186,15 +192,25 @@ function Category(props) {
 
 
                         {/* Pagination */}
-                        <div className="flex justify-end mt-4 space-x-1 mb-8">
-                            {categorys.links.map((link, index) => (
-                                <Link
-                                    key={index}
-                                    href={link.url}
-                                    className={`px-3 py-1 border ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                />
-                            ))}
+                        <div className="flex flex-col items-center md:items-end mt-4 mb-4">
+                            <div className="flex justify-center md:justify-end mt-4 space-x-1 ">
+                                {categorys.links.map((link, index) => (
+                                    <Link
+                                        key={index}
+                                        href={link.url}
+                                        className={`px-3 py-1 mt-1 border rounded-md text-sm ${link.active ? 'bg-yellow-500 text-white' : 'bg-gray-200 hover:bg-yellow-300'}`}
+                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                    />
+                                ))}
+                            </div>
+                            {/* Show total pages if applicable */}
+                            <div className="text-sm mt-2">
+                                {categorys.links.length > 0 && (
+                                    <span>
+                                        Page {categorys.current_page} of {categorys.last_page}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

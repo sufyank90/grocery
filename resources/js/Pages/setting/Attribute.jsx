@@ -48,9 +48,9 @@ export default function Home(props) {
         >
             <Head title="Attribute" />
 
-            <div className="flex">
-                <div className="max-w-7xl mx-auto w-full">
-                    <div className="flex justify-between items-center mt-6 mb-4">
+            <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                <div className="w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                         <h3 className="text-lg font-bold">Attribute</h3>
                         <div className="flex space-x-2">
                             <button
@@ -65,46 +65,47 @@ export default function Home(props) {
                             </button>
                         </div>
                     </div>
-
-                    <table className="min-w-full bg-white rounded-lg shadow">
-                        <thead>
-                            <tr>
-                                <th className="py-2 px-4 border-b text-left">#</th>
-                                <th className="py-2 px-4 border-b text-left">Name</th>
-                                <th className="py-2 px-4 border-b text-left">Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody className='text-center'>
-                            {attributes.map((attribute, index) => (
-                                <tr key={attribute.id}>
-                                    <td className="py-2 px-4 border-b text-left">{index + 1}</td>
-                                    <td className="py-2 px-4 border-b truncate text-left">{attribute.name}</td>
-                                    <td className="py-2 px-4 border-b text-left">
-                                        <div className="flex items-center ">
-                                            <FaEdit
-                                                onClick={() => openEditModal(attribute)}
-                                                className="w-7 h-7 cursor-pointer"
-                                                style={{ color: '#fcb609' }}
-                                            />
-                                            <span className="mx-1"></span>
-                                            <MdDelete
-                                                onClick={() => openDeleteModal(attribute.id)}
-                                                className="w-7 h-7 cursor-pointer"
-                                                style={{ color: '#fcb609' }}
-                                            />
-                                            <AiOutlineAppstoreAdd 
-                                                onClick={() => router.get(route('attributevalue.show', attribute.id))}
-                                                className="w-7 h-7 cursor-pointer"
-                                                style={{ color: '#fcb609' }}
-                                            />
-
-                                        </div>
-                                    </td>
+                    <div className='overflow-x-auto'>
+                        <table className="min-w-full bg-white rounded-lg shadow">
+                            <thead>
+                                <tr>
+                                    <th className="py-2 px-4 border-b text-left">#</th>
+                                    <th className="py-2 px-4 border-b text-left">Name</th>
+                                    <th className="py-2 px-4 border-b text-left">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+
+                            <tbody className='text-center'>
+                                {attributes.map((attribute, index) => (
+                                    <tr key={attribute.id}>
+                                        <td className="py-2 px-4 border-b text-left">{index + 1}</td>
+                                        <td className="py-2 px-4 border-b truncate text-left">{attribute.name}</td>
+                                        <td className="py-2 px-4 border-b text-left">
+                                            <div className="flex items-center ">
+                                                <FaEdit
+                                                    onClick={() => openEditModal(attribute)}
+                                                    className="w-7 h-7 cursor-pointer"
+                                                    style={{ color: '#fcb609' }}
+                                                />
+                                                <span className="mx-1"></span>
+                                                <MdDelete
+                                                    onClick={() => openDeleteModal(attribute.id)}
+                                                    className="w-7 h-7 cursor-pointer"
+                                                    style={{ color: '#fcb609' }}
+                                                />
+                                                <AiOutlineAppstoreAdd
+                                                    onClick={() => router.get(route('attributevalue.show', attribute.id))}
+                                                    className="w-7 h-7 cursor-pointer"
+                                                    style={{ color: '#fcb609' }}
+                                                />
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -119,19 +120,19 @@ export default function Home(props) {
                             name: Yup.string().required('Name is required'),
                         })
                     }
-                    
-                    onSubmit={async(values)  => {
-             
+
+                    onSubmit={async (values) => {
+
                         const action = selectedAttribute
 
-                            ? route('attribute.update', selectedAttribute.id) 
+                            ? route('attribute.update', selectedAttribute.id)
                             : route('attribute.store');
-                        
+
                         const method = selectedAttribute ? 'put' : 'post';
 
-                     await   router[method](action, values, {
+                        await router[method](action, values, {
                             onSuccess: () => {
-                               toast.success("Attribute saved successfully");
+                                toast.success("Attribute saved successfully");
                             },
                             onError: () => {
                                 toast.error("The attribute name has already been taken for this attribute.");
