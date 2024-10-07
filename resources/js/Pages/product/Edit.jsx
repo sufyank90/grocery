@@ -63,7 +63,7 @@ function Edit(props) {
                                 regular_price: product.regular_price ? product.regular_price : '',
                                 sale_price: product.sale_price ? product.sale_price : '0',
                                 tax: product.tax ? product.tax : '',
-                                tax_class: product.tax_class ? product.tax_class : '',
+                                tax_class: product.tax_class ? product.tax_class : 'fixed',
                                 categories: initialCategoryIds, // Initialize with selected categories
                                 shipping_rates: defaultshippingrate ? shippingRateIds : [],
                                 file:  removeThumbnailFromFiles,
@@ -71,7 +71,7 @@ function Edit(props) {
                                 
                                 stock_count: product.stock_count ? product.stock_count : '',
                                 attribute_id: [],
-                                variation: product.variation ? product.variation : "single",
+                                variation: product.variation ? product.variation : 'single',
                                 variations: variations || [],
                                 attributesdata: attributeNames || [],
 
@@ -81,29 +81,48 @@ function Edit(props) {
                                 description: Yup.string().required('Required'),
                                 //price: Yup.number().required('Required').positive(),
                                 // price: Yup.number().required('Required').positive(),
+                                variation : Yup.string().required('Required'),
                                 status: Yup.string().required('Required'),
                                 categories: Yup.array().min(1, 'At least one category is required').required('Required'),
                                 tax_class: Yup.string().required('Required'),
                                 tax: Yup.number().required('Required'),
                                 sku: Yup.string().required('Required'),
                                 stock_count: Yup.number().required('Required').positive(),
-                                file: removeThumbnailFromFiles.length > 0
-                                    ? null : Yup.array()
+                                file: Yup.array()
                                     .min(1, 'At least one image is required')
                                     .test('fileFormat', 'Unsupported file format', (files) => {
                                         if (!files || files.length === 0) return true;
-                                        return files.every(file =>
-                                            ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type)
+                                        return files.every(file =>{
+                                            if (file instanceof File) {
+                                                return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type);
+                                            }
+    
+                                            if (typeof file === 'object' && file !== null && 'url' in file && 'id' in file) {
+                                                return true;
+                                            }
+    
+                                            return false; 
+                                        }
+                                          
                                         );
                                     }),
-                                thumbnail: initialFiles.length > 0 ? null : Yup.mixed().required('File is required')
+                                thumbnail:  Yup.mixed().required('File is required')
                                 .test(
                                     'fileFormat',
                                     'Unsupported file format',
                                     (value) => {
                                         console.log(value)
                                         if (!value) return true; // If no file uploaded, skip validation
-                                        return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
+                                       // Check if it's a file object
+                                        if (value instanceof File) {
+                                            return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
+                                        }
+
+                                        if (typeof value === 'object' && value !== null && 'url' in value && 'id' in value) {
+                                            return true;
+                                        }
+
+                                        return false; 
                                     }
                                 ),
                                 regular_price: Yup.number()
@@ -127,7 +146,7 @@ function Edit(props) {
 
                             })}
                             onSubmit={(values, { resetForm }) => {
-                                console.log(values.attribute_id);
+                         
                                 const formData = new FormData();
                                 formData.append('name', values.name);
                                 formData.append('description', values.description);
@@ -152,6 +171,9 @@ function Edit(props) {
                                 formData.append('categories', values.categories.join(',')); // Join category IDs into a string
                                 if (values.thumbnail instanceof File) {
                                     formData.append('file[]', values.thumbnail);
+                                }
+                                if (values.thumbnail){
+                                    formData.append('ids[]', values.thumbnail.id);
                                 }
                                 if (values.file) {
                                     values.file.forEach((file) => {

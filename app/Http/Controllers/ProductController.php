@@ -570,7 +570,7 @@ public function csvstore(Request $request)
 
     public function updatewithfile(Request $request, Product $product)
     {
-    
+
         $this->authorize('update', $product);
         $rules = [
             'name' => 'required|string|max:255',
@@ -584,7 +584,6 @@ public function csvstore(Request $request)
             'tax' => 'nullable|string|max:255',
             'stock_count' => 'nullable|numeric|min:0',
             'variation' => 'nullable|string|max:255',
-       
         ];
        
         $validator = Validator::make($request->all(), $rules);
@@ -593,18 +592,12 @@ public function csvstore(Request $request)
         }
         $product->update($request->only(['name', 'description', 'price', 'status', 'sku', 'sale_price', 'regular_price', 'tax_class', 'tax', 'stock_count', 'variation']));
         
-
         $categories = explode(',', $request->categories);
         $categories = array_map('intval', $categories);
         $product->categories()->sync($categories);
-
         $attributes = json_decode($request->attributesdata);
-
-
         $product->attributes()->sync($attributes);
 
-        
-        
         if(!empty($request->shipping_rates)){
             $shipping_rates = explode(',', $request->shipping_rates);
             $shipping_rates = array_map('intval', $shipping_rates);
