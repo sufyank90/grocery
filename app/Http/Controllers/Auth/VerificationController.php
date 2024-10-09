@@ -17,7 +17,7 @@ class VerificationController extends Controller
     {
 
         $user = User::findOrFail($id);
- 
+        
         // Verify the hash and if the email matches
         if (!hash_equals($hash, sha1($user->email))) {
             abort(401);

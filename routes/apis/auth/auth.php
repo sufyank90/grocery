@@ -57,20 +57,10 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
         $email = $request->email;
         $password = $request->password;
 
-        $checkuser = Auth::attempt(['email' => $email, 'password' => $password]);
-        if($checkuser){
-            // $userAuth = Auth::user();
-            // // Check if the user's email is verified
-            // if (!$userAuth->hasVerifiedEmail()) {
-            //     Auth::logout(); // Log out the user
-            //     return response()->json([
-            //         'message' => 'Your account is not verified. Please check your email for the verification link.'
-            //     ], 403); // 403 Forbidden
-            // }
-            $user = $request->user();
+        $user = User::where(['email' => $email, 'password' => $password])->first();
+        if($user){
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
-            
             $message = "Login successfully";
              return response()->json([ "message"=>$message,"token"=> $token , "data"=>$user] , 200);
         }else{
@@ -100,8 +90,12 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
          // Send verification email
         $verificationUrl = route('verification.verify-app', ['id' => $user->id, 'hash' => sha1($user->email)]);
-        $user->notify(new VerifyAccount($verificationUrl));
-    
+        try{
+            $user->notify(new VerifyAccount($verificationUrl));
+        }
+        catch(Exception $e){
+            return response()->json(["data"=>$user,"message"=>"Account Created"], 200);
+        }
         return response()->json(["data"=>$user,"message"=>"Account Created"], 200);
 
 
