@@ -39,6 +39,14 @@ Route::middleware('auth:sanctum')->prefix('item')->group(function () {
         }
     
         $validatedData = $validator->validated();
+
+        $user = $request->user();
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Your account is not verified. Please check your email for the verification link.'
+            ], 403); // 403 Forbidden
+        }
     
         // Find the order
         $order = Order::findOrFail($orderId);

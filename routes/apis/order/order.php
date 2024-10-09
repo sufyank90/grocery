@@ -45,10 +45,21 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         }
+
+
+
+
         $validatedData = $validator->validated();
 
         // Get the currently authenticated user
         $user = $request->user();
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Your account is not verified. Please check your email for the verification link.'
+            ], 403); // 403 Forbidden
+        }
+              
 
         // Create a new order with the validated data
         $order = Order::create(array_merge($validatedData, [
