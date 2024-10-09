@@ -61,7 +61,9 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'wallet' => $request->wallet,
         ]);
-    
+
+        $user->markEmailAsVerified();
+        
         // User role assign karein
         $user->assignRole('user');
     
