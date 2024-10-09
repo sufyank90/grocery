@@ -9,8 +9,11 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
+use App\Notifications\VerifyAccount;
 
 Route::middleware(['guest'])->prefix('auth')->group(function () {
+
+    
 
 
 
@@ -56,6 +59,14 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
         $checkuser = Auth::attempt(['email' => $email, 'password' => $password]);
         if($checkuser){
+            $userAuth = Auth::user();
+            // Check if the user's email is verified
+            if (!$userAuth->hasVerifiedEmail()) {
+                Auth::logout(); // Log out the user
+                return response()->json([
+                    'message' => 'Your account is not verified. Please check your email for the verification link.'
+                ], 403); // 403 Forbidden
+            }
             $user = $request->user();
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
@@ -89,6 +100,10 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
         //assign user role
         $user->assignRole('user');
+
+         // Send verification email
+        $verificationUrl = route('verification.verify-app', ['id' => $user->id, 'hash' => sha1($user->email)]);
+        $user->notify(new VerifyAccount($verificationUrl));
     
         return response()->json(["data"=>$user,"message"=>"Account Created"], 200);
 
@@ -96,6 +111,10 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
     });
     
 });
+
+
+
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

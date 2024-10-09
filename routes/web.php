@@ -9,6 +9,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Http\Controllers\Auth\VerificationController;
 
 
 /*
@@ -94,6 +95,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/order', function () {
     return Inertia::render('order/Order');
 })->name('order');
+
+
 
 require __DIR__.'/auth.php';
 require __DIR__.'/dashboard/user.php';
