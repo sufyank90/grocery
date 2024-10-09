@@ -85,6 +85,7 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'string', Rules\Password::defaults()],
         ]);
 
@@ -92,11 +93,7 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
             return response()->json($validator->errors(), 422); // 422 Unprocessable Entity
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->string('password')),
-        ]);
+        $user = User::create($request->all());
 
         //assign user role
         $user->assignRole('user');
