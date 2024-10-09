@@ -35,6 +35,21 @@ class UserController extends Controller
     
         return redirect()->back()->with('success', 'Wallet updated successfully.');
     }
+
+    //verify
+    public function verify($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->hasVerifiedEmail()) {
+            // Unverify
+            $user->markEmailAsUnverified();
+            session()->flash('message', 'Email unverified successfully!');
+        } else {
+            // Verify
+            $user->markEmailAsVerified();
+            session()->flash('message', 'Email verified successfully!');
+        }
+    }
     
 
 

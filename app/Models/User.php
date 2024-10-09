@@ -53,4 +53,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Coupon::class);
     }
+
+    public function markEmailAsUnverified()
+    {
+        $this->email_verified_at = null; // Set the verification timestamp to null
+        $this->save(); // Save the changes to the database
+    }
 }
