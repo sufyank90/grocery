@@ -13,7 +13,6 @@ use App\Notifications\VerifyAccount;
 
 Route::middleware(['guest'])->prefix('auth')->group(function () {
 
-    
 
 
 
@@ -110,8 +109,17 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
 
 
-    
-    
+    Route::post('/verifyaccountemail',function(Request $request){
+        $user = $request->user();
+        $verificationUrl = route('verification.verify-app', ['id' => $user->id, 'hash' => sha1($user->email)]);
+        try{
+            $user->notify(new VerifyAccount($verificationUrl));
+        }
+        catch(Exception $e){
+            return response()->json(["message"=>"Failed to send verification email"]);
+        }
+    });
+
     
     Route::delete('/deleteaccount', function(Request $request) {
         $user = $request->user();

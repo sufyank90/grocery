@@ -20,7 +20,10 @@ Route::middleware('auth:sanctum')->prefix('banner')->group(function () {
                     ->with(['media', 'category']) // Load the category with the banner
                     ->get();
         
-        return response()->json(["data" => $data, "message" => "success"], 200);
+        $user = $request->user();
+        $checkemailverified = $user->hasVerifiedEmail();
+        
+        return response()->json(["data" => $data, "message" => "success",'verified'=>$checkemailverified], 200);
     });
     
 
