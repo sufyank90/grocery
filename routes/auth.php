@@ -37,6 +37,8 @@ Route::middleware('guest')->group(function () {
                 ->name('password.store');
 });
 
+Route::get('/verify-email-app/{id}/{hash}',[VerificationController::class,'verify'])->name('verification.verify-app');
+
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
                 ->name('verification.notice');
@@ -45,7 +47,7 @@ Route::middleware('auth')->group(function () {
                 ->middleware(['signed', 'throttle:6,1'])
                 ->name('verification.verify');
     
-    Route::get('/verify-email-app/{id}/{hash}',[VerificationController::class,'verify'])->name('verification.verify-app');
+
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
                 ->middleware('throttle:6,1')
