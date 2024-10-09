@@ -59,14 +59,14 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
         $checkuser = Auth::attempt(['email' => $email, 'password' => $password]);
         if($checkuser){
-            $userAuth = Auth::user();
-            // Check if the user's email is verified
-            if (!$userAuth->hasVerifiedEmail()) {
-                Auth::logout(); // Log out the user
-                return response()->json([
-                    'message' => 'Your account is not verified. Please check your email for the verification link.'
-                ], 403); // 403 Forbidden
-            }
+            // $userAuth = Auth::user();
+            // // Check if the user's email is verified
+            // if (!$userAuth->hasVerifiedEmail()) {
+            //     Auth::logout(); // Log out the user
+            //     return response()->json([
+            //         'message' => 'Your account is not verified. Please check your email for the verification link.'
+            //     ], 403); // 403 Forbidden
+            // }
             $user = $request->user();
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
