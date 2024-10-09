@@ -10,6 +10,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\VerifyAccount;
+//Order
+use App\Models\Order;
 
 Route::middleware(['guest'])->prefix('auth')->group(function () {
 
@@ -61,7 +63,24 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
             $message = "Login successfully";
-             return response()->json([ "message"=>$message,"token"=> $token , "data"=>$user] , 200);
+           
+            $order = Order::where('user_id', $user->id)->orderBy('id', 'desc')->first();
+            $addressData = [];
+            
+            if ($order) {
+                $addressData = [
+                    'name' => $order->name,
+                    'email' => $order->email,
+                    'phone' => $order->phone,
+                    'address' => $order->address,
+                    'zipcode' => $order->zipcode,
+                    'city' => $order->city,
+                    'country' => $order->country,
+                ];
+            }
+          
+
+             return response()->json([ "message"=>$message,"token"=> $token , "data"=>$user,'address'=>$addressData] , 200);
         }else{
             $message = "Invalid credentials";
             return response()->json([ "message"=>$message], 401);
@@ -133,8 +152,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'newpassword' => ['required', 'string', 'min:8'],
         ]);
 
-
-        
     
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -151,11 +168,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
         return response()->json(['message' => 'Password changed successfully'], 200); 
     });
-
-    //soft delete api 
-
-   
-
 
     Route::put('/profile', function(Request $request) {
         $user = $request->user();
