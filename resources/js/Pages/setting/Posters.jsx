@@ -69,8 +69,8 @@ export default function Posters(props) {
                                             setSubmitting(true);
                                             const formData = new FormData();
                                             formData.append('file', values.file);
-                                            formData.append('product', values.product);
-                                            formData.append('category', values.category);
+                                            values.type == 'product' ? formData.append('product', values.product) : formData.append('product', null);
+                                            values.type == 'category' ? formData.append('category', values.category) : formData.append('category', null);
                                             formData.append('type', values.type);
 
                                             await router.post(route('banner.store'), formData, {
@@ -185,21 +185,22 @@ export default function Posters(props) {
                                         <div key={media.id} className="mt-2 flex items-center justify-between mb-2 bg-[#f3d08140] px-2 py-2 rounded-lg">
                                             <div className="flex items-center gap-3">
                                                 <img src={media.media[0].original_url} height={100} width={100} className="rounded-lg" />
-                                                <p>
-                                                    {media.category?.name ? (
-                                                        <span className="ml-2 text-lg text-gray-500">{media.category.name}</span>
+
+                                                {!media.category_id && !media.product_id  && (
+                                                <p> Only Banner</p>
+                                                    ) }
+                                                
+                                                    {media.category?.name && (
+                                                <p>Category :<span className="ml-2 text-lg text-gray-500">{media.category.name}</span> </p>
+                                                    ) }
+
+
+                                            {media.category?.name ? (
+                                                <p>Product :<span className="ml-2 text-lg text-gray-500">{media.product.name}</span> </p>
                                                     ) : null}
-                                                </p>
-                                                {/* <p>
-                                                   {media.product?.name ? (
-                                                        <span className="ml-2 text-lg text-gray-500">{media.product.name}</span>
-                                                    ) : null}
-                                                </p> */}
-                                                {!media.category?.name && !media.product?.name && (
-                                                    <p>
-                                                        <span className="ml-2 text-lg text-gray-500">Only Banner</span>
-                                                    </p>
-                                                )}
+                                                
+                                              
+                                              
 
 
                                             </div>
