@@ -131,8 +131,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
             $user->notify(new VerifyAccount($verificationUrl));
         }
         catch(Exception $e){
-            return response()->json(["message"=>"Failed to send verification email"]);
+            return response()->json(["message"=>"Failed to send verification email"], 500);
         }
+        return response()->json(["message"=>"Verification email sent successfully"], 200);
     });
 
     

@@ -18,7 +18,7 @@ class BannerController extends Controller
      */
     public function index()
     {
-        $poster = Banner::with('media')->get();
+        $poster = Banner::with('media','category','product')->get();
         $products = Product::all();
         $categories = Category::all();
         return Inertia::render('setting/Posters',compact(['poster','products','categories']));

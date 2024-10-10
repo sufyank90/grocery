@@ -11,12 +11,12 @@ import { useState } from 'react';
 export default function Posters(props) {
 
     const { poster, products, categories } = props;
-console.log(poster)
+    console.log(poster);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     return (
-        
+
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
@@ -55,13 +55,13 @@ console.log(poster)
                                                 is: 'product',
                                                 then: schema => schema.required(),
                                                 otherwise: schema => schema.optional(),
-                                              }),
+                                            }),
                                             category: Yup.string().when("type", {
                                                 is: 'category',
                                                 then: schema => schema.required(),
                                                 otherwise: schema => schema.optional(),
-                                              }),
-                                           
+                                            }),
+
                                         })
                                     }
                                     onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -72,7 +72,7 @@ console.log(poster)
                                             formData.append('product', values.product);
                                             formData.append('category', values.category);
                                             formData.append('type', values.type);
-                                           
+
                                             await router.post(route('banner.store'), formData, {
                                                 preserveScroll: true,
                                                 preserveState: true,
@@ -97,15 +97,15 @@ console.log(poster)
                                             </div>
 
                                             <div className="mb-4 mt-5">
-                                      
+
                                                 <label>
-                                                <Field type="radio" name="type" value='' /> &nbsp; Only Banner &nbsp;
+                                                    <Field type="radio" name="type" value='' /> &nbsp; Only Banner &nbsp;
                                                 </label>
                                                 <label>
-                                                <Field type="radio" name="type" value='category' /> &nbsp; For Category &nbsp;
+                                                    <Field type="radio" name="type" value='category' /> &nbsp; For Category &nbsp;
                                                 </label>
                                                 <label>
-                                                <Field type="radio" name="type" value='product' /> &nbsp; For Product &nbsp;
+                                                    <Field type="radio" name="type" value='product' /> &nbsp; For Product &nbsp;
                                                 </label>
 
                                                 <ErrorMessage name="file" component="div" className="text-red-500 text-sm" />
@@ -113,37 +113,37 @@ console.log(poster)
 
                                             {/* Product Dropdown */}
                                             {values.type === 'product' && (
-                                                  <div className="mb-4">
-                                                  <label htmlFor="product" className="block mb-2 text-sm font-medium text-gray-700">Select Product</label>
-                                                  <Field as="select" name="product" id="product" className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg">
-                                                      <option value="" label="Select product" />
-                                                      {products.map((product , index) => (
-                                                          <option key={product.id} value={product.id}>
-                                                              {product.name}
-                                                          </option>
-                                                      ))}
-                                                  </Field>
-                                                  <ErrorMessage name="product" component="div" className="text-red-500 text-sm" />
-                                              </div>
-  
+                                                <div className="mb-4">
+                                                    <label htmlFor="product" className="block mb-2 text-sm font-medium text-gray-700">Select Product</label>
+                                                    <Field as="select" name="product" id="product" className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg">
+                                                        <option value="" label="Select product" />
+                                                        {products.map((product, index) => (
+                                                            <option key={product.id} value={product.id}>
+                                                                {product.name}
+                                                            </option>
+                                                        ))}
+                                                    </Field>
+                                                    <ErrorMessage name="product" component="div" className="text-red-500 text-sm" />
+                                                </div>
+
                                             )}
-                                          
+
                                             {/* Category Dropdown */}
                                             {values.type === 'category' && (
-                                                  <div className="mb-4">
-                                                  <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-700">Select Category</label>
-                                                  <Field as="select" name="category" id="category" className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg">
-                                                      <option value="" label="Select category" />
-                                                      {categories.map((category) => (
-                                                          <option key={category.id} value={category.id}>
-                                                              {category.name}
-                                                          </option>
-                                                      ))}
-                                                  </Field>
-                                                  <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
-                                              </div>
+                                                <div className="mb-4">
+                                                    <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-700">Select Category</label>
+                                                    <Field as="select" name="category" id="category" className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg">
+                                                        <option value="" label="Select category" />
+                                                        {categories.map((category) => (
+                                                            <option key={category.id} value={category.id}>
+                                                                {category.name}
+                                                            </option>
+                                                        ))}
+                                                    </Field>
+                                                    <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
+                                                </div>
                                             )}
-                                          
+
 
                                             <div className="flex items-center justify-center w-full mb-4">
                                                 <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
@@ -183,7 +183,26 @@ console.log(poster)
                                 {poster && poster.length > 0 && (
                                     poster.map((media) => (
                                         <div key={media.id} className="mt-2 flex items-center justify-between mb-2 bg-[#f3d08140] px-2 py-2 rounded-lg">
-                                            <img src={media.media[0].original_url} height={100} width={100} className="rounded-lg" />
+                                            <div className="flex items-center gap-3">
+                                                <img src={media.media[0].original_url} height={100} width={100} className="rounded-lg" />
+                                                <p>
+                                                    {media.category?.name ? (
+                                                        <span className="ml-2 text-lg text-gray-500">{media.category.name}</span>
+                                                    ) : null}
+                                                </p>
+                                                {/* <p>
+                                                   {media.product?.name ? (
+                                                        <span className="ml-2 text-lg text-gray-500">{media.product.name}</span>
+                                                    ) : null}
+                                                </p> */}
+                                                {!media.category?.name && !media.product?.name && (
+                                                    <p>
+                                                        <span className="ml-2 text-lg text-gray-500">Only Banner</span>
+                                                    </p>
+                                                )}
+
+
+                                            </div>
                                             <div className="flex gap-3">
                                                 <a href={media.media[0].original_url} download className="bg-[#e5e5e5e5] text-gray-500 px-2 py-2 rounded-lg text-bold mt-4">
                                                     <FaDownload size={20} />
@@ -200,6 +219,8 @@ console.log(poster)
                                         </div>
                                     ))
                                 )}
+
+
                             </div>
                         </div>
                     </div>
