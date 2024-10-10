@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('zipcode',10)->nullable();
             $table->string('city');
             $table->string('country');
-            $table->enum('920209',['cash','card'])->default('cash');
+            $table->enum('method',['cash','card'])->default('cash');
             $table->decimal('total', 10, 2);
             $table->string('couponcode',50)->nullable();
             $table->enum('coupontype',['fixed','percent'])->nullable();
