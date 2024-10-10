@@ -102,10 +102,6 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
     
 });
 
-
-
-
-
 Route::middleware(['auth:sanctum'])->group(function () {
 
 

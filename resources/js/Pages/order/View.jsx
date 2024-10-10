@@ -7,7 +7,7 @@ const View = (props) => {
     const { order, attribute } = props;
 
 
-    return ( 
+    return (
         <Authenticated auth={props.auth} errors={props.errors}
             header={<h2 className=" font-semibold text-xl text-gray-800 leading-tight no-print">View Order # {order.id}</h2>}>
             <Head title="View Order" />
@@ -33,123 +33,136 @@ const View = (props) => {
                     >
                         Print
                     </button>
- 
+
                 </div>
 
-                {/* Order Information Box */}
-                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Order Information</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="text-lg"><strong>Order ID:</strong> {order.id}</div>
-                        <div className="text-lg"><strong>Order Date:</strong> {order.created_at_formatted}</div>
-                        <div className="text-lg"><strong>Status:</strong> {order.status}</div>
-                        <div className="text-lg"><strong>Payment Method:</strong> {order.method}</div>
-                        <div className="text-lg"><strong>Total:</strong> Rs. {order.total}</div>
-                    </div>
-                </div>
-
-                {/* Customer Details Box */}
-                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Customer Details</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="text-lg"><strong>Name:</strong> {order.name}</div>
-                        <div className="text-lg"><strong>Email:</strong> {order.email}</div>
-                        <div className="text-lg"><strong>Phone:</strong> {order.phone}</div>
-                        <div className="text-lg"><strong>Address:</strong> {order.address}</div>
-                        <div className="text-lg"><strong>City:</strong> {order.city}</div>
-                        <div className="text-lg"><strong>Country:</strong> {order.country}</div>
-                        <div className="text-lg"><strong>Zipcode:</strong> {order.zipcode}</div>
-                    </div>
-                </div>
-
-                {/* Order Items Box */}
-                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200 print-gap">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Order Items</h2>
-                    <div className="relative overflow-x-auto">
-                        <table className="w-full text-sm text-gray-600 order-table">
-                            <thead className="bg-gray-100">
-                                <tr>
-                                    <th className="px-4 py-3 border-b">Product Name</th>
-                                    <th className="px-4 py-3 border-b">Variation_id</th>
-                                    <th className="px-4 py-3 border-b">Attribute</th>
-                                    <th className="px-4 py-3 border-b">Category</th>
-                                    <th className="px-4 py-3 border-b">Price</th>
-                                    <th className="px-4 py-3 border-b">Qty</th>
-                                    <th className="px-4 py-3 border-b">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {order.items.map((item, index) => (
-                                    console.log(item),
-                                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="px-4 py-4">{item.name}</td>
-                                        <td className="px-4 py-4">{item.variation ? item.variation.id : "N/A"}</td>
-                                        <td className="py-1 px-2">
-                                        {item.variation ?
-                                                                        <ul className='list-disc list-inside'>
-                                                                            { JSON.parse(item.variation.attributes).map((id, index) => (
-                                                                                console.log(attribute),
-                                                                                <li key={index}>
-                                                                                    <span className='font-bold'> {attribute
-                                                                                        .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
-                                                                                        ?.name} :
-                                                                                    </span>
-                                                                                    {attribute
-                                                                                        .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
-                                                                                        ?.attribute_values.find(value => value.id === parseInt(id))
-                                                                                        ?.value}
-                                                                                </li>
-                                                                            ))}
-                                                                        </ul>
-                                                                        : "N/A"}
-                                                                    </td>
-                                        <td className="px-4 py-4">{item.category}</td>
-                                        <td className="px-4 py-4">Rs. {item.price}</td>
-                                        <td className="px-4 py-4">{item.qty}</td>
-                                        <td className="px-4 py-4">Rs. {(item.price * item.qty).toFixed(2)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* Order Summary Box */}
-                <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Summary</h2>
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="text-lg"><strong>Subtotal:</strong> Rs. {order.total}</div>
-                        {order.couponcode && (
-                            <>
-                                <div className="text-lg"><strong>Coupon:</strong> {order.couponcode}</div>
-                                <div className="text-lg"><strong>Discount:</strong> -Rs. {order.discount}</div>
-                            </>
-                        )}
-                        <div className="text-lg"><strong>Total Payable:</strong> Rs. {order.payable}</div>
-                    </div>
-                </div>
-
-                {/* Feedback Box */}
-                <div className='no-print'>
-
-                
-                {order.feedbacks.length > 0 && (
-                    <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
-                        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Customer Feedback</h2>
-                        <div className="space-y-4">
-                            {order.feedbacks.map((feedback, index) => (
-                                <div key={index} className="border border-gray-300 p-4 rounded-lg">
-                                    {/* <div className="text-lg"><strong>User ID:</strong> {feedback.user_id}</div> */}
-                                    <div className="text-lg"><strong>Rating:</strong> {feedback.rating ? feedback.rating : 'No Rating Provided.'}</div>
-
-                                    <div className="text-lg"><strong>Comment:</strong>
-                                        {feedback.comment ? ' ' + feedback.comment : ' No comment provided.'}
-                                    </div>
-                                </div>
-                            ))}
+                <div className="max-w-6xl mx-auto p-6 bg-white rounded shadow-sm my-6" id="invoice">
+                    <div className="grid grid-cols-2 items-center">
+                        <div>
+                            {/* Company logo */}
+                            <img src="/image/logotrans.png" alt="company-logo" height="100" width="100" />
+                        </div>
+                        <div className="text-right">
+                            <p>Air Express Mart</p>
+                            <p className="text-gray-500 text-sm">sales@airexpressmart.com</p>
+                            <p className="text-gray-500 text-sm mt-1">+92-000000000</p>
+                            {/* <p className="text-gray-500 text-sm mt-1">VAT: 8657671212</p> */}
                         </div>
                     </div>
-                )}
+
+                    {/* Client info */}
+                    <div className="grid grid-cols-2 items-center mt-8">
+                        <div>
+                            {/* <p className="font-bold text-gray-800">Bill to:</p> */}
+                            <p>Bill to: <span className='text-gray-500'>{order.name}</span>
+                                {/* <br />
+            {order.address}, {order.city}, {order.country} */}
+                            </p>
+                            <p>Address: <span className="text-gray-500" >{order.address}, {order.city}, {order.country}</span></p>
+                            <p>Email: <span className="text-gray-500">{order.email}</span></p>
+                            <p>payment method: <span className="text-gray-500">{order.method}</span></p>
+                            <p>Status: <span className="text-gray-500" >{order.status}</span></p>
+                        </div>
+                        <div className="text-right">
+                            <p>
+                                Invoice number: <span className="text-gray-500">INV-{order.id}</span>
+                            </p>
+                            <p>
+                                Invoice date: <span className="text-gray-500">{order.created_at_formatted}</span>
+
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Invoice Items */}
+                    <div className="-mx-4 mt-8 flow-root sm:mx-0">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full">
+                                <colgroup>
+                                    <col className="w-full sm:w-1/4" />
+                                    <col className="w-full sm:w-1/6" />
+                                    <col className="w-full sm:w-1/6" />
+                                    <col className="w-full sm:w-1/6" />
+                                    <col className="sm:w-1/6" />
+                                    <col className="sm:w-1/6" />
+                                    <col className="sm:w-1/6" />
+                                </colgroup>
+                                <thead className="border-b border-gray-300 text-gray-900">
+                                    <tr>
+                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Product Name</th>
+                                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Variation ID</th>
+                                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Attribute</th>
+                                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Category</th>
+                                        <th scope="col" className="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Price</th>
+                                        <th scope="col" className="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Quantity</th>
+                                        <th scope="col" className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {order.items.map((item, index) => (
+                                        <tr key={index} className="border-b border-gray-200">
+                                            <td className="max-w-0 py-5 pl-4 pr-3 text-sm sm:pl-0">
+                                                <div className="font-medium text-gray-900">{item.name}</div>
+                                                {/* <div className="mt-1 truncate text-gray-500">{item.description}</div> */}
+                                            </td>
+                                            <td className="hidden px-3 py-5 text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}</td>
+                                            <td className="hidden px-3 py-5 text-left text-sm text-gray-500 sm:table-cell">{item.variation ?
+                                                <ul className='list-disc list-inside'>
+                                                    {JSON.parse(item.variation.attributes).map((id, index) => (
+                                                        console.log(attribute),
+                                                        <li key={index}>
+                                                            <span className='font-bold'> {attribute
+                                                                .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
+                                                                ?.name} :
+                                                            </span>
+                                                            {attribute
+                                                                .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
+                                                                ?.attribute_values.find(value => value.id === parseInt(id))
+                                                                ?.value}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                : "N/A"}</td>
+                                            <td className="hidden px-3 py-5 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
+                                            <td className="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
+                                            <td className="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
+                                            <td className="py-5 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
+                                                Rs. {(item.price * item.qty)?.toFixed(2) || "NA"}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                
+                            </table>
+ 
+                            <tfoot className="justify-content-right">
+                                    <tr>
+                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal</th>
+                                        <th scope="row" className="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
+                                        <td className="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.total}</td>
+                                    </tr>
+                                    {order.couponcode && (
+                                        <tr>
+                                            <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount</th>
+                                            <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Discount</th>
+                                            <td className="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.discount}</td>
+                                        </tr>
+                                    )}
+                                    <tr>
+                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
+                                        <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
+                                        <td className="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Rs. {order.payable}</td>
+                                    </tr>
+                                </tfoot>
+                        </div>
+
+                    </div>
+
+
+                    {/* Footer */}
+                    <div className="border-t-2 pt-4 text-xs text-gray-500 text-center mt-16">
+                        Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.
+                    </div>
                 </div>
             </div>
         </Authenticated>
