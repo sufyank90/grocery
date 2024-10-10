@@ -195,7 +195,7 @@ export default function Posters(props) {
                                                     ) }
 
 
-                                            {media.category?.name ? (
+                                            {media.product?.name ? (
                                                 <p>Product :<span className="ml-2 text-lg text-gray-500">{media.product.name}</span> </p>
                                                     ) : null}
                                                 

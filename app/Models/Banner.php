@@ -22,7 +22,7 @@ class Banner extends Model implements HasMedia
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'category_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
 }

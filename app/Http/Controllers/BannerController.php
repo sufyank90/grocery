@@ -21,6 +21,7 @@ class BannerController extends Controller
         $poster = Banner::with('media','category','product')->get();
         $products = Product::all();
         $categories = Category::all();
+      
         return Inertia::render('setting/Posters',compact(['poster','products','categories']));
     }
 
@@ -42,7 +43,7 @@ class BannerController extends Controller
      */
     public function store(StoreBannerRequest $request)
     {
-
+       
         $banner = Banner::create();
         if($request->file){
             $banner->addMedia($request->file)->toMediaCollection();
