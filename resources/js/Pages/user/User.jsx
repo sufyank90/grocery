@@ -56,6 +56,21 @@ function User(props) {
     });
   };
 
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+    };
+    return new Date(dateString).toLocaleString(undefined, options);
+};
+
+
   return (
     <>
       <AuthenticatedLayout
@@ -124,7 +139,10 @@ function User(props) {
                     <th className="py-2 px-4 border-b text-left">#</th>
                     <th className="py-2 px-4 border-b text-left">Name</th>
                     <th className="py-2 px-4 border-b text-left">Email</th>
+                    <th className="py-2 px-4 border-b text-left">Phone</th>
                     <th className="py-2 px-4 border-b text-left">Wallet</th>
+                    <th className="py-2 px-4 border-b text-left">Verified At</th>
+                    <th className="py-2 px-4 border-b text-left">Verify Email</th>
                     <th className="py-2 px-4 border-b text-left">Actions</th>
                   </tr>
                 </thead>
@@ -141,9 +159,17 @@ function User(props) {
                       <td className="py-2 px-4 border-b text-left">{index + 1}</td>
                       <td className="py-2 px-4 border-b truncate text-left">{user.name}</td>
                       <td className="py-2 px-4 border-b text-left">{user.email}</td>
+                      <td className="py-2 px-4 border-b text-left">{user.phone || 'N/A'}</td>
                       <td className="py-2 px-4 border-b text-left">
                         {user.wallet.toString()} <GiTwoCoins className="inline-flex ml-3" color="#fcb609" />
                       </td>
+                      <td className="py-2 px-4 border-b text-left">  {formatDateTime(user.email_verified_at) || 'N/A'}</td>
+                      <td className="py-2 px-4 border-b text-left">
+                        <button className={`text-white py-2 px-4 rounded-lg ${user.email_verified_at ? 'bg-green-500' : 'bg-red-500'} hover:bg-blue-600}`} onClick={() => router.put(route('customer.verify', user.id))}>
+                          {user.email_verified_at ? 'Verified' : 'Verify'}
+                        </button>
+                      </td>
+
                       <td className="py-2 px-4 border-b text-left">
                         <div className="flex items-center justify-center space-x-2">
                           <FaEdit
