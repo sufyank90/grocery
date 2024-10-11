@@ -42,11 +42,11 @@ Route::middleware('auth:sanctum')->prefix('item')->group(function () {
 
         $user = $request->user();
 
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Your account is not verified. Please check your email for the verification link.'
-            ], 403); // 403 Forbidden
-        }
+        // if (!$user->hasVerifiedEmail()) {
+        //     return response()->json([
+        //         'message' => 'Your account is not verified. Please check your email for the verification link.'
+        //     ], 403); // 403 Forbidden
+        // }
     
         // Find the order
         $order = Order::findOrFail($orderId);
