@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->prefix('banner')->group(function () {
     // });
     Route::get('', function(Request $request) {
         $data = Banner::orderBy('id', 'desc')
-                    ->with(['media', 'category', 'product']) // Load the category with the banner
+                    ->with(['media', 'category', 'product','product.media','product.categories']) // Load the category with the banner
                     ->get();
         
         $user = $request->user();
