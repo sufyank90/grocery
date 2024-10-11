@@ -33,7 +33,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
                 'zipcode' => 'nullable|string|max:10',
                 'city' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-                'method' => 'required|in:cash,card,wallet',
+                'method' => 'required|in:cash,card,wallet,bank-transfer',
                 'total' => 'required|numeric',
                 'couponcode' => 'nullable|string|max:50',
                 'coupontype' => 'nullable|in:fixed,percent',
