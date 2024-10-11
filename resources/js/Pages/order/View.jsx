@@ -45,7 +45,7 @@ const View = (props) => {
                         <div className="text-right">
                             <p>Air Express Mart</p>
                             <p className="text-gray-500 text-sm">sales@airexpressmart.com</p>
-                            <p className="text-gray-500 text-sm mt-1">+92-000000000</p>
+                            <p className="text-gray-500 text-sm mt-1">+92-3331325935</p>
                             {/* <p className="text-gray-500 text-sm mt-1">VAT: 8657671212</p> */}
                         </div>
                     </div>
