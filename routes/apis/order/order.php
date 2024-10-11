@@ -54,11 +54,11 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         // Get the currently authenticated user
         $user = $request->user();
 
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Your account is not verified. Please check your email for the verification link.'
-            ], 403); // 403 Forbidden
-        }
+        // if (!$user->hasVerifiedEmail()) {
+        //     return response()->json([
+        //         'message' => 'Your account is not verified. Please check your email for the verification link.'
+        //     ], 403); // 403 Forbidden
+        // }
               
 
         // Create a new order with the validated data
