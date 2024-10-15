@@ -102,26 +102,27 @@ const View = (props) => {
                                     {order.items.map((item, index) => (
                                         <tr key={index} className="border-b border-gray-200">
                                             <td className="max-w-0  pl-4 pr-3 text-sm sm:pl-0">
-                                                <div className="font-medium text-gray-900">{item.name}</div>
+                                            <div className="font-medium text-gray-900 text-sm leading-tight break-words max-w-full">{item.name}</div>
+
                                                 {/* <div className="mt-1 truncate text-gray-500">{item.description}</div> */}
                                             </td>
                                             <td className="hidden px-3  text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}</td>
                                             <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">
-    {item.variation ? (
-        <ul className='list-disc list-inside'>
-            {JSON.parse(item.variation.attributes).map((id, index) => (
-                <li key={index} className="flex items-center">
-                    <span className='font-bold'>
-                        {attribute.find(att => att.attribute_values.some(value => value.id === parseInt(id)))?.name}:
-                    </span>
-                    <span className="ml-1">
-                        {attribute.find(att => att.attribute_values.some(value => value.id === parseInt(id)))?.attribute_values.find(value => value.id === parseInt(id))?.value}
-                    </span>
-                </li>
-            ))}
-        </ul>
-    ) : "N/A"}
-</td>
+                                                {item.variation ? (
+                                                    <ul className='list-disc list-inside'>
+                                                        {JSON.parse(item.variation.attributes).map((id, index) => (
+                                                            <li key={index} className="flex items-center">
+                                                                <span className='font-bold'>
+                                                                    {attribute.find(att => att.attribute_values.some(value => value.id === parseInt(id)))?.name}:
+                                                                </span>
+                                                                <span className="ml-1">
+                                                                    {attribute.find(att => att.attribute_values.some(value => value.id === parseInt(id)))?.attribute_values.find(value => value.id === parseInt(id))?.value}
+                                                                </span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : "N/A"}
+                                            </td>
 
                                             <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
                                             <td className="hidden px-3 text-center text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
@@ -132,28 +133,28 @@ const View = (props) => {
                                         </tr>
                                     ))}
                                 </tbody>
-                                
+
                             </table>
- 
+
                             <tfoot className="justify-content-right">
+                                <tr>
+                                    <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal</th>
+                                    <th scope="row" className="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
+                                    <td className="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.total}</td>
+                                </tr>
+                                {order.couponcode && (
                                     <tr>
-                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal</th>
-                                        <th scope="row" className="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
-                                        <td className="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.total}</td>
+                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount</th>
+                                        <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Discount</th>
+                                        <td className="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.discount}</td>
                                     </tr>
-                                    {order.couponcode && (
-                                        <tr>
-                                            <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount</th>
-                                            <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Discount</th>
-                                            <td className="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.discount}</td>
-                                        </tr>
-                                    )}
-                                    <tr>
-                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
-                                        <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
-                                        <td className="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Rs. {order.payable}</td>
-                                    </tr>
-                                </tfoot>
+                                )}
+                                <tr>
+                                    <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
+                                    <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
+                                    <td className="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Rs. {order.payable}</td>
+                                </tr>
+                            </tfoot>
                         </div>
 
                     </div>
