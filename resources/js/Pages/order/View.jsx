@@ -93,7 +93,7 @@ const View = (props) => {
                                         <th scope="col" className="hidden px-3  text-left text-sm font-semibold text-gray-900 sm:table-cell">Variation ID</th>
                                         <th scope="col" className="hidden px-3  text-left text-sm font-semibold text-gray-900 sm:table-cell">Attribute</th>
                                         <th scope="col" className="hidden px-3  text-left text-sm font-semibold text-gray-900 sm:table-cell">Category</th>
-                                        <th scope="col" className="hidden px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell">Price</th>
+                                        <th scope="col" className="hidden px-3 text-center text-sm font-semibold text-gray-900 sm:table-cell">Price</th>
                                         <th scope="col" className="hidden px-3  text-right text-sm font-semibold text-gray-900 sm:table-cell">Quantity</th>
                                         <th scope="col" className=" pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Total</th>
                                     </tr>
@@ -124,7 +124,7 @@ const View = (props) => {
                                                 </ul>
                                                 : "N/A"}</td>
                                             <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
-                                            <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
+                                            <td className="hidden px-3 text-center text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
                                             <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
                                             <td className=" pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
                                                 Rs. {(item.price * item.qty)?.toFixed(2) || "NA"}
