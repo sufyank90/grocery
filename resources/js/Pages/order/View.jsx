@@ -106,23 +106,23 @@ const View = (props) => {
                                                 {/* <div className="mt-1 truncate text-gray-500">{item.description}</div> */}
                                             </td>
                                             <td className="hidden px-3  text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}</td>
-                                            <td className="hidden px-3  text-left text-sm text-gray-500 sm:table-cell">{item.variation ?
-                                                <ul className='list-disc list-inside'>
-                                                    {JSON.parse(item.variation.attributes).map((id, index) => (
-                                                        console.log(attribute),
-                                                        <li key={index}>
-                                                            <span className='font-bold'> {attribute
-                                                                .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
-                                                                ?.name} :
-                                                            </span>
-                                                            {attribute
-                                                                .find(att => att.attribute_values.some(value => value.id === parseInt(id)))
-                                                                ?.attribute_values.find(value => value.id === parseInt(id))
-                                                                ?.value}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                                : "N/A"}</td>
+                                            <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">
+    {item.variation ? (
+        <ul className='list-disc list-inside'>
+            {JSON.parse(item.variation.attributes).map((id, index) => (
+                <li key={index} className="flex items-center">
+                    <span className='font-bold'>
+                        {attribute.find(att => att.attribute_values.some(value => value.id === parseInt(id)))?.name}:
+                    </span>
+                    <span className="ml-1">
+                        {attribute.find(att => att.attribute_values.some(value => value.id === parseInt(id)))?.attribute_values.find(value => value.id === parseInt(id))?.value}
+                    </span>
+                </li>
+            ))}
+        </ul>
+    ) : "N/A"}
+</td>
+
                                             <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
                                             <td className="hidden px-3 text-center text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
                                             <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
