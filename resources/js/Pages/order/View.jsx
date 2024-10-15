@@ -36,7 +36,7 @@ const View = (props) => {
 
                 </div>
 
-                <div className="max-w-6xl mx-auto p-6 bg-white rounded shadow-sm my-6" id="invoice">
+                <div className="max-w-10xl mx-auto p-6 bg-white rounded shadow-sm my-6" id="invoice">
                     <div className="grid grid-cols-2 items-center">
                         <div>
                             {/* Company logo */}
@@ -79,7 +79,7 @@ const View = (props) => {
                         <div className="overflow-x-auto">
                             <table className="min-w-full">
                                 <colgroup>
-                                    <col className="w-full sm:w-1/4" />
+                                    <col className="w-full sm:w-1/2" />
                                     <col className="w-full sm:w-1/6" />
                                     <col className="w-full sm:w-1/6" />
                                     <col className="w-full sm:w-1/6" />
@@ -93,8 +93,8 @@ const View = (props) => {
                                         <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Variation ID</th>
                                         <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Attribute</th>
                                         <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Category</th>
-                                        <th scope="col" className="hidden px-3 text-center text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Price</th>
-                                        <th scope="col" className="hidden px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Quantity</th>
+                                        <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Price</th>
+                                        <th scope="col" className="hidden px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">QTY</th>
                                         <th scope="col" className="pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0 whitespace-nowrap">Total</th>
                                     </tr>
                                 </thead>
@@ -126,8 +126,8 @@ const View = (props) => {
                                             </td>
 
                                             <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
-                                            <td className="hidden px-3 text-center text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
-                                            <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
+                                            <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell  whitespace-nowrap">Rs. {item.price || "NA"}</td>
+                                            <td className="hidden px-3 text-center text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
                                             <td className=" pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
                                                 Rs. {(item.price * item.qty)?.toFixed(2) || "NA"}
                                             </td>
