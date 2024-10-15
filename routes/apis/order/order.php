@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         // Create a new order with the validated data
         $order = Order::create(array_merge($validatedData, [
             'user_id' => $user->id,
+            
         ]));
         if($validatedData['method'] == 'wallet'){
             $user->wallet = $user->wallet - $validatedData['total'];

@@ -89,24 +89,24 @@ const View = (props) => {
                                 </colgroup>
                                 <thead className="border-b border-gray-300 text-gray-900">
                                     <tr>
-                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Product Name</th>
-                                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Variation ID</th>
-                                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Attribute</th>
-                                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Category</th>
-                                        <th scope="col" className="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Price</th>
-                                        <th scope="col" className="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">Quantity</th>
-                                        <th scope="col" className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Total</th>
+                                        <th scope="col" className=" pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Product Name</th>
+                                        <th scope="col" className="hidden px-3  text-left text-sm font-semibold text-gray-900 sm:table-cell">Variation ID</th>
+                                        <th scope="col" className="hidden px-3  text-left text-sm font-semibold text-gray-900 sm:table-cell">Attribute</th>
+                                        <th scope="col" className="hidden px-3  text-left text-sm font-semibold text-gray-900 sm:table-cell">Category</th>
+                                        <th scope="col" className="hidden px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell">Price</th>
+                                        <th scope="col" className="hidden px-3  text-right text-sm font-semibold text-gray-900 sm:table-cell">Quantity</th>
+                                        <th scope="col" className=" pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {order.items.map((item, index) => (
                                         <tr key={index} className="border-b border-gray-200">
-                                            <td className="max-w-0 py-5 pl-4 pr-3 text-sm sm:pl-0">
+                                            <td className="max-w-0  pl-4 pr-3 text-sm sm:pl-0">
                                                 <div className="font-medium text-gray-900">{item.name}</div>
                                                 {/* <div className="mt-1 truncate text-gray-500">{item.description}</div> */}
                                             </td>
-                                            <td className="hidden px-3 py-5 text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}</td>
-                                            <td className="hidden px-3 py-5 text-left text-sm text-gray-500 sm:table-cell">{item.variation ?
+                                            <td className="hidden px-3  text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}</td>
+                                            <td className="hidden px-3  text-left text-sm text-gray-500 sm:table-cell">{item.variation ?
                                                 <ul className='list-disc list-inside'>
                                                     {JSON.parse(item.variation.attributes).map((id, index) => (
                                                         console.log(attribute),
@@ -123,10 +123,10 @@ const View = (props) => {
                                                     ))}
                                                 </ul>
                                                 : "N/A"}</td>
-                                            <td className="hidden px-3 py-5 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
-                                            <td className="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
-                                            <td className="hidden px-3 py-5 text-right text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
-                                            <td className="py-5 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
+                                            <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
+                                            <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell">Rs. {item.price || "NA"}</td>
+                                            <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
+                                            <td className=" pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
                                                 Rs. {(item.price * item.qty)?.toFixed(2) || "NA"}
                                             </td>
                                         </tr>
@@ -149,7 +149,7 @@ const View = (props) => {
                                         </tr>
                                     )}
                                     <tr>
-                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
+                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
                                         <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
                                         <td className="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Rs. {order.payable}</td>
                                     </tr>
@@ -159,10 +159,10 @@ const View = (props) => {
                     </div>
 
 
-                    {/* Footer */}
+                    {/* Footer
                     <div className="border-t-2 pt-4 text-xs text-gray-500 text-center mt-16">
                         Please pay the invoice before the due date. You can pay the invoice by logging in to your account from our client portal.
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </Authenticated>
