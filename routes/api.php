@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+
 Route::post('/search', function (Request $request) {
     $validator = Validator::make($request->all(), [
         'search' => 'required',
@@ -36,8 +37,9 @@ Route::post('/search', function (Request $request) {
     $searchTerm = $validatedData['search'];
     $shipping_area = $validatedData['shipping_area'];
 
-  
+    // Search Products
     $productQuery = Product::with('categories', 'media', 'shipping_rates');
+
     if ($shipping_area) {
         $productQuery->where(function ($q) use ($shipping_area) {
             $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
@@ -46,17 +48,24 @@ Route::post('/search', function (Request $request) {
             ->orWhereDoesntHave('shipping_rates');
         });
     } else {
-        $query->whereDoesntHave('shipping_rates');
+        $productQuery->whereDoesntHave('shipping_rates');
     }
-    $productQuery->orWhere('name', 'like', '%' . $searchTerm . '%');
+
+    // Add search conditions for product fields
+    $productQuery->where(function ($q) use ($searchTerm) {
+        $q->orWhere('name', 'like', '%' . $searchTerm . '%');
+    });
+
     $products = $productQuery->orderBy('id', 'desc')->limit(10)->get();
 
     // Search Categories
-
     $categoryQuery = Category::with('media');
-   
-    $categoryQuery->orWhere('name', 'like', '%' . $searchTerm . '%');
-    
+
+    // Add search conditions for category fields
+    $categoryQuery->where(function ($q) use ($searchTerm) {
+        $q->orWhere('name', 'like', '%' . $searchTerm . '%'); // Assuming you have a description field
+    });
+
     $categories = $categoryQuery->orderBy('id', 'desc')->limit(10)->get();
 
     $result = [
@@ -66,7 +75,6 @@ Route::post('/search', function (Request $request) {
 
     return response()->json(["data" => $result, "message" => "success"], 200);
 });
-
 
 include __DIR__ . '/apis/auth/auth.php';
 include __DIR__ . '/apis/category/getcategory.php';
