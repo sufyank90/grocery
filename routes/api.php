@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Product;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +19,52 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::post('/search', function (Request $request) {
+    $validator = Validator::make($request->all(), [
+        'search' => 'required',
+        'shipping_area' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
+    }
+
+    $validatedData = $validator->validated();
+    $searchTerm = $validatedData['search'];
+    $shipping_area = $validatedData['shipping_area'];
+
+  
+    $productQuery = Product::with('categories', 'media', 'shipping_rates');
+    if ($shipping_area) {
+        $productQuery->where(function ($q) use ($shipping_area) {
+            $q->whereHas('shipping_rates', function ($q) use ($shipping_area) {
+                $q->where('id', $shipping_area);
+            })
+            ->orWhereDoesntHave('shipping_rates');
+        });
+    } else {
+        $query->whereDoesntHave('shipping_rates');
+    }
+    $productQuery->orWhere('name', 'like', '%' . $searchTerm . '%');
+    $products = $productQuery->orderBy('id', 'desc')->limit(10)->get();
+
+    // Search Categories
+
+    $categoryQuery = Category::with('media');
+   
+    $categoryQuery->orWhere('name', 'like', '%' . $searchTerm . '%');
+    
+    $categories = $categoryQuery->orderBy('id', 'desc')->limit(10)->get();
+
+    $result = [
+        'products' => $products,
+        'categories' => $categories,
+    ];
+
+    return response()->json(["data" => $result, "message" => "success"], 200);
 });
 
 

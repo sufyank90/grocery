@@ -227,4 +227,6 @@ Route::middleware('auth:sanctum')->prefix('product')->group(function () {
         return response()->json(["data" => $data, "message" => "success"], 200);
     });
 
+ 
+
 });
