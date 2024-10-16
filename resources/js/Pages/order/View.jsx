@@ -2,10 +2,34 @@ import Authenticated from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import React from 'react';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const View = (props) => {
     const { order, attribute } = props;
+    const generatePDF = () => {
+        const input = document.getElementById('invoice');
+        html2canvas(input, { scale: 2 }).then((canvas) => {
+            const pdf = new jsPDF('p', 'pt', 'a4');
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = pdf.internal.pageSize.getWidth() - 20; 
+            const pageHeight = pdf.internal.pageSize.height;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
 
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+            pdf.save(`Invoice_${order.id}.pdf`);
+        });
+    };
 
     return (
         <Authenticated auth={props.auth} errors={props.errors}
@@ -32,6 +56,12 @@ const View = (props) => {
                         className="bg-yellow-500 text-white py-2 px-4 rounded shadow hover:bg-yellow-600 transition duration-300"
                     >
                         Print
+                    </button>
+                    <button
+                        onClick={generatePDF}
+                        className="ml-2 bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition duration-300"
+                    >
+                        Download PDF
                     </button>
 
                 </div>
