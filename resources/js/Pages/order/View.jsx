@@ -107,7 +107,7 @@ const View = (props) => {
                     </div>
 
                     {/* Invoice Items */}
-                    <div className="-mx-4 mt-8 flow-root sm:mx-0 py-4">
+                    <div className="-mx-4 mt-2 flow-root sm:mx-0 py-4">
                         <div className="overflow-x-auto">
                             <table className="min-w-full">
                                 <colgroup>
