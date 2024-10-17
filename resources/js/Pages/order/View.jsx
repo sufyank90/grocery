@@ -11,7 +11,7 @@ const View = (props) => {
         html2canvas(input, { scale: 2 }).then((canvas) => {
             const pdf = new jsPDF('p', 'pt', 'a4');
             const imgData = canvas.toDataURL('image/png');
-            const imgWidth = pdf.internal.pageSize.getWidth() - 20; 
+            const imgWidth = pdf.internal.pageSize.getWidth() - 20;
             const pageHeight = pdf.internal.pageSize.height;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             let heightLeft = imgHeight;
@@ -77,7 +77,7 @@ const View = (props) => {
                             <p className="text-gray-500 text-sm mt-1">airexpressmart.com</p>
                             <p className="text-gray-500 text-sm">sales@airexpressmart.com</p>
                             <p className="text-gray-500 text-sm mt-1">+92-3331325935</p>
-                            
+
                             {/* <p className="text-gray-500 text-sm mt-1">VAT: 8657671212</p> */}
                         </div>
                     </div>
@@ -107,7 +107,7 @@ const View = (props) => {
                     </div>
 
                     {/* Invoice Items */}
-                    <div className="-mx-4 mt-8 flow-root sm:mx-0">
+                    <div className="-mx-4 mt-8 flow-root sm:mx-0 py-4">
                         <div className="overflow-x-auto">
                             <table className="min-w-full">
                                 <colgroup>
@@ -120,27 +120,29 @@ const View = (props) => {
                                     <col className="sm:w-1/6" />
                                 </colgroup>
                                 <thead className="border-b border-gray-300 text-gray-900">
-                                    <tr>
-                                        <th scope="col" className="pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0 whitespace-nowrap">Product Name</th>
-                                        <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Variation ID</th>
-                                        <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Attribute</th>
-                                        <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Category</th>
-                                        <th scope="col" className="hidden px-3 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Price</th>
-                                        <th scope="col" className="hidden px-3 text-right text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">QTY</th>
-                                        <th scope="col" className="pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0 whitespace-nowrap">Total</th>
+                                    <tr >
+                                        <th scope="col" className="pl-4 py-2 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0 whitespace-nowrap">Product Name</th>
+                                        <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Variation ID</th>
+                                        <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Attribute</th>
+                                        <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Category</th>
+                                        <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Price</th>
+                                        <th scope="col" className="hidden px-3 py-2 text-right text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">QTY</th>
+                                        <th scope="col" className="pl-3 pr-4 py-2 text-right text-sm font-semibold text-gray-900 sm:pr-0 whitespace-nowrap">Total</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {order.items.map((item, index) => (
                                         <tr key={index} className="border-b border-gray-200">
-                                            <td className="max-w-0  pl-4 pr-3 text-sm sm:pl-0">
+                                            <td className="max-w-0  pl-4 py-2 pr-3 text-sm sm:pl-0">
                                                 <div className="font-medium text-gray-900 text-sm leading-tight break-words max-w-full">{item.name}</div>
 
                                                 {/* <div className="mt-1 truncate text-gray-500">{item.description}</div> */}
                                             </td>
-                                            <td className="hidden px-3  text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}</td>
-                                            <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">
+                                            <td className="hidden px-3 py-2  text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}
+                                        
+                                            </td>
+                                            <td className="hidden px-3 py-2 text-left text-sm text-gray-500 sm:table-cell">
                                                 {item.variation ? (
                                                     <ul className='list-disc list-inside'>
                                                         {JSON.parse(item.variation.attributes).map((id, index) => (
@@ -157,10 +159,11 @@ const View = (props) => {
                                                 ) : "N/A"}
                                             </td>
 
-                                            <td className="hidden px-3 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}</td>
-                                            <td className="hidden px-3 text-right text-sm text-gray-500 sm:table-cell  whitespace-nowrap">Rs. {item.price || "NA"}</td>
+                                            <td className="hidden px-3 py-2 text-left text-sm text-gray-500 sm:table-cell">{item.category || "NA"}
+                                            </td>
+                                            <td className="hidden px-3 py-2 text-right text-sm text-gray-500 sm:table-cell  whitespace-nowrap">Rs. {item.price || "NA"}</td>
                                             <td className="hidden px-3 text-center text-sm text-gray-500 sm:table-cell">{item.qty || "NA"}</td>
-                                            <td className=" pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
+                                            <td className=" pl-3 pr-4 py-2 text-right text-sm text-gray-500 sm:pr-0 whitespace-nowrap">
                                                 Rs. {(item.price * item.qty)?.toFixed(2) || "NA"}
                                             </td>
                                         </tr>
@@ -171,21 +174,21 @@ const View = (props) => {
 
                             <tfoot className="justify-content-right">
                                 <tr>
-                                    <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal</th>
+                                    <th scope="row" colSpan="6" className="hidden pl-4 pr-3 py-2 pt-6 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Subtotal</th>
                                     <th scope="row" className="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
-                                    <td className="pl-3 pr-6 pt-6 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.total}</td>
+                                    <td className="pl-3 pr-6 pt-6 py-2 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.total}</td>
                                 </tr>
                                 {order.couponcode && (
                                     <tr>
-                                        <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount</th>
+                                        <th scope="row" colSpan="6" className="hidden pl-4 py-2 pr-3 pt-4 text-right text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount</th>
                                         <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Discount</th>
-                                        <td className="pl-3 pr-6 pt-4 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.discount}</td>
+                                        <td className="pl-3 pr-6 pt-4 py-2 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.discount}</td>
                                     </tr>
                                 )}
                                 <tr>
-                                    <th scope="row" colSpan="6" className="hidden pl-4 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
+                                    <th scope="row" colSpan="6" className="hidden pl-4 py-2 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total</th>
                                     <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
-                                    <td className="pl-3 pr-4 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Rs. {order.payable}</td>
+                                    <td className="pl-3 pr-4 py-2 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Rs. {order.payable}</td>
                                 </tr>
                             </tfoot>
                         </div>
