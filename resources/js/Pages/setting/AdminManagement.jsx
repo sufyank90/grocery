@@ -12,7 +12,7 @@ import { GiTwoCoins } from "react-icons/gi";
 
 function AdminManagement(props) {
 
-  const { users } = props;
+  const { users ,roles} = props;
 
   // console.log(users)
 
@@ -115,7 +115,7 @@ function AdminManagement(props) {
                     <th className="py-2 px-4 border-b text-left">#</th>
                     <th className="py-2 px-4 border-b text-left">Name</th>
                     <th className="py-2 px-4 border-b text-left">Email</th>
-
+                    <th className="py-2 px-4 border-b text-left">Role</th>
                     <th className="py-2 px-4 border-b text-left">Actions</th>
                   </tr>
                 </thead>
@@ -132,6 +132,7 @@ function AdminManagement(props) {
                       <td className="py-2 px-4 border-b text-left">{index + 1}</td>
                       <td className="py-2 px-4 border-b truncate text-left">{user.name}</td>
                       <td className="py-2 px-4 border-b text-left">{user.email}</td>
+                      <td className="py-2 px-4 border-b text-left">{user.roles.map(role => role.name + ' ')}</td>
                       <td className="py-2 px-4 border-b text-left">
                         <div className="flex items-center">
                           {/* <button
@@ -198,12 +199,14 @@ function AdminManagement(props) {
               email: '',
               password: '',
               password_confirmation: '',
+              role: '',
             }}
             validationSchema={Yup.object({
               name: Yup.string().required('Name is required'),
               email: Yup.string().email('Invalid email address').required('Email is required'),
               password: Yup.string().required('Password is required'),
               password_confirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+              role: Yup.string().required('Role is required'),
             })}
             onSubmit={(values, { resetForm, setErrors }) => {
               router.post(route('admin.store'), values, {
@@ -293,6 +296,32 @@ function AdminManagement(props) {
                   </label>
                   <ErrorMessage name="password_confirmation" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
+
+
+
+                <div className="relative z-0 w-full mb-5 group">
+                  <Field
+                    as="select"
+                    name="role"
+                    id="password_confirmation"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                  > 
+                  <option value="">Select Role</option>
+                    {roles.map((role,index) => (
+                      <option key={index} value={role}>{role}</option>
+                    ))}
+                  </Field>
+                  <label
+                    htmlFor="password_confirmation"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Select Role
+                  </label>
+                  <ErrorMessage name="role" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
+
+                
 
                 <div className="flex justify-end">
                   <button

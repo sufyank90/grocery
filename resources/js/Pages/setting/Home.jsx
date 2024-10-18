@@ -24,7 +24,7 @@ export default function Home(props) {
                         <>
                         <Link href={route('admin.index')}>
                         <div className="p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow-md">
-                            <h1 className="text-lg font-semibold">Admin Panel Management</h1>
+                            <h1 className="text-lg font-semibold">User Management</h1>
                         </div>
                     </Link>
                         <Link href={route('attribute.index')}>

@@ -10,7 +10,7 @@ export default function Guest({ children }) {
                 </div>
                 <div className='w-full md:w-2/3 p-8 md:pl-80 md:pr-32'>
                     <h1 className='text-2xl font-bold mb-10 text-center lg:text-center md:text-left'>
-                        Welcome to Air Express Mart Admin Panel
+                        Welcome to Air Express Mart
                     </h1>
                     {children}
                 </div>

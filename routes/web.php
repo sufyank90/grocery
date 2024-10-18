@@ -29,6 +29,11 @@ Route::get('/', function () {
 
 });
 
+
+Route::get('/passwordresetsuccess' ,function(Request $request){
+    return Inertia::render('Auth/PasswordResetSucess');
+})->name('passwordresetsuccess');
+
 Route::get('/dashboard', function (Request $request) {
     $countorders = Order::count();
     $countuser = User::where('name', 'like', '%')->role('user')->count();

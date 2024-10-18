@@ -33,9 +33,9 @@ export default function Login({ status, canResetPassword }) {
         <GuestLayout>
             <Head title="Log in" />
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+            {status && <div className="mb-4 max-w-md mx-auto font-medium text-sm text-green-600">{status}</div>}
 
-            {errors.status && <div className="mb-4 font-medium text-sm text-red-600">{errors.status}</div>}
+            {errors.status && <div className="mb-4 max-w-md mx-auto font-medium text-sm text-red-600">{errors.status}</div>}
 
             <form onSubmit={submit} className="max-w-md mx-auto">
                 <div>
