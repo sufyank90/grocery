@@ -46,8 +46,9 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
     
 
     Route::post('/login',function(Request $request){
+        
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ]);
 
@@ -56,10 +57,13 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
         }
 
         $email = $request->email;
-        $password = $request->password;
+        $password =  $request->password;
 
-        $user = User::where(['email' => $email, 'password' => $password])->first();
-        if($user){
+
+
+        $user = User::where(['email' => $email])->first();
+    
+        if($user && Hash::check($password, $user->password)){
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
             $message = "Login successfully";
@@ -100,6 +104,8 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422); // 422 Unprocessable Entity
         }
+
+        $request['password'] = Hash::make($request['password']);
 
         $user = User::create($request->all());
 

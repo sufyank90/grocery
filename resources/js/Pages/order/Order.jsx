@@ -162,8 +162,8 @@ function Orders(props) {
                                             </td>
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.name}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.email}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.name || 'N/A'}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.email || 'N/A'}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
