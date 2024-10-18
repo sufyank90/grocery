@@ -67,30 +67,15 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
             $message = "Login successfully";
-           
-            $order = Order::where('user_id', $user->id)->orderBy('id', 'desc')->first();
-            $addressData = [];
-            
-            if ($order) {
-                $addressData = [
-                    'name' => $order->name,
-                    'email' => $order->email,
-                    'phone' => $order->phone,
-                    'address' => $order->address,
-                    'zipcode' => $order->zipcode,
-                    'city' => $order->city,
-                    'country' => $order->country,
-                ];
-            }
-          
-
-             return response()->json([ "message"=>$message,"token"=> $token , "data"=>$user,'address'=>$addressData] , 200);
+             return response()->json([ "message"=>$message,"token"=> $token , "data"=>$user] , 200);
         }else{
             $message = "Invalid credentials";
             return response()->json([ "message"=>$message], 401);
         }
-
     });
+
+
+ 
 
     Route::post('/register',function(Request $request){
 
@@ -105,7 +90,6 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
             return response()->json($validator->errors(), 422); // 422 Unprocessable Entity
         }
 
-        $request['password'] = Hash::make($request['password']);
 
         $user = User::create($request->all());
 
@@ -129,6 +113,24 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
+
+    Route::get('/orderaddess',function(Request $request){
+        $user = $request->user();
+        $order = Order::where('user_id', $user->id)->orderBy('id', 'desc')->first();
+        $addressData = [];     
+        if ($order) {
+            $addressData = [
+                'name' => $order->name,
+                'email' => $order->email,
+                'phone' => $order->phone,
+                'address' => $order->address,
+                'zipcode' => $order->zipcode,
+                'city' => $order->city,
+                'country' => $order->country,
+            ];
+        }
+        return response()->json([ "message"=>"success","address"=>$addressData] , 200);
+    });
 
     Route::post('/verifyaccountemail',function(Request $request){
         $user = $request->user();
