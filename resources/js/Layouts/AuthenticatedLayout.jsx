@@ -39,32 +39,32 @@ export default function Authenticated({ auth, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('customer.index')} active={route().current('customer.index')}>
                                     Customers
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('order.index')} active={route().current('order.index')}>
                                     Order
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('product.index')} active={route().current('product.index')}>
                                     Product
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('category.index')} active={route().current('category.index')}>
                                     Category
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('coupon.index')} active={route().current('coupon.index')}>
                                     Coupon
                                 </NavLink>
@@ -74,21 +74,21 @@ export default function Authenticated({ auth, header, children }) {
                                     Setting
                                 </NavLink>
                             </div> */}
-                            {auth.superadmin &&  (
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-5 sm:flex">
+                            {/* {auth.superadmin &&  (
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('settings.update')} active={route().current('settings.all')}>
                                   Site Setting
                                 </NavLink>
                             </div>
-                            )}
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            )} */}
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('shipment.index')} active={route().current('shipment.index')}>
                                     Shipment
                                 </NavLink>
                             </div>
                             {auth.superadmin &&  (
                                 <>
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-6 sm:flex">
                                 <NavLink href={route('banner.index')} active={route().current('banner.index')}>
                                     Banner
                                 </NavLink>

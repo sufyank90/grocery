@@ -42,7 +42,7 @@ function Orders(props) {
                 <Head title="Admin Dashboard" />
 
                 {/* max-w-7xl mt-10 mx-auto w-full */}
-                <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+                <div className="flex flex-col px-4 max-w-7xl mt-10 mx-auto w-full">
                     <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                         <h3 className="text-lg font-bold">Orders</h3>
                         <div className="flex flex-col md:flex-row space-x-0 md:space-x-2 mt-2 md:mt-0">
@@ -162,8 +162,8 @@ function Orders(props) {
                                             </td>
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.name}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user.email}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.name}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.email}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>

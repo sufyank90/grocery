@@ -37,6 +37,11 @@ export default function Home(props) {
                             <h1 className="text-lg font-semibold">Role</h1>
                         </div>
                     </Link>
+                    <Link href={route('settings.update')}>
+                        <div className="p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow-md">
+                            <h1 className="text-lg font-semibold">Reword</h1>
+                        </div>
+                    </Link>
                     </>
                     )}
                     

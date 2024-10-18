@@ -23,11 +23,11 @@ export default function AdminPanel(props) {
             auth={props.auth}
             errors={props.errors}
             header={
-            <>
-            <div className='flex flex-col px-4'>
-            <h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
-            </div>
-            </>
+                <>
+                    <div className='flex flex-col px-4'>
+                        <h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+                    </div>
+                </>
             }
         >
             <Head title="Admin Dashboard" />
@@ -35,7 +35,7 @@ export default function AdminPanel(props) {
             <div className="flex flex-col">
 
                 {/* Main Content */}
-                <div className="max-w-7xl mt-10 mx-auto w-full">
+                <div className="max-w-7xl mt-10 mx-auto w-full max-[633px]:p-6">
                     <div className="py-4 ">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-[633px]:p-6">
                             {/* Cards */}
@@ -190,7 +190,7 @@ export default function AdminPanel(props) {
 
                             {/* Pagination */}
                             <div className="flex flex-col items-center md:items-end mt-4 mb-4">
-                                <div className="flex justify-center md:justify-end mt-4 space-x-1">
+                                <div className="flex justify-center md:justify-end mt-4 space-x-1 ">
                                     {orders.links.map((link, index) => (
                                         <Link
                                             key={index}
@@ -209,6 +209,10 @@ export default function AdminPanel(props) {
                                     )}
                                 </div>
                             </div>
+
+
+
+
                         </div>
                     </div>
                 </div>

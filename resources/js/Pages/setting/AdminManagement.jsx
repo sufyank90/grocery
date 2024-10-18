@@ -62,7 +62,7 @@ function AdminManagement(props) {
       >
         <Head title="Admin Dashboard" />
 
-        <div className="flex flex-col px-4 md:pl-32 md:pr-32">
+        <div className="flex flex-col px-4 max-w-7xl mt-10 mx-auto w-full">
           <div className="w-full">
             <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
               <h3 className="text-lg font-bold">Admin</h3>
