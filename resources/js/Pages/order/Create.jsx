@@ -18,7 +18,8 @@ const Create = (props) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [finalPrice, setFinalPrice] = useState(0);
     const [couponCode, setCouponCode] = useState([]);
-    const handleEmailChange = (e, setFieldValue) => {
+    const [userType, setUserType] = useState('existing'); 
+        const handleEmailChange = (e, setFieldValue) => {
         const selectedEmail = e.target.value;
         const selectedUser = users.find(user => user.email === selectedEmail);
         const userName = selectedUser ? selectedUser.name : '';
@@ -121,10 +122,115 @@ const Create = (props) => {
                         {({ isSubmitting, setFieldValue }) => (
                             <Form className="">
                                 <h2 className="text-lg font-bold mb-4">Enter Customer Details</h2>
-
+                                {/* Radio buttons for Guest and Existing User */}
+                                <div className="mb-5">
+                                    <label className="mr-4">
+                                        <Field
+                                            type="radio"
+                                            name="userType"
+                                            value="guest"
+                                            onChange={() => setUserType('guest')}
+                                            checked={userType === 'guest'}
+                                            className="mr-2"
+                                        />
+                                        Guest Customer
+                                    </label>
+                                    <label>
+                                        <Field
+                                            type="radio"
+                                            name="userType"
+                                            value="existing"
+                                            onChange={() => setUserType('existing')}
+                                            checked={userType === 'existing'}
+                                            className="mr-2"
+                                        />
+                                        Existing User
+                                    </label>
+                                </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Show fields based on userType */}
+                                    {userType === 'existing' && (
+                                        <>
+                                            <div className="relative z-0 w-full mb-5 group">
+                                                <Field
+                                                    as="select"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    name="email"
+                                                    onChange={(e) => {
+                                                        handleEmailChange(e, setFieldValue);
+                                                        setFieldValue('email', e.target.value);
+                                                        const id = users.find(user => user.email === e.target.value)?.id;
+                                                        setFieldValue('user_id', id);
+                                                        const selectedUser = users.find(user => user.email === e.target.value);
+                                                        setSelectedName(selectedUser?.name || '');
+                                                    }}
+                                                >
+                                                    <option value="">Select Email</option>
+                                                    {users.map((user) => (
+                                                        <option key={user.id} value={user.email}>
+                                                            {user.email}
+                                                        </option>
+                                                    ))}
+                                                </Field>
+                                                <label
+                                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
+                                                </label>
+                                                <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
+                                            </div>
 
-                                    <div className="relative z-0 w-full mb-5 group">
+                                            <div className="relative z-0 w-full mb-5 group">
+                                                <Field
+                                                    type="text"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder="Enter your name"
+                                                    name="name"
+                                                    value={selectedName}
+                                                    disabled
+                                                />
+                                                <label
+                                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
+                                                </label>
+                                                <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* Guest User Fields */}
+                                    {userType === 'guest' && (
+                                        <>
+                                            <div className="relative z-0 w-full mb-5 group">
+                                                <Field
+                                                    type="email"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder="Enter your email"
+                                                    name="guestEmail"
+                                                />
+                                                <label
+                                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
+                                                </label>
+                                                <ErrorMessage name="guestEmail" component="div" className="text-red-600 text-sm mt-1" />
+                                            </div>
+
+                                            <div className="relative z-0 w-full mb-5 group">
+                                                <Field
+                                                    type="text"
+                                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                                    placeholder="Enter your name"
+                                                    name="guestName"
+                                                />
+                                                <label
+                                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
+                                                </label>
+                                                <ErrorMessage name="guestName" component="div" className="text-red-600 text-sm mt-1" />
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* <div className="relative z-0 w-full mb-5 group">
                                         <Field
                                             as="select"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -163,7 +269,7 @@ const Create = (props) => {
                                         >
                                         </label>
                                         <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
-                                    </div>
+                                    </div> */}
 
 
 
