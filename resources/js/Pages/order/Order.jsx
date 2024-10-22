@@ -42,7 +42,7 @@ function Orders(props) {
                 <Head title="Admin Dashboard" />
 
                 {/* max-w-7xl mt-10 mx-auto w-full */}
-                <div className="flex flex-col px-4 max-w-7xl mt-10 mx-auto w-full">
+                <div className="flex flex-col max-w-7xl mt-10 mx-auto w-full">
                     <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                         <h3 className="text-lg font-bold">Orders</h3>
                         <div className="flex flex-col md:flex-row space-x-0 md:space-x-2 mt-2 md:mt-0">
@@ -114,7 +114,7 @@ function Orders(props) {
                         <table className="min-w-full bg-white rounded-lg shadow-lg">
                             <thead>
                                 <tr>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
+                                    <th className="py-3 px-2 border-b-2 border-gray-200 text-left font-semibold text-gray-700">
                                         <input
                                             type="checkbox"
                                             className="form-checkbox h-5 w-5 text-gray-600"
@@ -123,17 +123,17 @@ function Orders(props) {
                                         />
                                     </th>
                                     {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
+                                    <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
+                                    <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">UserType</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
+                                    <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,7 +146,7 @@ function Orders(props) {
                                 ) : (<>
                                     {orders.data.map((order, index) => (
                                         <tr key={order.id} className="hover:bg-gray-100">
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                            <td className="py-2 px-2 border-b border-gray-200 text-left text-gray-700">
                                                 <input
                                                     type="checkbox"
                                                     className="form-checkbox h-5 w-5 text-gray-600"
@@ -162,20 +162,21 @@ function Orders(props) {
                                                 />
                                             </td>
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{ order.guest === 1 ? order.name : order.user?.name || 'N/A'}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{ order.guest === 1 ? order.email : order.user?.email || 'N/A'}</td>
+                                            <td className="py-2 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
+                                            <td className="py-2 px-4 border-b text-left
+                                            ">{order.guest === 1 ? order.name : order.user?.name || 'N/A'}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? order.email : order.user?.email || 'N/A'}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
+                                            <td className="py-2 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
                                             <td className="py-2 px-4 border-b text-left">
                                                 {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
                                             </td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? 'Guest' : 'Registered'}</td>
+                                            <td className="py-2 border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? 'Guest' : 'Registered'}</td>
 
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">
+                                            <td className="py-2 border-b border-gray-200 text-left text-gray-700">
                                                 {order.status === 'pending' && (
                                                     <span
                                                         onClick={() => {
@@ -208,8 +209,8 @@ function Orders(props) {
                                                 )}
                                             </td>
 
-                                            <td className="py-2 mb-5 px-4 border-b border-gray-200 text-right">
-                                                <div className="text-right space-x-2">
+                                            <td className="py-2 mb-5 border-b border-gray-200 text-left">
+                                                <div className="text-left space-x-2">
 
                                                     <Link href={route('order.show', order.id)}>
                                                         <GrView className="w-7 h-7" style={{ color: '#fcb609' }} />
