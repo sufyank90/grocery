@@ -38,9 +38,10 @@ class CouponController extends Controller
      */
     public function store(Request $request)
 {
+    
     $request->validate([
         'code' => 'required|string|unique:coupons,code',
-        'type' => 'required|string|in:fixed,percentage',
+        'type' => 'required|string|in:fixed,percent',
         'value' => 'required|numeric|min:0',
         'usage_type' => 'required|string|in:single,multiple',
         'usage_limit' => 'required_if:usage_type,multiple|nullable|integer|min:1',

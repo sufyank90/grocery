@@ -237,7 +237,7 @@ function Coupons(props) {
                                 >
                                     <option value="">Select Type</option>
                                     <option value="fixed">Fixed</option>
-                                    <option value="percentage">Percentage</option>
+                                    <option value="percent">Percentage</option>
                                 </Field>
                                 <ErrorMessage name="type" component="div" className="text-red-600 text-sm mt-1" />
                             </div>
