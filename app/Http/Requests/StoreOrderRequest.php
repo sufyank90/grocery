@@ -40,7 +40,7 @@ class StoreOrderRequest extends FormRequest
             'coupontype' => 'nullable|in:fixed,percentage',
             'payable' => 'required|numeric',
             'status' => 'required',
-            'user_id' => 'required',
+            'user_id' => 'nullable',
         ];
     }
 }

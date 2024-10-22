@@ -147,10 +147,12 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+    
         $this->authorize('create', Order::class);
         // Validate the request and create the order
         $orderData = $request->validated();
     
+        $orderData['guest'] = $request->guest === '1' ? 1 : 0;
         // Create the order
         $order = Order::create($orderData);
     
@@ -173,8 +175,9 @@ class OrderController extends Controller
             $order->update(['shipping_id' => $request->shipping_rates]);
         }
 
-        Notification::send($order->user, new OrderNotification($order));
-    
+        if($request->guest === '0'){
+            Notification::send($order->user, new OrderNotification($order));
+        }
         return redirect()->route('order.index');
     }
     

@@ -131,6 +131,7 @@ function Orders(props) {
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
+                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">UserType</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
                                     <th className="py-3 px-4 border-b-2 border-gray-200 text-right font-semibold text-gray-700">Action</th>
                                 </tr>
@@ -162,8 +163,8 @@ function Orders(props) {
                                             </td>
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.name || 'N/A'}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.user?.email || 'N/A'}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{ order.guest === 1 ? order.name : order.user?.name || 'N/A'}</td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{ order.guest === 1 ? order.email : order.user?.email || 'N/A'}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
@@ -171,6 +172,7 @@ function Orders(props) {
                                             <td className="py-2 px-4 border-b text-left">
                                                 {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
                                             </td>
+                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? 'Guest' : 'Registered'}</td>
 
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.status}</td> */}
                                             <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">

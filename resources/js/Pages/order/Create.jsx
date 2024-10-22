@@ -18,7 +18,7 @@ const Create = (props) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [finalPrice, setFinalPrice] = useState(0);
     const [couponCode, setCouponCode] = useState([]);
-    const [userType, setUserType] = useState('existing'); 
+
         const handleEmailChange = (e, setFieldValue) => {
         const selectedEmail = e.target.value;
         const selectedUser = users.find(user => user.email === selectedEmail);
@@ -76,6 +76,7 @@ const Create = (props) => {
                             payable: '',
                             user_id: '',
                             shipping_rates: '',
+                            guest: '0',
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
@@ -89,6 +90,11 @@ const Create = (props) => {
 
                         })}
                         onSubmit={(values, { resetForm }) => {
+
+
+                            if (values.guest === '1') {
+                                values.user_id = '';
+                            }
 
                             router.post(route('order.store'), {
                                 name: values.name,
@@ -108,7 +114,8 @@ const Create = (props) => {
                                 items: selectedItem,
                                 coupon: couponCode,
                                 user_id: values.user_id,
-                                shipping_rates: values.shipping_rates
+                                shipping_rates: values.shipping_rates,
+                                guest: values.guest
 
                             }, {
                                 onSuccess: () => {
@@ -119,7 +126,7 @@ const Create = (props) => {
 
                         }}
                     >
-                        {({ isSubmitting, setFieldValue }) => (
+                        {({values, isSubmitting, setFieldValue }) => (
                             <Form className="">
                                 <h2 className="text-lg font-bold mb-4">Enter Customer Details</h2>
                                 {/* Radio buttons for Guest and Existing User */}
@@ -127,29 +134,29 @@ const Create = (props) => {
                                     <label className="mr-4">
                                         <Field
                                             type="radio"
-                                            name="userType"
-                                            value="guest"
-                                            onChange={() => setUserType('guest')}
-                                            checked={userType === 'guest'}
+                                            name="guest"
+                                            value='1'
+                                       
+                                            checked={values.guest === '1'}
                                             className="mr-2"
                                         />
-                                        Guest Customer
+                                        Guest
                                     </label>
                                     <label>
                                         <Field
                                             type="radio"
-                                            name="userType"
-                                            value="existing"
-                                            onChange={() => setUserType('existing')}
-                                            checked={userType === 'existing'}
+                                            name="guest"
+                                            value='0'
+                                      
+                                            checked={values.guest === '0'}
                                             className="mr-2"
                                         />
-                                        Existing User
+                                        Existing
                                     </label>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {/* Show fields based on userType */}
-                                    {userType === 'existing' && (
+                                    {values.guest === '0' && (
                                         <>
                                             <div className="relative z-0 w-full mb-5 group">
                                                 <Field
@@ -198,20 +205,20 @@ const Create = (props) => {
                                     )}
 
                                     {/* Guest User Fields */}
-                                    {userType === 'guest' && (
+                                    {values.guest === '1' && (
                                         <>
                                             <div className="relative z-0 w-full mb-5 group">
                                                 <Field
                                                     type="email"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder="Enter your email"
-                                                    name="guestEmail"
+                                                    name="email"
                                                 />
                                                 <label
                                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                 >
                                                 </label>
-                                                <ErrorMessage name="guestEmail" component="div" className="text-red-600 text-sm mt-1" />
+                                                <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
                                             </div>
 
                                             <div className="relative z-0 w-full mb-5 group">
@@ -219,13 +226,13 @@ const Create = (props) => {
                                                     type="text"
                                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                     placeholder="Enter your name"
-                                                    name="guestName"
+                                                    name="name"
                                                 />
                                                 <label
                                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                 >
                                                 </label>
-                                                <ErrorMessage name="guestName" component="div" className="text-red-600 text-sm mt-1" />
+                                                <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
                                             </div>
                                         </>
                                     )}
