@@ -242,7 +242,7 @@ export default function Product(props) {
 
                                                 {/* Wider columns with more height */}
                                                 <td className="py-4 px-2 border-b text-left max-w-[200px]">{product.name}</td>
-                                                <td className="py-4 px-2 border-b text-left max-w-[250px]">{product.description}</td>
+                                                <td className="py-4 px-2 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[250px]">{product.description}</td>
 
                                                 <td className="py-4 px-2 border-b text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px]">
                                                     Rs. {parseFloat(product.regular_price).toFixed(2)}

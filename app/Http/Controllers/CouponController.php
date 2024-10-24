@@ -15,6 +15,7 @@ class CouponController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Coupon::class);
         $coupons = Coupon::where('code','like','%'.$request->search.'%')
         ->orderBy('id','desc')->paginate(10);
         return Inertia::render('coupon/Coupons',compact('coupons'));
@@ -38,6 +39,7 @@ class CouponController extends Controller
      */
     public function store(Request $request)
 {
+    $this->authorize('create', Coupon::class);
     
     $request->validate([
         'code' => 'required|string|unique:coupons,code',
@@ -95,6 +97,7 @@ class CouponController extends Controller
      */
     public function update(Request $request, Coupon $coupon)
     {
+        $this->authorize('update', $coupon);
         
         $request->validate([
             'code' => 'required|string|unique:coupons,code,' . $coupon->id,
@@ -127,6 +130,7 @@ class CouponController extends Controller
      */
     public function destroy(Coupon $coupon)
     {
+        $this->authorize('delete', $coupon);
         $coupon->delete();
     
         return redirect()->back()->with('success', 'Coupon deleted successfully.');

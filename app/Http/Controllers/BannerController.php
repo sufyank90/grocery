@@ -18,6 +18,8 @@ class BannerController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Banner::class);
+        
         $poster = Banner::with('media','category','product')->get();
         $products = Product::all();
         $categories = Category::all();
@@ -43,6 +45,7 @@ class BannerController extends Controller
      */
     public function store(StoreBannerRequest $request)
     {
+        $this->authorize('create', Banner::class);
        
         $banner = Banner::create();
         if($request->file){
@@ -98,6 +101,7 @@ class BannerController extends Controller
      */
     public function destroy(Banner $banner)
     {
+        $this->authorize('delete', $banner);
         $banner->delete();
         return redirect()->back();
 

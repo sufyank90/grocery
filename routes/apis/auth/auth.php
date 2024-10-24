@@ -13,6 +13,23 @@ use App\Notifications\VerifyAccount;
 //Order
 use App\Models\Order;
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('checkexpire',function(Request $request){
+     
+        $user = $request->user();
+        if ($user) {
+            
+            if ($user->tokenCan('personal_access_token')) {
+                return response()->json(["message" => "Token is valid"], 200);
+            } else {
+                return response()->json(["message" => "Token has expired"], 401);
+            }
+        } else {
+            return response()->json(["message" => "User not authenticated"], 401);
+        }
+        });
+});
+
 Route::middleware(['guest'])->prefix('auth')->group(function () {
 
 
@@ -75,7 +92,6 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
     });
 
 
- 
 
     Route::post('/register',function(Request $request){
 

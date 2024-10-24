@@ -2,14 +2,15 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Banner;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Coupon;
 
-class BannerPolicy
+class CouponPolicy
 {
     use HandlesAuthorization;
 
+   
     /**
      * Determine whether the user can view any models.
      *
@@ -18,17 +19,17 @@ class BannerPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('view banners');
+        return $user->hasPermissionTo('view coupons');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Coupon  
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Banner $banner)
+    public function view(User $user, Coupon $coupon)
     {
         
     }
@@ -41,41 +42,41 @@ class BannerPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermissionTo('create banners');
+        return $user->hasPermissionTo('create coupons');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Coupon  
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Banner $banner)
+    public function update(User $user,Coupon $coupon)
     {
-        return $user->hasPermissionTo('update banners');
+        return $user->hasPermissionTo('update coupons');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Coupon 
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Banner $banner)
+    public function delete(User $user, Coupon $coupon)
     {
-        return $user->hasPermissionTo('delete banners');
+        return $user->hasPermissionTo('delete coupons');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Coupon  
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Banner $banner)
+    public function restore(User $user,Coupon $coupon)
     {
         //
     }
@@ -84,10 +85,10 @@ class BannerPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Coupon 
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Banner $banner)
+    public function forceDelete(User $user,Coupon $coupon)
     {
         //
     }

@@ -2,14 +2,15 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Banner;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
-class BannerPolicy
+
+class UserPolicy
 {
     use HandlesAuthorization;
 
+   
     /**
      * Determine whether the user can view any models.
      *
@@ -18,19 +19,19 @@ class BannerPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('view banners');
+        return $user->hasPermissionTo('view customers');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\User  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Banner $banner)
+    public function view()
     {
-        
+        //
     }
 
     /**
@@ -41,41 +42,43 @@ class BannerPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermissionTo('create banners');
+        return $user->hasPermissionTo('create customers');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Banner $banner)
+    public function update(User $user)
     {
-        return $user->hasPermissionTo('update banners');
+        return $user->hasPermissionTo('update customers');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Banner $banner)
+    public function delete(User $user)
     {
-        return $user->hasPermissionTo('delete banners');
+        return $user->hasPermissionTo('delete customers');
     }
+
+
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Banner $banner)
+    public function restore(User $user)
     {
         //
     }
@@ -84,10 +87,10 @@ class BannerPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Banner  $banner
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Banner $banner)
+    public function forceDelete(User $user)
     {
         //
     }

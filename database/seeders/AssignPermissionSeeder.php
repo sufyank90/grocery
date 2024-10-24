@@ -38,6 +38,18 @@ class AssignPermissionSeeder extends Seeder
             'create shipping rates',
             'update shipping rates',
             'delete shipping rates',
+            'view customers',
+            'create customers',
+            'update customers',
+            'delete customers',
+            'view coupons',
+            'create coupons',
+            'update coupons',
+            'delete coupons',
+            'view banners',
+            'create banners',
+            'update banners',
+            'delete banners',
         ];
         
         // Create permissions if they do not exist

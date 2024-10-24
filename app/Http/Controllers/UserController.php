@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Hash; // Add this line
 class UserController extends Controller
 {
     public function index(Request $request){
+
+        $this->authorize('viewAny', User::class);
+
         $users = User::where('name','like','%'.$request->search.'%')
         ->orWhere('email', 'like', '%' . $request->search . '%')
         ->role('user')->orderBy('id','desc')->paginate(10);
@@ -23,6 +26,8 @@ class UserController extends Controller
 
     public function updateWallet(Request $request, $id)
     {
+        $this->authorize('update', User::class);
+
         $request->validate([
             'wallet' => 'required|numeric|min:0',
         ]);
@@ -39,6 +44,8 @@ class UserController extends Controller
     //verify
     public function verify($id)
     {
+        $this->authorize('update', User::class);
+
         $user = User::findOrFail($id);
         if ($user->hasVerifiedEmail()) {
             // Unverify
@@ -55,6 +62,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', User::class);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -89,6 +97,7 @@ class UserController extends Controller
     
     public function update(Request $request, $id)
     {
+        $this->authorize('update', User::class);
         // dd($request->all());
         $user = User::findOrFail($id);
 
@@ -110,6 +119,7 @@ class UserController extends Controller
     }
     public function destroy($id)
     {
+        $this->authorize('delete', User::class);
         $user = User::findOrFail($id);  // Find the user by ID
         $user->delete();  // Delete the user
         return redirect()->back()->with('message', 'User deleted successfully!');
