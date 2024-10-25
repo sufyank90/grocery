@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderNotification;
+use Carbon\Carbon;
+use App\Models\Coupon;
 
 Route::middleware('auth:sanctum')->prefix('order')->group(function () {
 
@@ -59,6 +61,24 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         //         'message' => 'Your account is not verified. Please check your email for the verification link.'
         //     ], 403); // 403 Forbidden
         // }
+
+
+        //Huzaifa Shakeel
+        if($request->couponcode !== ''){
+            $coupon = Coupon::where('code', $request->couponcode)->where('status', 'active')->where('expiry_date', '>', Carbon::now())->where('usage_limit', '>', 0)->first();
+
+            if (!$coupon) {
+                return response()->json(["message" => "Coupon code is invalid or expired"], 400);
+            }
+            if ($coupon->usage_type === 'single') {
+                $coupon->usage_limit = 0; // Single-use coupon, now used up
+            } 
+            elseif ($coupon->usage_type === 'multiple') {
+                $coupon->decrement('usage_limit'); // Decrease usage limit by 1
+            }
+            $coupon->save();
+        }
+       
               
 
         // Create a new order with the validated data
@@ -70,6 +90,9 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
             $user->wallet = $user->wallet - $validatedData['total'];
             $user->save();
         }
+
+
+
         
         Notification::send($order->user, new OrderNotification($order));
         return response()->json(["data" => $order, "message" => "Order created successfully"], 201);

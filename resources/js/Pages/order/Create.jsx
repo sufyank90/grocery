@@ -8,9 +8,10 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import Modal from '@/Components/Modal';
 import Select from 'react-select';
 import InputLabel from '@/Components/InputLabel';
+import { toast } from 'react-toastify';
 
 const Create = (props) => {
-    const { nextId, users, products, coupons, shippingRates } = props;
+    const { nextId, users, products, coupons, shippingRates,attributevalues } = props;
     const [selectedName, setSelectedName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
@@ -18,6 +19,7 @@ const Create = (props) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [finalPrice, setFinalPrice] = useState(0);
     const [couponCode, setCouponCode] = useState([]);
+
 
         const handleEmailChange = (e, setFieldValue) => {
         const selectedEmail = e.target.value;
@@ -595,10 +597,12 @@ const Create = (props) => {
                 onClose={() => setIsModalOpen(false)}
                 maxWidth="2xl"
             >
-                <Formik
+                <Formik 
+                    enableReinitialize
                     initialValues={{
                         item: '',
-                        qty: 0
+                        qty: 0,
+                        variation: ''
 
                     }}
                     validationSchema={Yup.object({
@@ -606,16 +610,40 @@ const Create = (props) => {
                         qty: Yup.number().required('Required').min(1, 'Quantity must be greater than 0').max(100, 'Quantity must be less than 100'),
 
                     })}
-                    onSubmit={(values, { resetForm }) => {
+                    onSubmit={(values, { resetForm, setSubmitting }) => {
                         const items = products.find(product => product.id === parseInt(values.item));
+                        console.log(items);
+                        if (items.variation === 'variation' && !values.variation) {
+                            toast.error('Please select a variation');
+                            setSubmitting(false);
+                            return;
+                        }
+                        if(items.variation === 'single' ) {
+                            values.variation = '';
+                        }
+                        let variationPrice = 0;
+
+                        if (values.variation !== '') {
+                            const product = products.find((product) => product.id === parseInt(values.item));
+                            const variation = product?.variations.find((variation) => variation.id === parseInt(values.variation));
+                        
+                            if (variation) {
+                                variationPrice = variation.sale_price > 0 && variation.sale_price < variation.regular_price
+                                    ? variation.sale_price
+                                    : variation.regular_price;
+                            } 
+                        }
+                        
+                        
                         setSelectedItem(prevItems => [
                             ...prevItems,
                             {
                                 order_id: nextId,
                                 product_id: items.id,
+                                variation_id: values.variation,
                                 name: items.name,
-                                category: items.categories[0].name,
-                                price: items.price,
+                                category:  items.categories[0]?.name,
+                                price: variationPrice > 0 &&  values.variation ? variationPrice :  items.price,
                                 qty: values.qty
                             }
                         ]);
@@ -626,7 +654,7 @@ const Create = (props) => {
 
                     }}
                 >
-                    {({ isSubmitting }) => (
+                    {({ values, isSubmitting }) => (
                         <Form className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto flex flex-col items-center ">
                             <h2 className="text-lg font-bold mb-4">Add Item</h2>
                             <div className="overflow-y-auto max-h-80 w-full">
@@ -636,7 +664,6 @@ const Create = (props) => {
                                             as="select"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             name="item"
-
                                         >
                                             <option value="" disabled>Select Product</option>
                                             {products.map((product) => (
@@ -649,8 +676,32 @@ const Create = (props) => {
                                         </label>
                                         <ErrorMessage name="item" component="div" className="text-red-600 text-sm mt-1" />
                                     </div>
-
-
+                                
+                                
+                               
+                                    
+                                    {products.find((product) => product.id === parseInt(values.item))?.variation === "variation" && (
+                                    <div className="relative z-0 w-full mb-5 group">
+                                        <Field
+                                            as="select"
+                                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            name="variation"
+                                        >
+                                            <option value="" disabled>Select Variation</option>
+                                            {products.find((product) => product.id === parseInt(values.item))?.variations.map((item) => (
+                                                <option key={item.id} value={item.id}>{ JSON.parse(item.attributes).map((id) =>attributevalues.find((attributevalue) => attributevalue.id == id)?.value).join(', ')}</option>
+                                               
+                                            ))}
+                                        </Field>
+                                        <label
+                                            className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                        >
+                                        </label>
+                                        <ErrorMessage name="variation" component="div" className="text-red-600 text-sm mt-1" />
+                                    </div>
+                            )}           
+                             
+                                    
                                     <div className="relative z-0 w-full mb-5 group">
                                         <Field
                                             type="number"
@@ -697,7 +748,7 @@ const Create = (props) => {
                 onClose={() => setIsCouponModalOpen(false)}
                 maxWidth="2xl"
             >
-                <Formik
+                <Formik enableReinitialize
                     initialValues={{
                         code: ''
 

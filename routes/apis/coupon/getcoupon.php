@@ -115,20 +115,22 @@ Route::middleware('auth:sanctum')->prefix('coupon')->group(function () {
             $discount = $request->amount * ($coupon->value / 100); // Percentage discount
         }
     
+          //Huzaifa Shakeel
         // Update the usage limit if applicable
-        if ($coupon->usage_type === 'single') {
-            $coupon->usage_limit = 0; // Single-use coupon, now used up
-        } elseif ($coupon->usage_type === 'multiple') {
-            $coupon->decrement('usage_limit'); // Decrease usage limit by 1
-        }
+        // if ($coupon->usage_type === 'single') {
+        //     $coupon->usage_limit = 0; // Single-use coupon, now used up
+        // } 
+        // elseif ($coupon->usage_type === 'multiple') {
+        //     $coupon->decrement('usage_limit'); // Decrease usage limit by 1
+        // }
     
-        $coupon->save();
+        // $coupon->save();
     
         return response()->json([
             'message' => 'Coupon applied successfully',
             'discount' => $discount,
-            'final_amount' => $request->amount - $discount
-        ]);
+            'final_amount' => $request->amount - $discount,  
+        ], 200);
     });
     
 

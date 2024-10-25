@@ -16,6 +16,8 @@ use App\Models\ShippingRate;
 
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderNotification;
+//Attributevalue
+use App\Models\Attributevalue;
 
 
 
@@ -87,7 +89,10 @@ class OrderController extends Controller
 
         // Fetch all users, products, and coupons
         $users = User::all();
-        $products = Product::with('categories')->get();
+        $products = Product::with('categories','variations','attributes')->get();
+        $attributevalues = Attributevalue::get();
+   
+       
         $coupons = Coupon::all();
 
         // Fetch all shipping rates with id and area_name
@@ -110,6 +115,7 @@ class OrderController extends Controller
             'users' => $users,
             'products' => $products,
             'coupons' => $coupons,
+            'attributevalues' => $attributevalues,
             'shippingRates' => $formattedShippingRates, // Add shipping rates here
         ]);
     }
