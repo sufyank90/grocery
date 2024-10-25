@@ -82,8 +82,10 @@ public function csvstore(Request $request)
         }
 
         DB::beginTransaction();
+        // dd($jsonData);
         foreach ($jsonData as $data) {
             try {
+                
                 $product = Product::create([
                     'name' => $data['name'],
                     'description' => $data['description'], 

@@ -37,38 +37,39 @@ export default function Product(props) {
             if (file.type === "text/csv" || file.name.endsWith(".csv")) {
                 // FileReader instance to read file contents
                 const reader = new FileReader();
+    
                 reader.onload = (e) => {
                     const csvContent = e.target.result;
                     const rows = csvContent.split("\n").slice(1); // Split by lines and exclude the header row
-
+    
                     // Parse CSV rows into JSON objects
                     const jsonData = rows.reduce((acc, row) => {
-                        const columns = row.split(",");
+                        const columns = parseCSVRow(row); // Use custom CSV parsing function
                         // Check if all columns are empty
                         if (columns.every(col => col.trim() === "")) {
                             return acc; // Ignore empty rows
                         }
-
-                        // Construct JSON object name,description,price,status,sku,sale_price,regular_price,tax_class,tax
+    
+                        // Construct JSON object
                         const data = {
-                            name: columns[0],
-                            description: columns[1],
-                            price: columns[2],
-                            status: columns[3],
-                            sku: columns[4],
-                            sale_price: columns[5],
-                            regular_price: columns[6],
-                            tax_class: columns[7],
-                            tax: columns[8],
-                            stock_count: columns[9],
+                            name: columns[0] || null,
+                            description: columns[1] ? columns[1].replace(/,/g, '') : null, // Remove commas if not null
+                            price: columns[2] || null,
+                            status: columns[3] || null,
+                            sku: columns[4] || null,
+                            sale_price: columns[5] || null,
+                            regular_price: columns[6] || null,
+                            tax_class: columns[7] || null,
+                            tax: columns[8] || null,
+                            stock_count: columns[9] || null,
                         };
-
+    
                         acc.push(data); // Push non-empty row to accumulator
                         return acc;
                     }, []);
-
+    
                     console.log("Parsed JSON:", jsonData);
-                    router.post(route('product.csvstore'), jsonData)
+                    router.post(route('product.csvstore'), jsonData);
                 };
                 reader.readAsText(file); // Read file as text
             } else {
@@ -76,7 +77,14 @@ export default function Product(props) {
             }
         }
     };
-
+    
+    // Function to parse CSV row correctly considering quoted strings
+    function parseCSVRow(row) {
+        const regex = /("([^"]|"")*"|[^,]+)/g; // Match quoted strings and other values
+        const matches = row.match(regex);
+        return matches ? matches.map(m => m.replace(/(^"|"$)|""/g, '').trim()) : [];
+    }
+    
 
     return (
         <>
