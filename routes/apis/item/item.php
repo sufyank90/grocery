@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->prefix('item')->group(function () {
             'items' => 'required|array',
             'items.*.product_id' => 'required|integer',
             'items.*.name' => 'required|string|max:255',
-            'items.*.category' => 'required|string|max:255',
+            'items.*.category' => 'nullable|string|max:255',
             'items.*.price' => 'required|numeric',
             'items.*.qty' => 'required|integer|min:1',
             'items.*.status' => 'required|in:instock,outofstock,active',
