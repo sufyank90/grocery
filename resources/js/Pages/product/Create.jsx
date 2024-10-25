@@ -50,8 +50,7 @@ function Create(props) {
                             shipping_rates: [],
                             file: [],
                             thumbnail: [], 
-                            attribute_id: [],
-                      
+                            attribute_id: [],                     
                             regular_price: '',
                             sale_price: '0',
                             stock: '',
@@ -65,7 +64,8 @@ function Create(props) {
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string().required('Required'),
-                            description: Yup.string().required('Required'),
+                            description: Yup.string().required('Required') 
+                            .max(800, 'Description must be at most 800 characters'),
                             // price: Yup.number().required('Required').positive(),
                             status: Yup.string().required('Required'),
                             categories: Yup.array().min(1, 'At least one category is required').required('Required'),
@@ -231,6 +231,7 @@ function Create(props) {
                                             name="description"
                                             as="textarea"
                                             id="description"
+                                            rows="10"
                                             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             placeholder=" "
                                         />
