@@ -64,7 +64,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
 
 
         //Huzaifa Shakeel
-        if($request->couponcode !== ''){
+        if($request->couponcode !== '' && $request->couponcode !== null){
             $coupon = Coupon::where('code', $request->couponcode)->where('status', 'active')->where('expiry_date', '>', Carbon::now())->where('usage_limit', '>', 0)->first();
 
             if (!$coupon) {
