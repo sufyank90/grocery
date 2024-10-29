@@ -90,7 +90,7 @@ public function csvstore(Request $request)
                 // Read the CSV data into an array
                 $data = array_map('str_getcsv', file($fullPath));
 
-                if($data[0] != ['name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count','categories']){
+                if($data[0] != ['name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count'] && $data[0] != ['name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count','categories'] ){
                     unlink($fullPath);
                     session()->flash('error', 'Invalid CSV/EXCEL file');
                     return redirect()->back();
@@ -114,12 +114,15 @@ public function csvstore(Request $request)
 
                     $product = Product::create($tempproduct);
 
-                    $categories = explode(',', $row[10]);
-                    foreach ($categories as $category) {
-                        $category = trim($category);
-                       $cate = Category::firstOrCreate(['name' => $category]);
-                       $product->categories()->attach($cate);
+                    if(isset($row[10]) && !empty($row[10])){
+                        $categories = explode(',', $row[10]);
+                        foreach ($categories as $category) {
+                            $category = trim($category);
+                           $cate = Category::firstOrCreate(['name' => $category]);
+                           $product->categories()->attach($cate);
+                        }
                     }
+                  //check kro
                 }
                 unlink($fullPath);  
                 session()->flash('message', 'Records created successfully!');
@@ -176,7 +179,7 @@ public function csvstore(Request $request)
     // }
 }
 
-
+//category pe serif yeh condition lagani hai ke agr category add na kare phir bhi data submit ho jaye or add ki ho category jb bhi add ho jaye
     // public function csvExport(Request $request)
     // {
         
