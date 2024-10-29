@@ -74,7 +74,7 @@ function Create(props) {
                                 .test('fileFormat', 'Unsupported file format', (files) => {
                                     if (!files || files.length === 0) return true;
                                     return files.every(file =>
-                                        ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type)
+                                        ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif','image/webp', 'image/bmp', 'image/tiff'].includes(file.type)
                                     );
                                 }),
                             thumbnail:Yup.array()
@@ -83,7 +83,7 @@ function Create(props) {
                             .test('fileFormat', 'Unsupported file format', (files) => {
                                 if (!files || files.length === 0) return true;
                                 return files.every(file =>
-                                    ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type)
+                                    ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif','image/webp', 'image/bmp', 'image/tiff'].includes(file.type)
                                 );
                             }),
                             regular_price: Yup.number()
@@ -661,7 +661,7 @@ function Create(props) {
                                       {/* Thumbnail Upload */}
                                       <label className="block text-sm font-medium text-gray-700 my-2">Thumbnail</label>
                                     <FileUpload
-                                        label="SVG, PNG, JPG or GIF (MAX. 800x400px)"
+                                        label="SVG, PNG, JPG GIF or WEBP (MAX. 800x400px)"
                                         accept="image/*"
                                         setFieldValue={setFieldValue}
                                         values={values}
@@ -676,7 +676,7 @@ function Create(props) {
                                     {/* File Upload */}
                                     <label className="block text-sm font-medium text-gray-700 my-2">Pictures</label>
                                     <FileUpload
-                                        label="SVG, PNG, JPG or GIF (MAX. 800x400px)"
+                                        label="SVG, PNG, JPG GIF or WEBP (MAX. 800x400px)"
                                         accept="*/*" // Change as needed
                                         setFieldValue={setFieldValue}
                                         values={values}

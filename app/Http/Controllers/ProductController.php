@@ -72,48 +72,105 @@ class ProductController extends Controller
 
 public function csvstore(Request $request)
 {
+
     $this->authorize('create', Product::class);
 
-    try {
-        $jsonData = json_decode($request->getContent(), true);
+    $file = $request->file('file');
 
-        if (!$jsonData) {
-            return response()->json(['error' => 'Invalid JSON data'], 400);
-        }
+    if ($file) {
+        // Store the file in storage/app/productscvs
+        $path = $file->storeAs('productscvs', $file->getClientOriginalName(), 'public');
 
-        DB::beginTransaction();
-        // dd($jsonData);
-        foreach ($jsonData as $data) {
-            try {
-                
-                $product = Product::create([
-                    'name' => $data['name'],
-                    'description' => $data['description'], 
-                    'price' => intval($data['price']) ?: 0, 
-                    'status' => $data['status'], 
-                    'sku' => $data['sku'], 
-                    'sale_price' => intval($data['sale_price']) ?: 0, 
-                    'regular_price' => intval($data['regular_price']) ?: 0, 
-                    'tax_class' => $data['tax_class'], 
-                    'tax' => intval($data['tax']) ?: 0,
-                    'stock_count' => intval($data['stock_count']) ?: 0,
-                ]);
-            } catch (Exception $e) {
-                session()->flash('error', 'Failed to import one or more products. Please check the log for details.');
-                DB::rollBack();
+        if ($path) {
+            // Construct the full path to the stored file
+            $fullPath = storage_path('app/public/' . $path);
+
+            // Check if the file exists before attempting to read
+            if (file_exists($fullPath)) {
+                // Read the CSV data into an array
+                $data = array_map('str_getcsv', file($fullPath));
+
+                if($data[0] != ['name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count']){
+                    unlink($fullPath);
+                    session()->flash('error', 'Invalid CSV/EXCEL file');
+                    return redirect()->back();
+                }
+                $products = [];
+
+                array_shift($data);
+                foreach ($data as $row) {
+
+                    $products[] = [
+                        'name' => $row[0],
+                        'description' => $row[1] ?: '',
+                        'price' => intval($row[2]) ? intval($row[2]) : 0,
+                        'status' => $row[3] || 'instock',
+                        'sku' => $row[4],
+                        'sale_price' => intval($row[5]) ? intval($row[5]) : 0,
+                        'regular_price' => intval($row[6]) ? intval($row[6]) : 0,
+                        'tax_class' => $row[7],
+                        'tax' => intval($row[8]) ? intval($row[8]) : 0,
+                        'stock_count' => intval($row[9]) ? intval($row[9]) : 0
+                    ];
+                }
+
+
+                Product::insert($products);
+
+                unlink($fullPath);
+  
+                session()->flash('message', 'Records created successfully!');
+                return redirect()->back();
+            } else {
+                session()->flash('error', 'File could not be found after upload.');
                 return redirect()->back();
             }
         }
-        DB::commit(); 
-        session()->flash('message', 'Records created successfully!');
-
-        return redirect()->back();
-    } catch (Exception $e) {
-
-        DB::rollBack();
-        session()->flash('error', 'Failed to import products: ' . $e->getMessage());
+    } else {
+        session()->flash('error', 'File not found.');
         return redirect()->back();
     }
+
+    // try {
+    //     $jsonData = json_decode($request->getContent(), true);
+
+    //     if (!$jsonData) {
+    //         return response()->json(['error' => 'Invalid JSON data'], 400);
+    //     }
+
+    //     DB::beginTransaction();
+    //     // dd($jsonData);
+    //     foreach ($jsonData as $data) {
+    //         try {
+                
+    //             $product = Product::create([
+    //                 'name' => $data['name'],
+    //                 'description' => $data['description'], 
+    //                 'price' => intval($data['price']) ?: 0, 
+    //                 'status' => $data['status'], 
+    //                 'sku' => $data['sku'], 
+    //                 'sale_price' => intval($data['sale_price']) ?: 0, 
+    //                 'regular_price' => intval($data['regular_price']) ?: 0, 
+    //                 'tax_class' => $data['tax_class'], 
+    //                 'tax' => intval($data['tax']) ?: 0,
+    //                 'stock_count' => intval($data['stock_count']) ?: 0,
+    //             ]);
+    //         } catch (Exception $e) {
+    //             session()->flash('error', 'Failed to import one or more products. Please check the log for details.');
+    //             DB::rollBack();
+    //             return redirect()->back();
+    //         }
+    //     }
+    //     DB::commit(); 
+    //     session()->flash('message', 'Records created successfully!');
+
+    //     return redirect()->back();
+    // } catch (Exception $e) {
+
+    //     DB::rollBack();
+    //     session()->flash('error', 'Failed to import products: ' . $e->getMessage());
+    //     return redirect()->back();
+    // }
 }
 
 

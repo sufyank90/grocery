@@ -34,44 +34,48 @@ export default function Product(props) {
         const file = event.target.files[0]; // Selecting the first file from the FileList object
         if (file) {
             // Check if the selected file is a CSV file
-            if (file.type === "text/csv" || file.name.endsWith(".csv")) {
+            if (file.type === "text/csv" || file.name.endsWith(".csv")|| file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
                 // FileReader instance to read file contents
-                const reader = new FileReader();
+                // const reader = new FileReader();
+                // reader.onload = (e) => {
+                //     const csvContent = e.target.result;
+                //     const rows = csvContent.split("\n").slice(1); // Split by lines and exclude the header row
     
-                reader.onload = (e) => {
-                    const csvContent = e.target.result;
-                    const rows = csvContent.split("\n").slice(1); // Split by lines and exclude the header row
+                //     // Parse CSV rows into JSON objects
+                //     const jsonData = rows.reduce((acc, row) => {
+                //         const columns = parseCSVRow(row); // Use custom CSV parsing function
+                //         // Check if all columns are empty
+                //         if (columns.every(col => col.trim() === "")) {
+                //             return acc; // Ignore empty rows
+                //         }
     
-                    // Parse CSV rows into JSON objects
-                    const jsonData = rows.reduce((acc, row) => {
-                        const columns = parseCSVRow(row); // Use custom CSV parsing function
-                        // Check if all columns are empty
-                        if (columns.every(col => col.trim() === "")) {
-                            return acc; // Ignore empty rows
-                        }
+                //         // Construct JSON object
+                //         const data = {
+                //             name: columns[0] || null,
+                //             description: columns[1] ? columns[1].replace(/,/g, '') : null, // Remove commas if not null
+                //             price: columns[2] || null,
+                //             status: columns[3] || null,
+                //             sku: columns[4] || null,
+                //             sale_price: columns[5] || null,
+                //             regular_price: columns[6] || null,
+                //             tax_class: columns[7] || null,
+                //             tax: columns[8] || null,
+                //             stock_count: columns[9] || null,
+                //         };
     
-                        // Construct JSON object
-                        const data = {
-                            name: columns[0] || null,
-                            description: columns[1] ? columns[1].replace(/,/g, '') : null, // Remove commas if not null
-                            price: columns[2] || null,
-                            status: columns[3] || null,
-                            sku: columns[4] || null,
-                            sale_price: columns[5] || null,
-                            regular_price: columns[6] || null,
-                            tax_class: columns[7] || null,
-                            tax: columns[8] || null,
-                            stock_count: columns[9] || null,
-                        };
+                //         acc.push(data); // Push non-empty row to accumulator
+                //         return acc;
+                //     }, []);
     
-                        acc.push(data); // Push non-empty row to accumulator
-                        return acc;
-                    }, []);
-    
-                    console.log("Parsed JSON:", jsonData);
-                    router.post(route('product.csvstore'), jsonData);
-                };
-                reader.readAsText(file); // Read file as text
+                //     console.log("Parsed JSON:", jsonData);
+                //     router.post(route('product.csvstore'), jsonData);
+                // };
+                // reader.readAsText(file); 
+
+                router.post(route('product.csvstore'), {
+                    file: file
+                });
+
             } else {
                 console.error("Please select a CSV file."); // Handle non-CSV file selection
             }
