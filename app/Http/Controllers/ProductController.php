@@ -90,17 +90,16 @@ public function csvstore(Request $request)
                 // Read the CSV data into an array
                 $data = array_map('str_getcsv', file($fullPath));
 
-                if($data[0] != ['name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count']){
+                if($data[0] != ['name','description','price','status','sku','sale_price','regular_price','tax_class','tax','stock_count','categories']){
                     unlink($fullPath);
                     session()->flash('error', 'Invalid CSV/EXCEL file');
                     return redirect()->back();
                 }
-                $products = [];
 
                 array_shift($data);
                 foreach ($data as $row) {
 
-                    $products[] = [
+                    $tempproduct = [
                         'name' => $row[0],
                         'description' => $row[1] ?: '',
                         'price' => intval($row[2]) ? intval($row[2]) : 0,
@@ -112,13 +111,17 @@ public function csvstore(Request $request)
                         'tax' => intval($row[8]) ? intval($row[8]) : 0,
                         'stock_count' => intval($row[9]) ? intval($row[9]) : 0
                     ];
+
+                    $product = Product::create($tempproduct);
+
+                    $categories = explode(',', $row[10]);
+                    foreach ($categories as $category) {
+                        $category = trim($category);
+                       $cate = Category::firstOrCreate(['name' => $category]);
+                       $product->categories()->attach($cate);
+                    }
                 }
-
-
-                Product::insert($products);
-
-                unlink($fullPath);
-  
+                unlink($fullPath);  
                 session()->flash('message', 'Records created successfully!');
                 return redirect()->back();
             } else {
