@@ -88,10 +88,16 @@ Route::middleware('auth:sanctum')->prefix('coupon')->group(function () {
 
         
     
-        $coupon = Coupon::where('code', $request->code)->first();
+        $coupon = Coupon::with('users')->where('code', $request->code)->first();
     
         if (!$coupon) {
             return response()->json(['message' => 'Coupon not found'], 404);
+        }
+
+        $user = $request->user();
+        //check if already used by user
+        if ($coupon->users->contains($user->id)) {
+            return response()->json(["message" => "Coupon code already used"], 400);
         }
     
         // Check if the coupon is expired
