@@ -33,6 +33,7 @@ class Order extends Model
         'user_id',
         'shipping_id',
         'guest',
+        'delivery_charges',
     ];
     protected $casts = [
         'created_at' => 'datetime',
