@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
                 'status' => 'nullable|string|max:50',
                 'payable' => 'required|numeric',
                 'shipping_id' => 'required',
+                'delivery_charges' => 'nullable|numeric',
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 422);

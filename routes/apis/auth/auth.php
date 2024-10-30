@@ -100,6 +100,10 @@ Route::middleware(['guest'])->prefix('auth')->group(function () {
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'string', Rules\Password::defaults()],
+        ],
+        [
+            'email.unique' => 'Your account is already registered please type on forgot password at login page.',
+            'phone.unique' => 'Your account is already registered please type on forgot password at login page.'
         ]);
 
         if ($validator->fails()) {
