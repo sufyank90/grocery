@@ -18,6 +18,8 @@ class CouponController extends Controller
         $this->authorize('viewAny', Coupon::class);
         $coupons = Coupon::where('code','like','%'.$request->search.'%')
         ->orderBy('id','desc')->paginate(10);
+
+
         return Inertia::render('coupon/Coupons',compact('coupons'));
     }
 
@@ -60,6 +62,7 @@ class CouponController extends Controller
     $coupon->min_amount = $request->input('min_amount');
     $coupon->expiry_date = $request->input('expiry_date');
     $coupon->save();
+
 
     return redirect()->back()->with('success', 'Coupon created successfully.');
 }

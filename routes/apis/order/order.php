@@ -66,16 +66,23 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
 
         //Huzaifa Shakeel
         if($request->couponcode !== '' && $request->couponcode !== null){
-            $coupon = Coupon::where('code', $request->couponcode)->where('status', 'active')->where('expiry_date', '>', Carbon::now())->where('usage_limit', '>', 0)->first();
+            $coupon = Coupon::with('users')->where('code', $request->couponcode)->where('status', 'active')->where('expiry_date', '>', Carbon::now())->where('usage_limit', '>', 0)->first();
+
+            //check if already used by user
+            if ($coupon->users->contains($user->id)) {
+                return response()->json(["message" => "Coupon code already used"], 400);
+            }
 
             if (!$coupon) {
                 return response()->json(["message" => "Coupon code is invalid or expired"], 400);
             }
             if ($coupon->usage_type === 'single') {
                 $coupon->usage_limit = 0; // Single-use coupon, now used up
+                $user->coupons()->attach($coupon->id);
             } 
             elseif ($coupon->usage_type === 'multiple') {
                 $coupon->decrement('usage_limit'); // Decrease usage limit by 1
+                $user->coupons()->attach($coupon->id);
             }
             $coupon->save();
         }

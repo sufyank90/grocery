@@ -18,6 +18,8 @@ class Coupon extends Model
         return $this->expiry_date && $this->expiry_date->isPast();
     }
 
+    
+
     // protected $casts = [
     //     'expiry_date' => 'date',
     // ];
