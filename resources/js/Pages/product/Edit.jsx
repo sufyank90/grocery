@@ -68,7 +68,6 @@ function Edit(props) {
                                 shipping_rates: defaultshippingrate ? shippingRateIds : [],
                                 file:  removeThumbnailFromFiles,
                                 thumbnail: initialFiles[0] ? initialFiles[0] : '',
-                                
                                 stock_count: product.stock_count ? product.stock_count : '',
                                 attribute_id: [],
                                 variation: product.variation ? product.variation : 'single',
@@ -95,7 +94,7 @@ function Edit(props) {
                                         if (!files || files.length === 0) return true;
                                         return files.every(file =>{
                                             if (file instanceof File) {
-                                                return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(file.type);
+                                                return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif','image/webp'].includes(file.type);
                                             }
     
                                             if (typeof file === 'object' && file !== null && 'url' in file && 'id' in file) {
@@ -116,7 +115,7 @@ function Edit(props) {
                                         if (!value) return true; // If no file uploaded, skip validation
                                        // Check if it's a file object
                                         if (value instanceof File) {
-                                            return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(value.type);
+                                            return ['image/svg+xml', 'image/png', 'image/jpg', 'image/jpeg', 'image/gif','image/webp'].includes(value.type);
                                         }
 
                                         if (typeof value === 'object' && value !== null && 'url' in value && 'id' in value) {
@@ -806,7 +805,7 @@ function Edit(props) {
                                                             <p className="mb-2 text-sm text-gray-500">
                                                                 <span className="font-semibold">Click to upload</span> or drag and drop
                                                             </p>
-                                                            <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                            <p className="text-xs text-gray-500">SVG, PNG, JPG  GIF or WEBP (MAX. 800x400px)</p>
                                                         </>
                                                    
                                                 </div>
@@ -863,7 +862,7 @@ function Edit(props) {
                                                             <p className="mb-2 text-sm text-gray-500">
                                                                 <span className="font-semibold">Click to upload</span> or drag and drop
                                                             </p>
-                                                            <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                            <p className="text-xs text-gray-500">SVG, PNG, JPG GIF or WEBP (MAX. 800x400px)</p>
                                                         </>
                                                  
                                                 </div>
