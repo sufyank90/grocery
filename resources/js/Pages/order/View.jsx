@@ -178,6 +178,12 @@ const View = (props) => {
                                     <th scope="row" className="pl-6 pr-3 pt-6 text-left text-sm font-normal text-gray-500 sm:hidden">Subtotal</th>
                                     <td className="pl-3 pr-6 pt-6 py-2 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.total}</td>
                                 </tr>
+                                <tr>
+                                    {/* add delivery cgarges */}
+                                    <th scope="row" colSpan="6" className="hidden pl-4 py-2 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Delivery Charges:</th>
+                                    <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Delivery Charges</th>
+                                    <td className="pl-3 pr-6 pt-4 py-2 text-right text-sm text-gray-500 sm:pr-0">Rs. {order.delivery_charges}</td>
+                                </tr>
                                 {order.couponcode && (
                                     <tr>
                                         <th scope="row" colSpan="6" className="hidden pl-4 py-2 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Discount:</th>
@@ -185,12 +191,7 @@ const View = (props) => {
                                         <td className="pl-3 pr-6 pt-4 py-2 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.discount}</td>
                                     </tr>
                                 )}
-                                <tr>
-                                    {/* add delivery cgarges */}
-                                    <th scope="row" colSpan="6" className="hidden pl-4 py-2 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:table-cell sm:pl-0">Delivery Charges:</th>
-                                    <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-normal text-gray-500 sm:hidden">Delivery Charges</th>
-                                    <td className="pl-3 pr-6 pt-4 py-2 text-right text-sm text-gray-500 sm:pr-0">-Rs. {order.delivery_charges}</td>
-                                </tr>
+                                
                                 <tr>
                                     <th scope="row" colSpan="6" className="hidden pl-4 py-2 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:table-cell sm:pl-0">Total:</th>
                                     <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">Total</th>
