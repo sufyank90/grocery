@@ -89,7 +89,7 @@ function Edit(props) {
                                 sku: Yup.string().required('Required'),
                                 stock_count: Yup.number().required('Required').positive(),
                                 file: Yup.array()
-                                    .min(1, 'At least one image is required')
+                                    // .min(1, 'At least one image is required')
                                     .test('fileFormat', 'Unsupported file format', (files) => {
                                         if (!files || files.length === 0) return true;
                                         return files.every(file =>{
