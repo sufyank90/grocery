@@ -106,4 +106,23 @@ class BannerController extends Controller
         return redirect()->back();
 
     }
+
+    //popup
+    public function popup(Banner $banner)
+    {
+        //set all banner popup to false
+        if($banner->popup){
+            $banner->update(['popup' => false]);
+            session()->flash('message', 'Banner closed');
+            return redirect()->back();
+        }
+
+        Banner::where('id','!=',$banner->id)->update(['popup' => false]);
+        
+        $banner->update(['popup' => true]);
+        session()->flash('message', 'Banner opened');
+        return redirect()->back();
+
+    }
+
 }

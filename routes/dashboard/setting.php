@@ -10,8 +10,8 @@ use Inertia\Inertia;
 Route::middleware(['auth'])->prefix('dashboard/setting')->group(function () {
     Route::get('', [SettingController::class, 'index'])->name('setting.index');
         Route::get('/posters', [SettingController::class, 'posters'])->name('setting.posters');
-        // setting.posters.upload
         Route::post('/posters/upload', [SettingController::class, 'posters_upload'])->name('setting.posters.upload');
+
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
@@ -23,5 +23,6 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
 Route::middleware(['auth'])->prefix('dashboard/setting')->group(function () {
     Route::resource('banner', BannerController::class);
+    Route::put('/banner/popup/{banner}', [BannerController::class, 'popup'])->name('setting.banner.popup');
 });
 

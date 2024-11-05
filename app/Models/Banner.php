@@ -12,6 +12,7 @@ class Banner extends Model implements HasMedia
     protected $fillable = [
         'category_id',
         'product_id',
+        'popup'
     ];
 
 

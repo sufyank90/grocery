@@ -205,6 +205,14 @@ export default function Posters(props) {
 
                                             </div>
                                             <div className="flex gap-3">
+                                                
+                                            <button
+                                            onClick={()=>{
+                                                router.put(route("setting.banner.popup",media))
+                                            }}
+                                            className={ media.popup ? "bg-red-500 text-white px-2 py-2 rounded-lg text-bold mt-4" : "bg-green-500 text-white px-2 py-2 rounded-lg text-bold mt-4"}>
+                                                {media.popup ? "Remove from Popup" : "Set on Popup"}    
+                                                </button>
                                                 <a href={media.media[0].original_url} download className="bg-[#e5e5e5e5] text-gray-500 px-2 py-2 rounded-lg text-bold mt-4">
                                                     <FaDownload size={20} />
                                                 </a>
