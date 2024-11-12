@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { CiSettings } from "react-icons/ci";
 function List(props) {
     const { roles } = props;
-
+console.log(roles);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);

@@ -19,7 +19,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::latest()->paginate(10);
+        $roles = Role::whereNotIn('name', ['user', 'super admin'])->latest()->paginate(10);
+        // $roles = Role::whereNotIn('name', ['user'])->pluck('name')->toArray();
         return Inertia::render('role/List',compact('roles'));
     }
 
