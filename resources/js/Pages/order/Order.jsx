@@ -21,6 +21,7 @@ function Orders(props) {
     const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
     const [selectId, setSelectId] = useState([]);
 
+
     const openEditModal = (order) => {
         setSelectedOrder(order);
         setIsEditModalOpen(true);
@@ -63,9 +64,9 @@ function Orders(props) {
                             </Link>
                             <Formik
                                 enableReinitialize
-                                initialValues={{ search: '', status: '' }}
+                                initialValues={{ search: '', status: '',toDate: '', fromDate: '' }}
                                 onSubmit={(values) => {
-                                    router.visit(route('order.index', { search: values.search, status: values.status }), {
+                                    router.visit(route('order.index', { search: values.search, status: values.status, fromDate: values.fromDate, toDate: values.toDate }), {
                                         method: 'get',
                                         preserveState: true,
                                     });
@@ -89,6 +90,41 @@ function Orders(props) {
                                                 <option value="cancelled">Cancelled</option>
                                             </Field>
                                         </div>
+                                        {/* To Date Picker */}
+                                        <div className="relative">
+                                            <label htmlFor="toDate" className="absolute -top-5 left-0 w-full h-full">To:</label>
+                                            <Field
+                                                type="date"
+                                                name="toDate"
+                                                className="py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                onChange={(e) => {
+                                                    setFieldValue("toDate", e.target.value);
+                                                    if (e.target.value || values.fromDate) { // Check if `toDate` or `fromDate` is set
+                                                        submitForm();
+                                                    }
+                                                }}
+                                            />
+                                            <ErrorMessage name="toDate" component="div" className="text-red-500 text-sm" />
+                                        </div>
+
+                                        {/* From Date Picker */}
+                                        <div className="relative">
+                                            <label htmlFor="fromDate" className="absolute -top-5 left-0 w-full h-full">From:</label>
+                                            <Field
+                                                type="date"
+                                                name="fromDate"
+                                                className="py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                onChange={(e) => {
+                                                    setFieldValue("fromDate", e.target.value);
+                                                    if (e.target.value || values.toDate) { // Check if `fromDate` or `toDate` is set
+                                                        submitForm();
+                                                    }
+                                                }}
+                                            />
+                                            <ErrorMessage name="fromDate" component="div" className="text-red-500 text-sm" />
+                                        </div>
+
+
                                         <div>
                                             <Field
                                                 name="search"

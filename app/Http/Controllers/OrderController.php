@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Attribute;
 use App\Models\ShippingRate;
+use MezPay\Facade\MezPayFacade;
 
 
 use Illuminate\Support\Facades\Notification;
@@ -42,6 +43,11 @@ class OrderController extends Controller
               ->orWhere('id', 'like', '%' . $request->search . '%');
         });
     }
+    
+    // Apply date range filters
+    if ($request->filled('fromDate') && $request->filled('toDate')) {
+        $query->whereBetween('created_at', [$request->toDate,$request->fromDate ]);
+    }
 
     // Apply status filter
     if ($request->filled('status')) {
@@ -57,7 +63,39 @@ class OrderController extends Controller
     ]);
 }
 
+public function registerOrder(Request $request)
+{
+    $paymentGateway = MezPayFacade::registerOrder([
+        'order_id' => 152,
+        'currency' => 586, // 586 = PKR | 540 = USD
+        'amount' => 2000,
+    ]);
+}
 
+
+public function orderSucceeded(Request $request)
+    {
+        // Get the orderId from the URL parameter or any other source as needed
+        $orderId = $request->orderId;
+
+        // Perform actions for successful payment
+        // For example, update order status, send notifications, etc.
+
+        // You can also pass the $orderId to a view if needed
+        return view('success', compact('orderId'));
+    }
+
+    public function orderFailed(Request $request)
+    {
+        // Get the orderId from the URL parameter or any other source as needed
+        $orderId = $request->orderId;
+
+        // Perform actions for failed payment
+        // For example, update order status, send notifications, etc.
+
+        // You can also pass the $orderId to a view if needed
+        return view('failed', compact('orderId'));
+    }
     
 
     /**

@@ -4,8 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "374c6b69306b376b835c63d43a98b610",
+    "content-hash": "d2b35c300c2ea03628ef6c05e008edf6",
     "packages": [
+        {
+            "name": "aqshah20/mezpay",
+            "version": "V1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aqshah20/mezpay.git",
+                "reference": "e1324464f72ae1ddc1cae84fb16fe6012a11e3d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aqshah20/mezpay/zipball/e1324464f72ae1ddc1cae84fb16fe6012a11e3d4",
+                "reference": "e1324464f72ae1ddc1cae84fb16fe6012a11e3d4",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MezPay\\MezPayServiceProvider"
+                    ],
+                    "aliases": {
+                        "MezPay": "MezPay\\Facade\\MezPayFacade"
+                    },
+                    "migrations": [
+                        "MezPay/src/database/migrations"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MezPay\\": "src/",
+                    "MezPay\\Models\\": "src/Models"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "AQ Shah",
+                    "email": "jqsystech@gmail.com"
+                }
+            ],
+            "description": "MezPay: A seamless Laravel payment gateway package empowering secure Meezan Bank payment processing. Simplify integration with Meezan Bank's E-commerce Payment Gateway for effortless transactions, supporting Stripe, PayPal, Braintree, and more.",
+            "support": {
+                "issues": "https://github.com/aqshah20/mezpay/issues",
+                "source": "https://github.com/aqshah20/mezpay/tree/V1.2"
+            },
+            "time": "2023-07-23T09:27:51+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.11.0",
@@ -8885,12 +8936,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.0.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
