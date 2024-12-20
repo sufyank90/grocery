@@ -146,15 +146,14 @@ public function orderSucceeded(Order $order, Request $request)
     // }
 
     public function orderFailed(Order $order, Request $request)
-{
-    return $order;
-    // Log or perform actions for failed payment
-    // Example:
-    $order->update(['status' => 'failed']);
-    return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'status' => 'failed']);
+    {
+        // Log or perform actions for failed payment
+        // Example:
+        $order->update(['status' => 'payment failed']);
+        return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'status' => 'failed']);
 
 
-}
+    }
 
     
 
