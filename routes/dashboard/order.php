@@ -14,9 +14,13 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::put('order/status/{id}', [OrderController::class, 'status'])->name('order.status');
     Route::post('/order/bulkdestroy', [OrderController::class, 'bulkdestroy'])->name('order.bulkdestroy');
 
+    // Route::get('order_payment/success/{orderId?}', [OrderController::class, 'orderSucceeded'])->name('success');
+    // Route::get('order_payment/failed/{orderId?}', [OrderController::class, 'orderFailed'])->name('failed');
+    // Route::get('order_payment/register', [OrderController::class, 'registerOrder'])->name('registerOrder');
+
     Route::get('order_payment/success/{orderId?}', [OrderController::class, 'orderSucceeded'])->name('success');
     Route::get('order_payment/failed/{orderId?}', [OrderController::class, 'orderFailed'])->name('failed');
-    
     Route::get('order_payment/register', [OrderController::class, 'registerOrder'])->name('registerOrder');
+
 
 });

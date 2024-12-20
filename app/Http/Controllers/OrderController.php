@@ -12,7 +12,9 @@ use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Attribute;
 use App\Models\ShippingRate;
-use MezPay\Facade\MezPayFacade;
+// use MezPay\Facade\MezPayFacade;
+use Illuminate\Support\Facades\Http;
+
 
 
 use Illuminate\Support\Facades\Notification;
@@ -63,39 +65,109 @@ class OrderController extends Controller
     ]);
 }
 
+// public function registerOrder(Request $request)
+// {
+//     $paymentGateway = MezPayFacade::registerOrder([
+//         'order_id' => 152,
+//         'currency' => 586, // 586 = PKR | 540 = USD
+//         'amount' => 2000,
+//     ]);
+// }
+
 public function registerOrder(Request $request)
 {
-    $paymentGateway = MezPayFacade::registerOrder([
-        'order_id' => 152,
-        'currency' => 586, // 586 = PKR | 540 = USD
-        'amount' => 2000,
-    ]);
+    try {
+        // Make the HTTP request to the API
+        $response = Http::asForm()->timeout(10)->post(env('MEZPAY_API_URL') . '/register.do', [
+            'userName' => env('MEZPAY_USERNAME'),
+            'password' => env('MEZPAY_PASSWORD'),
+            'orderNumber' => 152, // Unique order ID
+            'currency' => 586, // 586 = PKR
+            'amount' => 2000, // Amount in minor units (e.g., 2000 = PKR 20.00)
+            'returnUrl' => env('MEZPAY_SUCCESS_CALLBACK'),
+            'failUrl' => env('MEZPAY_FAILED_CALLBACK'),
+        ]);
+
+        // Parse the response
+        $result = $response->json();
+
+        if (isset($result['formUrl'])) {
+            return redirect($result['formUrl']); // Redirect to the payment page
+        }
+
+        // Handle API error response
+        $errorMessage = $result['errorMessage'] ?? 'Unknown error';
+        session()->flash('error', $errorMessage);
+        return redirect()->route('home'); // Redirect to the home page
+    } catch (\Exception $e) {
+        // Handle timeout or other exceptions
+        session()->flash('error', 'Payment service is currently unavailable. Please try again later.');
+        return redirect()->route('dashboard'); // Redirect to the home page
+    }
 }
 
 
+
+// public function orderSucceeded(Request $request)
+//     {
+//         // Get the orderId from the URL parameter or any other source as needed
+//         $orderId = $request->orderId;
+
+//         // Perform actions for successful payment
+//         // For example, update order status, send notifications, etc.
+
+//         // You can also pass the $orderId to a view if needed
+//         return view('success', compact('orderId'));
+//     }
+
 public function orderSucceeded(Request $request)
-    {
-        // Get the orderId from the URL parameter or any other source as needed
-        $orderId = $request->orderId;
+{
+    $orderId = $request->get('orderId');
 
-        // Perform actions for successful payment
-        // For example, update order status, send notifications, etc.
+    // Fetch the order status from the payment gateway
+    $response = Http::get(env('MEZPAY_API_URL') . '/getOrderStatus.do', [
+        'userName' => env('MEZPAY_USERNAME'),
+        'password' => env('MEZPAY_PASSWORD'),
+        'orderId' => $orderId,
+    ]);
 
-        // You can also pass the $orderId to a view if needed
+    $result = $response->json();
+
+    if ($result['errorCode'] == 0 && $result['orderStatus'] == 2) { // 2 = Payment Successful
+        // Perform actions for successful payment, e.g., update order status in database
+        // Example:
+        // Order::find($orderId)->update(['status' => 'paid']);
+
         return view('success', compact('orderId'));
     }
 
+    return response()->json(['error' => $result['errorMessage'] ?? 'Unknown error'], 400);
+}
+
+
+    // public function orderFailed(Request $request)
+    // {
+    //     // Get the orderId from the URL parameter or any other source as needed
+    //     $orderId = $request->orderId;
+
+    //     // Perform actions for failed payment
+    //     // For example, update order status, send notifications, etc.
+
+    //     // You can also pass the $orderId to a view if needed
+    //     return view('failed', compact('orderId'));
+    // }
+
     public function orderFailed(Request $request)
-    {
-        // Get the orderId from the URL parameter or any other source as needed
-        $orderId = $request->orderId;
+{
+    $orderId = $request->get('orderId');
 
-        // Perform actions for failed payment
-        // For example, update order status, send notifications, etc.
+    // Log or perform actions for failed payment
+    // Example:
+    // Order::find($orderId)->update(['status' => 'failed']);
 
-        // You can also pass the $orderId to a view if needed
-        return view('failed', compact('orderId'));
-    }
+    return view('failed', compact('orderId'));
+}
+
     
 
     /**
