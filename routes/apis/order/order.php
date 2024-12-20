@@ -103,6 +103,11 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
 
         
         Notification::send($order->user, new OrderNotification($order));
+        if($request->method == 'card')
+        {
+            return response()->json(["data" => ['id' => $order->id, 'payable' => $request->payable, 'link' => '/payment/'. $order->id.'/card/' ], "message" => "Redirecting to payment page"], 201);
+        }
+        
         return response()->json(["data" => $order, "message" => "Order created successfully"], 201);
     });
 

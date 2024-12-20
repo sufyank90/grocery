@@ -20,7 +20,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
     Route::get('order_payment/success/{orderId?}', [OrderController::class, 'orderSucceeded'])->name('success');
     Route::get('order_payment/failed/{orderId?}', [OrderController::class, 'orderFailed'])->name('failed');
-    Route::get('order_payment/register', [OrderController::class, 'registerOrder'])->name('registerOrder');
+    Route::get('payment/{order}/card', [OrderController::class, 'registerOrder'])->name('registerOrder');
 
 
 });
