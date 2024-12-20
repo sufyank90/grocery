@@ -125,9 +125,8 @@ public function orderSucceeded(Request $request)
     if ($result['errorCode'] == 0 && $result['orderStatus'] == 2) { // 2 = Payment Successful
         // Perform actions for successful payment, e.g., update order status in database
         // Example:
-        // Order::find($orderId)->update(['status' => 'paid']);
-
-        return view('success', compact('orderId'));
+        Order::find($orderId)->update(['status' => 'paid']);
+        return response()->json(['message' => 'Payment successful', 'orderId' => $orderId, 'status' => 'paid']);
     }
 
     return response()->json(['error' => $result['errorMessage'] ?? 'Unknown error'], 400);
@@ -152,9 +151,10 @@ public function orderSucceeded(Request $request)
 
     // Log or perform actions for failed payment
     // Example:
-    // Order::find($orderId)->update(['status' => 'failed']);
+    Order::find($orderId)->update(['status' => 'failed']);
+    return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'status' => 'failed']);
 
-    return view('failed', compact('orderId'));
+
 }
 
     
