@@ -147,6 +147,7 @@ public function orderSucceeded(Request $request)
 
     public function orderFailed(Request $request)
 {
+    dd($request->all());
     $orderId = $request->get('orderId');
 
     // Log or perform actions for failed payment
