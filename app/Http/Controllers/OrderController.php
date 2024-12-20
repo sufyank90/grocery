@@ -76,6 +76,15 @@ class OrderController extends Controller
 
 public function registerOrder(Order $order, Request $request)
 {   
+    return [
+        'userName' => env('MEZPAY_USERNAME'),
+        'password' => env('MEZPAY_PASSWORD'),
+        'orderNumber' => $order->id, // Unique order ID
+        'currency' => 586, // 586 = PKR
+        'amount' => $order->payable*1000, // Amount in minor units (e.g., 2000 = PKR 20.00)
+        'returnUrl' => env('MEZPAY_SUCCESS_CALLBACK'),
+        'failUrl' => env('MEZPAY_FAILED_CALLBACK'),
+    ];
     $response = Http::asForm()->post(env('MEZPAY_API_URL') . '/register.do', [
         'userName' => env('MEZPAY_USERNAME'),
         'password' => env('MEZPAY_PASSWORD'),
