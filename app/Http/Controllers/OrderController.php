@@ -125,7 +125,7 @@ public function orderSucceeded(Order $order, Request $request)
     if ($result['errorCode'] == 0 && $result['orderStatus'] == 2) { // 2 = Payment Successful
         // Perform actions for successful payment, e.g., update order status in database
         // Example:
-        Order::find($order->id)->update(['status' => 'paid']);
+        $order->update(['status' => 'paid']);
         return response()->json(['message' => 'Payment successful', 'orderId' => $orderId, 'status' => 'paid']);
     }
 
@@ -147,9 +147,10 @@ public function orderSucceeded(Order $order, Request $request)
 
     public function orderFailed(Order $order, Request $request)
 {
+    return $order;
     // Log or perform actions for failed payment
     // Example:
-    Order::find($order->id)->update(['status' => 'failed']);
+    $order->update(['status' => 'failed']);
     return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'status' => 'failed']);
 
 
