@@ -83,8 +83,8 @@ public function registerOrder(Order $order, Request $request)
         'orderNumber' => $order->id, // Unique order ID
         'currency' => 586, // 586 = PKR
         'amount' => $order->payable*100, // Amount in minor units (e.g., 2000 = PKR 20.00)
-        'returnUrl' => env('APP_URL') . '/order_payment/success',
-        'failUrl' => env('APP_URL') . '/order_payment/failed',
+        'returnUrl' => env('APP_URL') . '/order_payment/success/'.$order->id,
+        'failUrl' => env('APP_URL') . '/order_payment/failed/'.$order->id,
     ]);
     // Handle response
     $result = $response->json();
@@ -109,9 +109,9 @@ public function registerOrder(Order $order, Request $request)
 //         return view('success', compact('orderId'));
 //     }
 
-public function orderSucceeded(Request $request)
+public function orderSucceeded(Order $order, Request $request)
 {
-    $orderId = $request->get('orderId');
+    $orderId = $order->id;
 
     // Fetch the order status from the payment gateway
     $response = Http::get(env('MEZPAY_API_URL') . '/getOrderStatus.do', [
@@ -125,7 +125,7 @@ public function orderSucceeded(Request $request)
     if ($result['errorCode'] == 0 && $result['orderStatus'] == 2) { // 2 = Payment Successful
         // Perform actions for successful payment, e.g., update order status in database
         // Example:
-        Order::find($orderId)->update(['status' => 'paid']);
+        Order::find($order->id)->update(['status' => 'paid']);
         return response()->json(['message' => 'Payment successful', 'orderId' => $orderId, 'status' => 'paid']);
     }
 
@@ -145,14 +145,11 @@ public function orderSucceeded(Request $request)
     //     return view('failed', compact('orderId'));
     // }
 
-    public function orderFailed(Request $request)
+    public function orderFailed(Order $order, Request $request)
 {
-    dd($request->all());
-    $orderId = $request->get('orderId');
-
     // Log or perform actions for failed payment
     // Example:
-    Order::find($orderId)->update(['status' => 'failed']);
+    Order::find($order->id)->update(['status' => 'failed']);
     return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'status' => 'failed']);
 
 
