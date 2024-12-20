@@ -75,37 +75,25 @@ class OrderController extends Controller
 // }
 
 public function registerOrder(Request $request)
-{
-    try {
-        // Make the HTTP request to the API
-        $response = Http::asForm()->timeout(10)->post(env('MEZPAY_API_URL') . '/register.do', [
-            'userName' => env('MEZPAY_USERNAME'),
-            'password' => env('MEZPAY_PASSWORD'),
-            'orderNumber' => 152, // Unique order ID
-            'currency' => 586, // 586 = PKR
-            'amount' => 2000, // Amount in minor units (e.g., 2000 = PKR 20.00)
-            'returnUrl' => env('MEZPAY_SUCCESS_CALLBACK'),
-            'failUrl' => env('MEZPAY_FAILED_CALLBACK'),
-        ]);
+{   
+    $response = Http::asForm()->post(env('MEZPAY_API_URL') . '/register.do', [
+        'userName' => env('MEZPAY_USERNAME'),
+        'password' => env('MEZPAY_PASSWORD'),
+        'orderNumber' => 101, // Unique order ID
+        'currency' => 586, // 586 = PKR
+        'amount' => 2000, // Amount in minor units (e.g., 2000 = PKR 20.00)
+        'returnUrl' => env('MEZPAY_SUCCESS_CALLBACK'),
+        'failUrl' => env('MEZPAY_FAILED_CALLBACK'),
+    ]);
+    // Handle response
+    $result = $response->json();
 
-        // Parse the response
-        $result = $response->json();
-
-        if (isset($result['formUrl'])) {
-            return redirect($result['formUrl']); // Redirect to the payment page
-        }
-
-        // Handle API error response
-        $errorMessage = $result['errorMessage'] ?? 'Unknown error';
-        session()->flash('error', $errorMessage);
-        return redirect()->route('home'); // Redirect to the home page
-    } catch (\Exception $e) {
-        // Handle timeout or other exceptions
-        session()->flash('error', 'Payment service is currently unavailable. Please try again later.');
-        return redirect()->route('dashboard'); // Redirect to the home page
+    if (isset($result['formUrl'])) {
+        return redirect($result['formUrl']); // Redirect to the payment page
     }
-}
 
+    return response()->json(['error' => $result['errorMessage'] ?? 'Unknown error'], 400);
+}
 
 
 // public function orderSucceeded(Request $request)
