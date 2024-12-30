@@ -367,10 +367,9 @@ public function csvstore(Request $request)
     {
        
         $this->authorize('viewAny', Product::class);
-        
         $products = Product::where('name','like','%'.$request->search.'%')
         ->orwhere('description','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(10);
+        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(1);
       
         $categories = Category::all();
 
@@ -689,7 +688,9 @@ public function csvstore(Request $request)
                 $product->addMedia($file)->toMediaCollection();
             }
         }  
-        return redirect(route('product.index'))->with('success', 'Category updated successfully.');
+
+        return redirect()->back()->with('success', 'Product updated successfully.');
+        // return redirect(route('product.index'))->with('success', 'Category updated successfully.');
     }
 
     /**

@@ -32,5 +32,10 @@ class Item extends Model
     {
         return $this->belongsTo(Variation::class);
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
     
 }

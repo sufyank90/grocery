@@ -6,6 +6,7 @@ import html2canvas from 'html2canvas';
 
 const View = (props) => {
     const { order, attribute } = props;
+    console.log(order);
     const generatePDF = () => {
         const input = document.getElementById('invoice');
         html2canvas(input, { scale: 2 }).then((canvas) => {
@@ -122,6 +123,7 @@ const View = (props) => {
                                 <thead className="border-b border-gray-300 text-gray-900">
                                     <tr >
                                         <th scope="col" className="pl-4 py-2 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0 whitespace-nowrap">Product Name</th>
+                                        <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">SKU</th>
                                         <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Variation ID</th>
                                         <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Attribute</th>
                                         <th scope="col" className="hidden px-3 py-2 text-left text-sm font-semibold text-gray-900 sm:table-cell whitespace-nowrap">Category</th>
@@ -139,6 +141,7 @@ const View = (props) => {
 
                                                 {/* <div className="mt-1 truncate text-gray-500">{item.description}</div> */}
                                             </td>
+                                            <td className="hidden px-3 py-2 text-left text-sm text-gray-500 sm:table-cell">{item.product.sku ? item.product.sku : "N/A"}</td>
                                             <td className="hidden px-3 py-2  text-left text-sm text-gray-500 sm:table-cell">{item.variation ? item.variation.id : "N/A"}
 
                                             </td>

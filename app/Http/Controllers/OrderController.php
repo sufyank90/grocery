@@ -297,7 +297,7 @@ public function orderSucceeded(Order $order, Request $request)
     {
         $this->authorize('viewAny', Order::class);
       // Load the order with its items and feedbacks
-      $orderWithDetails = $order->load(['items','items.variation', 'feedbacks']);
+      $orderWithDetails = $order->load(['items','items.variation','items.product', 'feedbacks']);
 
       $attribute = Attribute::with('attributeValues')->get();
 

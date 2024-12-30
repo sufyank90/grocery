@@ -64,7 +64,7 @@ function Orders(props) {
                             </Link>
                             <Formik
                                 enableReinitialize
-                                initialValues={{ search: '', status: '',toDate: '', fromDate: '' }}
+                                initialValues={{ search: '', status: '', toDate: '', fromDate: '' }}
                                 onSubmit={(values) => {
                                     router.visit(route('order.index', { search: values.search, status: values.status, fromDate: values.fromDate, toDate: values.toDate }), {
                                         method: 'get',
@@ -90,16 +90,19 @@ function Orders(props) {
                                                 <option value="cancelled">Cancelled</option>
                                             </Field>
                                         </div>
-                                        {/* To Date Picker */}
+                                        {/* From Date Picker */}
                                         <div className="relative">
-                                            <label htmlFor="toDate" className="absolute -top-5 left-0 w-full h-full">To:</label>
+                                            <label htmlFor="toDate" className="absolute -top-5 left-0 w-full h-full">From:</label>
                                             <Field
                                                 type="date"
                                                 name="toDate"
                                                 className="py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                onClick={(e) => e.target.showPicker()} // Input field ke kisi bhi part par click karne se calendar khule
+                                                onFocus={(e) => e.target.showPicker()} // Input field ko focus karne se bhi calendar khule
+                                                on
                                                 onChange={(e) => {
                                                     setFieldValue("toDate", e.target.value);
-                                                    if (e.target.value || values.fromDate) { // Check if `toDate` or `fromDate` is set
+                                                    if (e.target.value || values.fromDate) {
                                                         submitForm();
                                                     }
                                                 }}
@@ -107,22 +110,29 @@ function Orders(props) {
                                             <ErrorMessage name="toDate" component="div" className="text-red-500 text-sm" />
                                         </div>
 
-                                        {/* From Date Picker */}
+                                        {/* To Date Picker */}
                                         <div className="relative">
-                                            <label htmlFor="fromDate" className="absolute -top-5 left-0 w-full h-full">From:</label>
+                                            <label htmlFor="fromDate" className="absolute -top-5 left-0 w-full h-full">To:</label>
                                             <Field
                                                 type="date"
                                                 name="fromDate"
                                                 className="py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                onClick={(e) => e.target.showPicker()} // Input field ke kisi bhi part par click karne se calendar khule
+                                                onFocus={(e) => e.target.showPicker()} // Input field ko focus karne se bhi calendar khule
                                                 onChange={(e) => {
                                                     setFieldValue("fromDate", e.target.value);
-                                                    if (e.target.value || values.toDate) { // Check if `fromDate` or `toDate` is set
+                                                    if (e.target.value || values.toDate) {
                                                         submitForm();
                                                     }
                                                 }}
                                             />
                                             <ErrorMessage name="fromDate" component="div" className="text-red-500 text-sm" />
                                         </div>
+
+
+
+
+
 
 
                                         <div>
