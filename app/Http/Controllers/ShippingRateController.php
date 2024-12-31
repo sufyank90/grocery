@@ -21,11 +21,11 @@ class ShippingRateController extends Controller
         $this->authorize('viewAny', ShippingRate::class);
         if($request->search)
         {
-            $shipments = ShippingRate::where('area_name','like','%'.$request->search.'%')->paginate(10);
+            $shipments = ShippingRate::where('area_name','like','%'.$request->search.'%')->paginate(50);
         }
         else
         {
-            $shipments = ShippingRate::orderBy('id','desc')->paginate(10);
+            $shipments = ShippingRate::orderBy('id','desc')->paginate(50);
         }
 
         $createPolicy = Gate::allows('create', ShippingRate::class);

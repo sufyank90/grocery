@@ -13,6 +13,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('order', OrderController::class);
     Route::put('order/status/{id}', [OrderController::class, 'status'])->name('order.status');
     Route::post('/order/bulkdestroy', [OrderController::class, 'bulkdestroy'])->name('order.bulkdestroy');
+    Route::get('/order/csv/csvexport', [OrderController::class, 'csvExport'])->name('order.csvexport');
 
     // Route::get('order_payment/success/{orderId?}', [OrderController::class, 'orderSucceeded'])->name('success');
     // Route::get('order_payment/failed/{orderId?}', [OrderController::class, 'orderFailed'])->name('failed');

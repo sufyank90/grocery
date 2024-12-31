@@ -17,7 +17,9 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         $user = $request->user();
     
  
-        $orders = Order::where('user_id', $user->id)->with('items','items.variation')
+        $orders = Order::where('user_id', $user->id)
+        ->where('paymentstatus','!=','Failed')
+        ->with('items','items.variation')
             ->orderBy('id', 'desc')
             ->get();
         
@@ -108,6 +110,53 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
     });
 
 
-
+    Route::post('/wallet-check', function (Request $request) {
+        // Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required|numeric|min:1',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        // Retrieve validated data
+        $validatedData = $validator->validated();
+    
+        // Get the currently authenticated user
+        $user = $request->user();
+    
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated.'
+            ], 401); // 401 Unauthorized
+        }
+    
+        // Check if wallet balance is zero
+        if ($user->wallet == 0) {
+            return response()->json([
+                'message' => 'Insufficient wallet balance. Wallet is empty.'
+            ], 400); // 400 Bad Request
+        }
+    
+        // Calculate the amount to deduct from the wallet
+        $deductedAmount = min($user->wallet, $validatedData['amount']);
+    
+        // Deduct the amount from the wallet
+        $user->wallet -= $deductedAmount;
+        $user->save();
+    
+        // Calculate the remaining amount to be processed
+        $remainingAmount = $validatedData['amount'] - $deductedAmount;
+    
+        return response()->json([
+            'message' => 'Amount processed successfully.',
+            'deducted_from_wallet' => $deductedAmount,
+            'remaining_amount' => $remainingAmount,
+            'wallet_balance' => $user->wallet,
+        ], 200); // 200 OK
+    });
+    
+    
 
 });

@@ -22,7 +22,7 @@ class CategoryController extends Controller
     {
         $this->authorize('viewAny', Category::class);
         $categorys = Category::where('name','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->with('media')->paginate(10);
+        ->orderBy('id','desc')->with('media')->paginate(50);
 
         $createPolicy = Gate::allows('create', Category::class);
         $updatePolicy = Gate::allows('update', Category::class);

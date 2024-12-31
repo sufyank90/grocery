@@ -7,13 +7,14 @@ import * as Yup from 'yup';
 import { GrView } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 import { IoCreate } from "react-icons/io5";
+import { SiMicrosoftexcel } from 'react-icons/si';
 
 
 
 
 function Orders(props) {
     const { orders } = props; // Update this to use orders instead of categorys
-
+console.log(orders);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -47,6 +48,7 @@ function Orders(props) {
                     <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
                         <h3 className="text-lg font-bold">Orders</h3>
                         <div className="flex flex-col md:flex-row space-x-0 md:space-x-2 mt-2 md:mt-0">
+                            
                             {selectId.length > 0 &&
                                 <button
                                     onClick={() => setIsBulkDeleteModalOpen(true)}
@@ -55,6 +57,15 @@ function Orders(props) {
                                     Bulk Delete
                                 </button>
                             }
+                            <a
+                                href={route('order.csvexport')}
+                                className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
+                            >
+                                <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                                    <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                                    Export CSV File
+                                </span>
+                            </a>
                             <Link
                                 href={route('order.create')}
                                 style={{ background: '#fcb609' }}
@@ -170,15 +181,15 @@ function Orders(props) {
                                     </th>
                                     {/* <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">#</th> */}
                                     <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">ID</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">Name</th>
+                                    <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Email</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">Phone</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">Address</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">Total</th>
                                     <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Ordered At</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">UserType</th>
-                                    <th className="py-3 px-4 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">Area</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">UserType</th>
+                                    <th className="py-3  border-b-2 border-gray-200 text-left font-semibold text-gray-700">Status</th>
                                     <th className="py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-700">Action</th>
                                 </tr>
                             </thead>
@@ -209,14 +220,14 @@ function Orders(props) {
                                             </td>
                                             {/* <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{index + 1}</td> */}
                                             <td className="py-2 border-b border-gray-200 text-left text-gray-700">{(orders.current_page - 1) * orders.per_page + index + 1}</td>
-                                            <td className="py-2 px-4 border-b text-left
+                                            <td className="py-2  border-b text-left
                                             ">{order.guest === 1 ? order.name : order.user?.name || 'N/A'}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? order.email : order.user?.email || 'N/A'}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">{order.address}</td>
-                                            <td className="py-2 px-4 border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
+                                            <td className="py-2  border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? order.email : order.user?.email || 'N/A'}</td>
+                                            <td className="py-2  border-b border-gray-200 text-left text-gray-700">{order.phone}</td>
+                                            <td className="py-2  border-b border-gray-200 text-left text-gray-700">{order.address}</td>
+                                            <td className="py-2  border-b border-gray-200 text-left text-gray-700">Rs. {order.total}</td>
                                             <td className="py-2 border-b border-gray-200 text-left text-gray-700">{order.created_at_formatted}</td>
-                                            <td className="py-2 px-4 border-b text-left">
+                                            <td className="py-2  border-b text-left">
                                                 {order.shipping_rate ? order.shipping_rate.area_name : 'Not Available'}
                                             </td>
                                             <td className="py-2 border-b border-gray-200 text-left text-gray-700">{order.guest === 1 ? 'Guest' : 'Registered'}</td>

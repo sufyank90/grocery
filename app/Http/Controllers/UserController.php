@@ -17,12 +17,56 @@ class UserController extends Controller
 
         $users = User::where('name','like','%'.$request->search.'%')
         ->orWhere('email', 'like', '%' . $request->search . '%')
-        ->role('user')->orderBy('id','desc')->paginate(10);
+        ->role('user')->orderBy('id','desc')->paginate(50);
         
         return Inertia::render('user/User', compact('users'));
     }
 
+    public function csvExport(Request $request)
+    {
+        $users = User::all();
 
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=users.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+        
+        // Define the columns for the CSV file
+        $columns = [
+            'Name',
+            'Email',
+            'Phone',
+            'Wallet',
+        ];
+        
+        // Create a callback to stream the CSV content
+        $callback = function() use ($users, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            // Write the column headers
+            fputcsv($file, $columns);
+            
+            // Write product data to the CSV
+            foreach ($users as $user) {
+               
+                
+                fputcsv($file, [
+                    $user->name,
+                    $user->email,
+                    $user->phone,
+                    $user->wallet
+                ]);
+            }
+            
+            fclose($file);
+        };
+        
+        // Return the streamed CSV file as a download
+        return response()->stream($callback, 200, $headers);
+    }
 
     public function updateWallet(Request $request, $id)
     {

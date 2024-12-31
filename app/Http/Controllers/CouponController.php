@@ -17,7 +17,7 @@ class CouponController extends Controller
     {
         $this->authorize('viewAny', Coupon::class);
         $coupons = Coupon::where('code','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->paginate(10);
+        ->orderBy('id','desc')->paginate(50);
 
 
         return Inertia::render('coupon/Coupons',compact('coupons'));

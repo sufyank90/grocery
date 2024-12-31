@@ -57,12 +57,87 @@ class OrderController extends Controller
     }
 
     // Eager load the shippingRate relationship and paginate
-    $orders = $query->with('shippingRate','user')->orderBy('id', 'desc')->paginate(10);
+    $orders = $query->with('shippingRate','user')->orderBy('id', 'desc')->paginate(50);
 
     // Return the data to the Inertia view
     return Inertia::render('order/Order', [
         'orders' => $orders,
     ]);
+}
+
+
+public function csvExport(Request $request)
+{
+    $orders = Order::all();
+
+    $headers = [
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=orders.csv",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+    
+    // Define the columns for the CSV file
+    $columns = [
+        'Name',
+        'Email',
+        'Phone',
+        'Address',
+        'Zipcode',
+        'City',
+        'Country',
+        'Method',
+        'Total',
+        'Couponcode',
+        'Coupontype',
+        'Discount',
+        'Status',
+        'Payable',
+        'User Id',
+        'Shipping Id',
+        'Guest',
+        'Delivery Charges',
+    ];
+    
+    // Create a callback to stream the CSV content
+    $callback = function() use ($orders, $columns) {
+        $file = fopen('php://output', 'w');
+        
+        // Write the column headers
+        fputcsv($file, $columns);
+        
+        // Write product data to the CSV
+        foreach ($orders as $order) {
+           
+            
+            fputcsv($file, [
+                $order->name,
+                $order->email,
+                $order->phone,
+                $order->address,
+                $order->zipcode,
+                $order->city,
+                $order->country,
+                $order->method,
+                $order->total,
+                $order->couponcode,
+                $order->coupontype,
+                $order->discount,
+                $order->status,
+                $order->payable,
+                $order->user_id,
+                $order->shipping_id,
+                $order->guest,
+                $order->delivery_charges
+            ]);
+        }
+        
+        fclose($file);
+    };
+    
+    // Return the streamed CSV file as a download
+    return response()->stream($callback, 200, $headers);
 }
 
 // public function registerOrder(Request $request)
@@ -125,8 +200,8 @@ public function orderSucceeded(Order $order, Request $request)
     if ($result['errorCode'] == 0 && $result['orderStatus'] == 2) { // 2 = Payment Successful
         // Perform actions for successful payment, e.g., update order status in database
         // Example:
-        $order->update(['status' => 'paid']);
-        return response()->json(['message' => 'Payment successful', 'orderId' => $orderId, 'status' => 'paid']);
+        $order->update(['status' => 'paid', 'paymentstatus' => 'Paid']);
+        return response()->json(['message' => 'Payment successful', 'orderId' => $orderId, 'paymentstatus' => 'Paid']);
     }
 
     return response()->json(['error' => $result['errorMessage'] ?? 'Unknown error'], 400);
@@ -150,8 +225,11 @@ public function orderSucceeded(Order $order, Request $request)
         // Log or perform actions for failed payment
         // Example:
         $orderId = $order->id;
-        $order->update(['status' => 'payment failed']);
-        return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'status' => 'failed']);
+        $order->update([
+            'status' => 'cancelled',
+            'paymentstatus' => 'Failed',
+        ]);
+        return response()->json(['message' => 'Payment failed', 'orderId' => $orderId, 'paymentstatus' => 'Failed']);
 
 
     }

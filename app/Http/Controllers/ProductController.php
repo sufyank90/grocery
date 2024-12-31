@@ -369,7 +369,7 @@ public function csvstore(Request $request)
         $this->authorize('viewAny', Product::class);
         $products = Product::where('name','like','%'.$request->search.'%')
         ->orwhere('description','like','%'.$request->search.'%')
-        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(1);
+        ->orderBy('id','desc')->with('media','shipping_rates')->paginate(50);
       
         $categories = Category::all();
 
@@ -634,7 +634,7 @@ public function csvstore(Request $request)
 
     public function updatewithfile(Request $request, Product $product)
     {
-
+// dd($request->all());
         $this->authorize('update', $product);
         $rules = [
             'name' => 'required|string|max:255',

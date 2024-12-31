@@ -9,6 +9,8 @@ import { MdDelete } from "react-icons/md";
 import { FaWallet } from "react-icons/fa";
 import { GiTwoCoins } from "react-icons/gi";
 import { toast } from 'react-toastify';
+import { SiMicrosoftexcel } from 'react-icons/si';
+
 
 
 function User(props) {
@@ -59,16 +61,16 @@ function User(props) {
   const formatDateTime = (dateString) => {
     if (!dateString) return 'N/A';
 
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit' 
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
     };
     return new Date(dateString).toLocaleString(undefined, options);
-};
+  };
 
 
   return (
@@ -91,6 +93,17 @@ function User(props) {
             <div className="flex flex-col md:flex-row justify-between items-center mt-6 mb-4">
               <h3 className="text-lg font-bold">Customers</h3>
               <div className="flex flex-col md:flex-row space-x-0 md:space-x-2">
+
+                <a
+                  href={route('customer.csvexport')}
+                  className='group relative flex items-center justify-center p-0.5 text-center font-medium transition-all focus:z-10 focus:outline-none border border-transparent bg-cyan-700 text-white focus:ring-4 focus:ring-cyan-300 enabled:hover:bg-cyan-800 dark:bg-cyan-600 dark:focus:ring-cyan-800 dark:enabled:hover:bg-cyan-700 rounded-lg'
+                >
+                  <span className="flex items-center transition-all duration-200 rounded-md px-4 py-2 text-sm">
+                    <SiMicrosoftexcel className="mr-2 h-5 w-5" />
+                    Export CSV File
+                  </span>
+                </a>
+
                 <button
                   onClick={() => setIsModalOpen(true)}
                   style={{ background: '#fcb609' }}

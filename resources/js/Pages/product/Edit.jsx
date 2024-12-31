@@ -189,8 +189,8 @@ function Edit(props) {
                                 
                                 router.post(route('product.updatewithfile', product.id), formData,  {
                                     onSuccess: () => {
-                                       
-                                        resetForm();
+                                        toast.success('Product updated successfully');
+                                        // resetForm();
                                     },
                                 }
                             
