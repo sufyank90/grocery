@@ -35,6 +35,7 @@ class Order extends Model
         'guest',
         'delivery_charges',
         'paymentstatus',
+        'walletdiscount'
     ];
     protected $casts = [
         'created_at' => 'datetime',
