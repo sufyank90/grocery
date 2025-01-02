@@ -33,7 +33,7 @@ class OrderNotification extends Notification
     public function via($notifiable)
     {
         // Only send notification via database if order status is "pending"
-        if ($this->order->status === 'pending') {
+        if ($this->order->paymentstatus === 'pending') {
             return ['database'];
         }
         return [];
