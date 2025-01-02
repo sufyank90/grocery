@@ -46,7 +46,8 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
                 'payable' => 'required|numeric',
                 'shipping_id' => 'required',
                 'delivery_charges' => 'nullable|numeric',
-                'paymentstatus'=>'nullable|string'
+                'paymentstatus'=>'nullable|string',
+                'walletdiscount' => 'nullable|numeric'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
@@ -97,6 +98,11 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
             'user_id' => $user->id,
             
         ]));
+
+        if($validatedData['walletdiscount'] > 0 || $validatedData['method'] != 'wallet'){
+            $user->wallet = $user->wallet - $validatedData['walletdiscount'];
+            $user->save();
+        }
 
         if($validatedData['method'] == 'wallet'){
             $user->wallet = $user->wallet - $validatedData['total'];
