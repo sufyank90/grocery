@@ -105,7 +105,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
         }
 
         if($validatedData['method'] == 'wallet'){
-            $user->wallet = $user->wallet - $validatedData['total'];
+            $user->wallet = $user->wallet - $validatedData['payable'];
             $user->save();
         }
         Notification::send($order->user, new OrderNotification($order));
