@@ -99,7 +99,7 @@ Route::middleware('auth:sanctum')->prefix('order')->group(function () {
             
         ]));
 
-        if($validatedData['walletdiscount'] > 0 || $validatedData['method'] != 'wallet'){
+        if($validatedData['walletdiscount'] > 0 && $validatedData['method'] != 'wallet'){
             $user->wallet = $user->wallet - $validatedData['walletdiscount'];
             $user->save();
         }
