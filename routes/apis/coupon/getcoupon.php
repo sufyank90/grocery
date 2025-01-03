@@ -120,7 +120,9 @@ Route::middleware('auth:sanctum')->prefix('coupon')->group(function () {
         } elseif ($coupon->type === 'percent') {
             $discount = $request->amount * ($coupon->value / 100); // Percentage discount
         }
-    
+        if ($coupon->min_amount > $request->amount) {
+            return response()->json(['message' => 'Minimum purchase requirement for the coupon not met.'], 400);
+        }
           //Huzaifa Shakeel
         // Update the usage limit if applicable
         // if ($coupon->usage_type === 'single') {
